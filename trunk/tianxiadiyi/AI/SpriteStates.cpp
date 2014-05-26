@@ -51,12 +51,12 @@ void Walk::enter( Sprite* sprite )
 				sprite->touchNextDirectionX = DIRECTION_NONE;
 				sprite->touchNextDirectionY = UP;
 			}
-			else if (degrees >=75 && degrees <=105)
+			else if (degrees >= 75 && degrees <= 105)
 			{
 				sprite->touchNextDirectionX = DIRECTION_NONE;
 				sprite->touchNextDirectionY = DOWN;
 			}
-			else if (degrees >=165 || degrees <= -165)
+			else if (degrees >= 165 || degrees <= -165)
 			{
 				sprite->touchNextDirectionX = LEFT;
 				sprite->touchNextDirectionY = DIRECTION_NONE;
