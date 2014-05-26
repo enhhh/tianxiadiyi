@@ -21,17 +21,21 @@ public:
 	~ItemManager();
 
 	vector<Item*>itemVector;
-
 	vector<Gem*>gemVector;
 	vector<Equipment*>equipmentVector;
 
-	int selectItemId;
+	// ±³°ü
+	Item** itemArray;
+
 	int pageNum;
 	int maxPageNum;
+
+	int selectItemId;
 
 	static ItemManager* getTheOnlyInstance();
 
 	vector<Equipment*> getEquipmentList(int type);
+
 };
 
 #endif

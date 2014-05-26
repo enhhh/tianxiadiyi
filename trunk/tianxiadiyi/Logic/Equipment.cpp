@@ -5,6 +5,8 @@ Equipment::Equipment(int id)
 	const tDataBase* equipmentTab = CDataBaseSystem::GetMe()->GetDataBase(DBC_EQUIPMENT);
 	const _DBC_EQUIPMENT* equipment = (_DBC_EQUIPMENT*)equipmentTab->Search_Index_EQU(id);
 	attribute = *equipment;
+
+	type = EQUIPMENT;
 }
 
 Equipment::~Equipment()

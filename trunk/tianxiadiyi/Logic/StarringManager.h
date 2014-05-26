@@ -30,12 +30,16 @@ public:
 	SoulBeadSprite soulBeadSpriteArray[12];
 	SoulBeadSprite soulBeadEquipSpriteArray[10];
 
+	bool isSelectSoulBead;
+
+	int soulPageNum;
+	int soulMaxPageNum;
+	
 	SoulBead** soulBeadArray;
 	SoulBead* soulBeadEquipArray[10];
 
 	int selectSoulBeadId;
-	int soulPageNum;
-	int soulMaxPageNum;
+	int selectSoulBeadCircleId;
 
 	static StarringManager* getTheOnlyInstance();
 };

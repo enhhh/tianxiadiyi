@@ -63,38 +63,63 @@ void UIBag::onEnter()
 
 void UIBag::refresh()
 {
-	int num;
-
-	if (itemManager->pageNum < (itemManager->maxPageNum-1))
+	if (itemManager->maxPageNum <= 0)
 	{
-		num = 16;
-	}
-	else
-	{
-		num = itemManager->itemVector.size() - itemManager->pageNum * 16;
+		return;
 	}
 
 	for (int i = 0; i < 16; i++)
 	{
-		if (i < num)
-		{
-			int j = itemManager->pageNum * 3 + i;
+		itemImageView[i]->setVisible(false);
 
-			Equipment* equipment = (Equipment*)itemManager->itemVector[j];
-			const char* s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
+		int j = itemManager->pageNum * 16 + i;
+
+		Item* item = itemManager->itemArray[j];
+
+		if (item != NULL)
+		{
+			const char* s;
+
+			if (item->type == GEM)
+			{
+				Gem* gem = (Gem*)item;
+				s = CCString::createWithFormat("png/gem/%s.png", gem->attribute.tuPian)->getCString();
+			}
+
+			if (item->type == EQUIPMENT)
+			{
+				Equipment* equipment = (Equipment*)item;
+				s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
+			}
+
 			itemImageView[i]->loadTexture(s);
 			itemImageView[i]->setVisible(true);
 		}
-		else
-		{
-			itemImageView[i]->setVisible(false);
-		}
 	}
 
-	Equipment* equipment = (Equipment*)itemManager->itemVector[itemManager->selectItemId];
-	const char* s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
-	itemFeatureImageView->loadTexture(s);
-	itemFeatureImageView->setVisible(true);
+	itemFeatureImageView->setVisible(false);
+
+	Item* item = itemManager->itemArray[itemManager->selectItemId];
+	
+	if (item != NULL)
+	{
+		const char* s;
+
+		if (item->type == GEM)
+		{
+			Gem* gem = (Gem*)item;
+			s = CCString::createWithFormat("png/gem/%s.png", gem->attribute.tuPian)->getCString();
+		}
+
+		if (item->type == EQUIPMENT)
+		{
+			Equipment* equipment = (Equipment*)item;
+			s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
+		}
+
+		itemFeatureImageView->loadTexture(s);
+		itemFeatureImageView->setVisible(true);
+	}
 }
 
 void UIBag::closeButtonClicked( CCObject* sender, TouchEventType type )
@@ -103,7 +128,6 @@ void UIBag::closeButtonClicked( CCObject* sender, TouchEventType type )
 	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiBag->release();
 	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiBag = NULL;
 }
-
 
 void UIBag::itemButtonClicked( CCObject* sender, TouchEventType type )
 {
@@ -115,13 +139,8 @@ void UIBag::itemButtonClicked( CCObject* sender, TouchEventType type )
 
 		if (strcmp(button->getName(), s) == 0)
 		{
-			int n = itemManager->pageNum * 16 + i;
-
-			if (n < itemManager->itemVector.size())
-			{
-				itemManager->selectItemId = n;
-				refresh();
-			}
+			itemManager->selectItemId = itemManager->pageNum * 16 + i;
+			refresh();
 
 			break;
 		}
