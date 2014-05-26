@@ -86,25 +86,16 @@ void UIStrengthen::onEnter()
 
 void UIStrengthen::refresh()
 {
-	int maxPageNum = strengthenManager->getMaxPageNum();
-
 	// ½«ÁìÍ¼Æ¬
 	int num;
 
-	if (strengthenManager->pageNum < (maxPageNum-1))
+	if (strengthenManager->pageNum < (strengthenManager->maxPageNum-1))
 	{
 		num = 4;
 	}
 	else
 	{
-		if (strengthenManager->selectGeneralId == 0)
-		{
-			num = itemManager->equipmentVector.size() - strengthenManager->pageNum * 4;
-		}
-		else
-		{
-			num = formationManager->generalVector[strengthenManager->selectGeneralId-1]->equipmentVector.size() - strengthenManager->pageNum * 4;
-		}
+		num = strengthenManager->equipmentVector.size() - strengthenManager->pageNum * 4;
 	}
 
 	for (int i = 0; i < 4; i++)
@@ -112,16 +103,7 @@ void UIStrengthen::refresh()
 		if (i < num)
 		{
 			int j = strengthenManager->pageNum * 4 + i;
-			const char* s = NULL;
-
-			if (strengthenManager->selectGeneralId == 0)
-			{
-				s = CCString::createWithFormat("png/equipment/%s.png", itemManager->equipmentVector[j]->attribute.tuPian)->getCString();
-			}
-			else
-			{
-				s = CCString::createWithFormat("png/equipment/%s.png", formationManager->generalVector[strengthenManager->selectGeneralId-1]->equipmentVector[j]->attribute.tuPian)->getCString();
-			}
+			const char* s = CCString::createWithFormat("png/equipment/%s.png", strengthenManager->equipmentVector[j].equipment->attribute.tuPian)->getCString();
 
 			equipmentImageView[i]->loadTexture(s);
 			equipmentImageView[i]->setVisible(true);
@@ -132,15 +114,12 @@ void UIStrengthen::refresh()
 		}
 	}
 
-	if (strengthenManager->selectGeneralId == 0)
+	featureImageView->setVisible(false);
+
+
+	if (strengthenManager->selectEquipmentId < strengthenManager->equipmentVector.size())
 	{
-		const char* s = CCString::createWithFormat("png/equipment/%s.png", itemManager->equipmentVector[strengthenManager->selectEquipmentId]->attribute.tuPian)->getCString();
-		featureImageView->loadTexture(s);
-		featureImageView->setVisible(true);
-	}
-	else
-	{
-		const char* s = CCString::createWithFormat("png/equipment/%s.png", formationManager->generalVector[strengthenManager->selectGeneralId-1]->equipmentVector[strengthenManager->selectEquipmentId]->attribute.tuPian)->getCString();
+		const char* s = CCString::createWithFormat("png/equipment/%s.png", strengthenManager->equipmentVector[strengthenManager->selectEquipmentId].equipment->attribute.tuPian)->getCString();
 		featureImageView->loadTexture(s);
 		featureImageView->setVisible(true);
 	}
@@ -171,6 +150,8 @@ void UIStrengthen::tableCellTouched( CCTableView* table, CCTableViewCell* cell )
 
 	UIButton* button = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("EquipmentButton_1"));;
 	selectFrameImageView->setPosition(button->getPosition());
+
+	strengthenManager->init();
 
 	refresh();
 }
@@ -263,25 +244,8 @@ void UIStrengthen::equipmentButtonClicked( CCObject* sender, TouchEventType type
 		if (strcmp(button->getName(), s) == 0)
 		{
 			selectFrameImageView->setPosition(button->getPosition());
-			int n = strengthenManager->pageNum * 4 + i;
-
-			if (strengthenManager->selectGeneralId == 0)
-			{
-				if (n < itemManager->equipmentVector.size())
-				{
-					strengthenManager->selectEquipmentId = n;
-					refresh();
-				}
-			}
-			else
-			{
-				if (n < formationManager->generalVector[strengthenManager->selectGeneralId-1]->equipmentVector.size())
-				{
-					strengthenManager->selectEquipmentId = n;
-					refresh();
-				}
-			}
-			
+			strengthenManager->selectEquipmentId = strengthenManager->pageNum * 4 + i;
+			refresh();
 			break;
 		}
 	}
@@ -315,11 +279,9 @@ void UIStrengthen::pageRightButtonClicked( CCObject* sender, TouchEventType type
 	{
 		strengthenManager->pageNum++;
 
-		int maxPageNum = strengthenManager->getMaxPageNum();
-
-		if (strengthenManager->pageNum > maxPageNum - 1)
+		if (strengthenManager->pageNum > strengthenManager->maxPageNum - 1)
 		{
-			strengthenManager->pageNum = maxPageNum - 1;
+			strengthenManager->pageNum = strengthenManager->maxPageNum - 1;
 			return;
 		}
 

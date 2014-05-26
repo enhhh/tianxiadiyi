@@ -9,9 +9,18 @@ using namespace cocos2d;
 using namespace CocosDenshion;
 using namespace cocos2d::extension;
 
+enum ITEM_TYPE
+{
+	EQUIPMENT = 0,
+	GEM = 1
+};
+
 class Item
 {
 public:
+
+	int type;
+
 	Item();
 	~Item();
 };

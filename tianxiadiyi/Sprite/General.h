@@ -42,9 +42,6 @@ public:
 	// 是否上阵
 	bool isFormation;
 
-	// 将领装备列表
-	vector<Equipment*>equipmentVector;
-
 	// 将领装备数组
 	Equipment* equipmentArray[6];
 

@@ -22,6 +22,8 @@ StarringManager::StarringManager()
 		soulBeadVector.push_back(new SoulBead(id));
 	}
 
+	isSelectSoulBead = true;
+
 	soulPageNum = 0;
 	soulMaxPageNum = (soulBeadVector.size()-1) / 12 + 1;
 
@@ -45,12 +47,13 @@ StarringManager::StarringManager()
 		}
 	}
 
-	selectSoulBeadId = 0;
-
 	for (int i = 0; i < 10; i++)
 	{
 		soulBeadEquipArray[i] = NULL;
 	}
+
+	selectSoulBeadId = 0;
+	selectSoulBeadCircleId = 0;
 }
 
 StarringManager::~StarringManager()

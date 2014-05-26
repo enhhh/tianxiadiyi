@@ -13,8 +13,7 @@ StrengthenManager::StrengthenManager()
 	// 选择的装备
 	selectEquipmentId = 0;
 
-	// 装备当前页
-	pageNum = 0;
+	init();
 }
 
 StrengthenManager::~StrengthenManager()
@@ -31,25 +30,46 @@ StrengthenManager* StrengthenManager::getTheOnlyInstance()
 	return strengthenManager;
 }
 
-int StrengthenManager::getMaxPageNum()
+void StrengthenManager::init()
 {
-	int size = 0;
+	equipmentVector.clear();
 
 	if (selectGeneralId == 0)
 	{
-		size = itemManager->equipmentVector.size() ;
+		for (int i = 0; i < itemManager->maxPageNum*16; i++)
+		{
+			Item* item = itemManager->itemArray[i];
+
+			if (item != NULL)
+			{
+				if (item->type == EQUIPMENT)
+				{
+					StrengthenEquipment strengthenEquipment = {i, (Equipment*)item};
+					equipmentVector.push_back(strengthenEquipment);
+				}
+			}
+		}
 	}
 	else
 	{
-		size = formationManager->generalVector[selectGeneralId-1]->equipmentVector.size();
+		for (int i = 0; i < 6; i++)
+		{
+			if (formationManager->generalVector[selectGeneralId-1]->equipmentArray[i] != NULL)
+			{
+				Equipment* equipment = formationManager->generalVector[selectGeneralId-1]->equipmentArray[i];
+				StrengthenEquipment strengthenEquipment = {i, equipment};
+				equipmentVector.push_back(strengthenEquipment);
+			}
+		}
 	}
 
-	int maxPageNum = (size-1) / 4 + 1;
+	// 装备当前页
+	pageNum = 0;
 
-	if (size == 0)
+	maxPageNum = (equipmentVector.size()-1) / 4 + 1;
+
+	if (equipmentVector.size() == 0)
 	{
 		maxPageNum = 0;
 	}
-
-	return maxPageNum;
 }

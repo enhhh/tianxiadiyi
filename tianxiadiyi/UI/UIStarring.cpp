@@ -260,6 +260,12 @@ void UIStarring::refreshSoulFeatureSprite()
 bool UIStarring::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
 {
 	CCLOG("ccTouchBegan");
+
+	if (soulPanel->isVisible() == false)
+	{
+		return true;
+	}
+
 	CCPoint touchPosition = pTouch->getLocation();
 
 	// 选择魂珠
@@ -275,13 +281,14 @@ bool UIStarring::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
 
 		if (rect.containsPoint(touchPosition))
 		{
+			starringManager->isSelectSoulBead = true;
+
 			starringManager->selectSoulBeadId = starringManager->soulPageNum * 12 + i;
 			selectSoulBeadSprite = starringManager->soulBeadSpriteArray[i];
 
 			starringManager->soulBeadSpriteArray[i].armature = NULL;
 			starringManager->soulBeadSpriteArray[i].soulBead = NULL;
 
-			starringManager->selectSoulBeadId = starringManager->soulPageNum * 12 + i;
 			refreshSoulFeatureSprite();
 
 			return true;
@@ -293,7 +300,6 @@ bool UIStarring::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
 	{
 		CCPoint soulAttributePanelPosition = soulAttributePanel->getPosition();
 		CCPoint soulBeadCircleImageViewPosition = soulBeadCircleImageView[i]->getPosition();
-
 		CCPoint position = CCPoint(soulAttributePanelPosition.x+soulBeadCircleImageViewPosition.x, soulAttributePanelPosition.y+soulBeadCircleImageViewPosition.y);
 
 		CCSize size = soulBeadCircleImageView[i]->getContentSize();
@@ -301,6 +307,14 @@ bool UIStarring::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
 
 		if (rect.containsPoint(touchPosition))
 		{
+			starringManager->isSelectSoulBead = false;
+
+			starringManager->selectSoulBeadCircleId = i;
+			selectSoulBeadSprite = starringManager->soulBeadEquipSpriteArray[i];
+
+			starringManager->soulBeadEquipSpriteArray[i].armature = NULL;
+			starringManager->soulBeadEquipSpriteArray[i].soulBead = NULL;
+
 			return true;
 		}
 	}
@@ -326,96 +340,192 @@ void UIStarring::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 
 	if (selectSoulBeadSprite.armature != NULL)
 	{
-		int buttonId = starringManager->selectSoulBeadId - starringManager->soulPageNum*12;
-		CCPoint soulPanelPosition = soulPanel->getPosition();
-		CCPoint soulBeadButtonPosition = soulBeadButton[buttonId]->getPosition();
-		CCPoint soulBeadPosition = CCPoint(soulPanelPosition.x+soulBeadButtonPosition.x, soulPanelPosition.y+soulBeadButtonPosition.y);
-
-		// 选择魂珠
-		for (int i = 0; i < 12; i++)
+		if (starringManager->isSelectSoulBead)
 		{
+			int buttonId = starringManager->selectSoulBeadId - starringManager->soulPageNum*12;
 			CCPoint soulPanelPosition = soulPanel->getPosition();
-			CCPoint soulBeadButtonPosition = soulBeadButton[i]->getPosition();
+			CCPoint soulBeadButtonPosition = soulBeadButton[buttonId]->getPosition();
+			CCPoint soulBeadPosition = CCPoint(soulPanelPosition.x+soulBeadButtonPosition.x, soulPanelPosition.y+soulBeadButtonPosition.y);
 
-			CCPoint position = CCPoint(soulPanelPosition.x+soulBeadButtonPosition.x, soulPanelPosition.y+soulBeadButtonPosition.y);
-
-			CCSize size = soulBeadButton[i]->getContentSize();
-			CCRect rect = CCRect(position.x-size.width/2, position.y-size.height/2, size.width, size.height);
-
-			if (rect.containsPoint(touchPosition))
+			// 选择魂珠
+			for (int i = 0; i < 12; i++)
 			{
-				// 目的位置是否有魂珠
-				if (starringManager->soulBeadSpriteArray[i].armature != NULL)
+				CCPoint soulPanelPosition = soulPanel->getPosition();
+				CCPoint soulBeadButtonPosition = soulBeadButton[i]->getPosition();
+
+				CCPoint position = CCPoint(soulPanelPosition.x+soulBeadButtonPosition.x, soulPanelPosition.y+soulBeadButtonPosition.y);
+
+				CCSize size = soulBeadButton[i]->getContentSize();
+				CCRect rect = CCRect(position.x-size.width/2, position.y-size.height/2, size.width, size.height);
+
+				if (rect.containsPoint(touchPosition))
 				{
-					// 交换魂珠位置
-					starringManager->soulBeadSpriteArray[i].armature->setPosition(soulBeadPosition);
-					selectSoulBeadSprite.armature->setPosition(position);
+					// 目的位置是否有魂珠
+					if (starringManager->soulBeadSpriteArray[i].armature != NULL)
+					{
+						// 交换魂珠位置
+						starringManager->soulBeadSpriteArray[i].armature->setPosition(soulBeadPosition);
+						selectSoulBeadSprite.armature->setPosition(position);
 
-					starringManager->soulBeadSpriteArray[buttonId] = starringManager->soulBeadSpriteArray[i];
-					starringManager->soulBeadSpriteArray[i] = selectSoulBeadSprite;
+						starringManager->soulBeadSpriteArray[buttonId] = starringManager->soulBeadSpriteArray[i];
+						starringManager->soulBeadSpriteArray[i] = selectSoulBeadSprite;
+					}
+					else
+					{
+						selectSoulBeadSprite.armature->setPosition(position);
+						starringManager->soulBeadSpriteArray[i] = selectSoulBeadSprite;
+					}
+
+					selectSoulBeadSprite.armature = NULL;
+					selectSoulBeadSprite.soulBead = NULL;
+
+					int id = starringManager->soulPageNum * 12 + i;
+					SoulBead* s = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
+					starringManager->soulBeadArray[starringManager->selectSoulBeadId] = starringManager->soulBeadArray[id];
+					starringManager->soulBeadArray[id] = s;
+
+					return;
 				}
-				else
-				{
-					selectSoulBeadSprite.armature->setPosition(position);
-					starringManager->soulBeadSpriteArray[i] = selectSoulBeadSprite;
-				}
-
-				selectSoulBeadSprite.armature = NULL;
-				selectSoulBeadSprite.soulBead = NULL;
-
-				int id = starringManager->soulPageNum * 12 + i;
-				SoulBead* s = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
-				starringManager->soulBeadArray[starringManager->selectSoulBeadId] = starringManager->soulBeadArray[id];
-				starringManager->soulBeadArray[id] = s;
-
-				return;
 			}
-		}
 
-		// 选择魂圈
-		for (int i = 0; i < 10; i++)
+			// 选择魂圈
+			for (int i = 0; i < 10; i++)
+			{
+				CCPoint soulAttributePanelPosition = soulAttributePanel->getPosition();
+				CCPoint soulBeadCircleImageViewPosition = soulBeadCircleImageView[i]->getPosition();
+
+				CCPoint position = CCPoint(soulAttributePanelPosition.x+soulBeadCircleImageViewPosition.x, soulAttributePanelPosition.y+soulBeadCircleImageViewPosition.y);
+
+				CCSize size = soulBeadCircleImageView[i]->getContentSize();
+				CCRect rect = CCRect(position.x-size.width/2, position.y-size.height/2, size.width, size.height);
+
+				if (rect.containsPoint(touchPosition))
+				{
+					// 目的位置是否有魂珠
+					if (starringManager->soulBeadEquipSpriteArray[i].armature != NULL)
+					{
+						// 交换魂珠位置
+						starringManager->soulBeadEquipSpriteArray[i].armature->setPosition(soulBeadPosition);
+						selectSoulBeadSprite.armature->setPosition(position);
+
+						starringManager->soulBeadSpriteArray[buttonId] = starringManager->soulBeadEquipSpriteArray[i];
+						starringManager->soulBeadEquipSpriteArray[i] = selectSoulBeadSprite;
+					}
+					else
+					{
+						selectSoulBeadSprite.armature->setPosition(position);
+						starringManager->soulBeadEquipSpriteArray[i] = selectSoulBeadSprite;
+					}
+
+					SoulBead* s = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
+					starringManager->soulBeadArray[starringManager->selectSoulBeadId] = starringManager->soulBeadEquipArray[i];
+					starringManager->soulBeadEquipArray[i] = s;
+
+					selectSoulBeadSprite.armature = NULL;
+					selectSoulBeadSprite.soulBead = NULL;
+
+					return;
+				}
+			}
+
+			selectSoulBeadSprite.armature->setPosition(soulBeadPosition);
+			starringManager->soulBeadSpriteArray[buttonId] = selectSoulBeadSprite;
+			selectSoulBeadSprite.armature = NULL;
+			selectSoulBeadSprite.soulBead = NULL;
+		}
+		else
 		{
+			int circleId = starringManager->selectSoulBeadCircleId;
 			CCPoint soulAttributePanelPosition = soulAttributePanel->getPosition();
-			CCPoint soulBeadCircleImageViewPosition = soulBeadCircleImageView[i]->getPosition();
+			CCPoint soulBeadCircleImageViewPosition = soulBeadCircleImageView[circleId]->getPosition();
+			CCPoint soulBeadCirclePosition = CCPoint(soulAttributePanelPosition.x+soulBeadCircleImageViewPosition.x, soulAttributePanelPosition.y+soulBeadCircleImageViewPosition.y);
 
-			CCPoint position = CCPoint(soulAttributePanelPosition.x+soulBeadCircleImageViewPosition.x, soulAttributePanelPosition.y+soulBeadCircleImageViewPosition.y);
-
-			CCSize size = soulBeadCircleImageView[i]->getContentSize();
-			CCRect rect = CCRect(position.x-size.width/2, position.y-size.height/2, size.width, size.height);
-
-			if (rect.containsPoint(touchPosition))
+			// 选择魂圈
+			for (int i = 0; i < 10; i++)
 			{
-				// 目的位置是否有魂珠
-				if (starringManager->soulBeadEquipSpriteArray[i].armature != NULL)
+				CCPoint soulAttributePanelPosition = soulAttributePanel->getPosition();
+				CCPoint soulBeadCircleImageViewPostion = soulBeadCircleImageView[i]->getPosition();
+
+				CCPoint position = CCPoint(soulAttributePanelPosition.x+soulBeadCircleImageViewPostion.x, soulAttributePanelPosition.y+soulBeadCircleImageViewPostion.y);
+				CCSize size = soulBeadCircleImageView[circleId]->getContentSize();
+				CCRect rect = CCRect(position.x-size.width/2, position.y-size.height/2, size.width, size.height);
+
+				if (rect.containsPoint(touchPosition))
 				{
-					// 交换魂珠位置
-					starringManager->soulBeadEquipSpriteArray[i].armature->setPosition(soulBeadPosition);
-					selectSoulBeadSprite.armature->setPosition(position);
+					// 目的位置是否有魂珠
+					if (starringManager->soulBeadEquipSpriteArray[i].armature != NULL)
+					{
+						// 交换魂珠位置
+						starringManager->soulBeadEquipSpriteArray[i].armature->setPosition(soulBeadCirclePosition);
+						selectSoulBeadSprite.armature->setPosition(position);
 
-					starringManager->soulBeadSpriteArray[buttonId] = starringManager->soulBeadEquipSpriteArray[i];
-					starringManager->soulBeadEquipSpriteArray[i] = selectSoulBeadSprite;
+						starringManager->soulBeadEquipSpriteArray[circleId] = starringManager->soulBeadEquipSpriteArray[i];
+						starringManager->soulBeadEquipSpriteArray[i] = selectSoulBeadSprite;
+					}
+					else
+					{
+						selectSoulBeadSprite.armature->setPosition(position);
+						starringManager->soulBeadEquipSpriteArray[i] = selectSoulBeadSprite;
+					}
+
+					SoulBead* s = starringManager->soulBeadEquipArray[starringManager->selectSoulBeadCircleId];
+					starringManager->soulBeadEquipArray[starringManager->selectSoulBeadCircleId] = starringManager->soulBeadEquipArray[i];
+					starringManager->soulBeadEquipArray[i] = s;
+
+					selectSoulBeadSprite.armature = NULL;
+					selectSoulBeadSprite.soulBead = NULL;
+					return;
 				}
-				else
-				{
-					selectSoulBeadSprite.armature->setPosition(position);
-					starringManager->soulBeadEquipSpriteArray[i] = selectSoulBeadSprite;
-				}
-
-				SoulBead* s = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
-				starringManager->soulBeadArray[starringManager->selectSoulBeadId] = starringManager->soulBeadEquipArray[i];
-				starringManager->soulBeadEquipArray[i] = s;
-
-				selectSoulBeadSprite.armature = NULL;
-				selectSoulBeadSprite.soulBead = NULL;
-
-				return;
 			}
-		}
 
-		selectSoulBeadSprite.armature->setPosition(soulBeadPosition);
-		starringManager->soulBeadSpriteArray[buttonId] = selectSoulBeadSprite;
-		selectSoulBeadSprite.armature = NULL;
-		selectSoulBeadSprite.soulBead = NULL;
+
+			// 选择魂珠
+			for (int i = 0; i < 12; i++)
+			{
+				CCPoint soulPanelPosition = soulPanel->getPosition();
+				CCPoint soulBeadButtonPosition = soulBeadButton[i]->getPosition();
+				CCPoint position = CCPoint(soulPanelPosition.x+soulBeadButtonPosition.x, soulPanelPosition.y+soulBeadButtonPosition.y);
+
+				CCSize size = soulBeadButton[i]->getContentSize();
+				CCRect rect = CCRect(position.x-size.width/2, position.y-size.height/2, size.width, size.height);
+
+				if (rect.containsPoint(touchPosition))
+				{
+					// 目的位置是否有魂珠
+					if (starringManager->soulBeadSpriteArray[i].armature != NULL)
+					{
+						// 交换魂珠位置
+						starringManager->soulBeadSpriteArray[i].armature->setPosition(soulBeadCirclePosition);
+						selectSoulBeadSprite.armature->setPosition(position);
+
+						int id = starringManager->soulPageNum * 12 + i;
+						starringManager->soulBeadEquipSpriteArray[circleId] = starringManager->soulBeadSpriteArray[id];
+						starringManager->soulBeadSpriteArray[id] = selectSoulBeadSprite;
+					}
+					else
+					{
+						selectSoulBeadSprite.armature->setPosition(position);
+						starringManager->soulBeadSpriteArray[i] = selectSoulBeadSprite;
+					}
+
+
+					int id = starringManager->soulPageNum * 12 + i;
+					SoulBead* s = starringManager->soulBeadArray[starringManager->selectSoulBeadCircleId];
+					starringManager->soulBeadEquipArray[starringManager->selectSoulBeadCircleId] = starringManager->soulBeadArray[id];
+					starringManager->soulBeadArray[id] = s;
+
+					selectSoulBeadSprite.armature = NULL;
+					selectSoulBeadSprite.soulBead = NULL;
+
+					return;
+				}
+			}
+
+			selectSoulBeadSprite.armature->setPosition(soulBeadCirclePosition);
+			starringManager->soulBeadEquipSpriteArray[circleId] = selectSoulBeadSprite;
+			selectSoulBeadSprite.armature = NULL;
+			selectSoulBeadSprite.soulBead = NULL;
+		}
 	}
 }
 
