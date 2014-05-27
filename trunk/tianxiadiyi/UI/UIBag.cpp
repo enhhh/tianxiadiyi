@@ -159,7 +159,7 @@ void UIBag::pageLeftButtonClicked( CCObject* sender, TouchEventType type )
 			return;
 		}
 
-		CCLOG("formationManager->pageNum: %d", itemManager->pageNum);
+		CCLOG("itemManager->pageNum: %d", itemManager->pageNum);
 
 		refresh();
 	}
@@ -177,7 +177,7 @@ void UIBag::pageRightButtonClicked( CCObject* sender, TouchEventType type )
 			return;
 		}
 
-		CCLOG("formationManager->pageNum: %d", itemManager->pageNum);
+		CCLOG("itemManager->pageNum: %d", itemManager->pageNum);
 
 		refresh();
 	}

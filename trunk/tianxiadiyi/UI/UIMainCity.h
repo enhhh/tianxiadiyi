@@ -36,7 +36,7 @@ public:
 
 	UIGeneral* uiGeneral;
 	UIWepon* uiWepon;
-	UIWeponTakeup* uiWeponTakeup;
+	UIWeponTakeUp* uiWeponTakeup;
 	UIAdvanced* uiAdvanced;
 
 	UIBag* uiBag;

@@ -7,6 +7,7 @@
 #include "cocos-ext.h"
 #include "SimpleAudioEngine.h"
 #include "Logic\GeneralManager.h"
+#include "Logic\WeponTakeUpManager.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
@@ -14,16 +15,20 @@ using namespace cocos2d::extension;
 using namespace gui;
 using namespace std;
 
-class UIWeponTakeup : public CCLayer
+class UIWeponTakeUp : public CCLayer
 {
 public:
 	GeneralManager* generalManager;
+	WeponTakeUpManager* weponTakeUpManager;
+
 	UILayer* uiLayer;
 
 	UIImageView* equipmentFeatureImageView;
 
-	UIWeponTakeup();
-	~UIWeponTakeup();
+	UIImageView* equipmentImageView[3];
+
+	UIWeponTakeUp();
+	~UIWeponTakeUp();
 
 	virtual bool init();
 	virtual void onEnter();
@@ -31,8 +36,12 @@ public:
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
 	void fillButtonClicked(CCObject* sender, TouchEventType type);
+	void equipmentButtonClicked(CCObject* sender, TouchEventType type);
 
-	CREATE_FUNC(UIWeponTakeup);
+	void pageLeftButtonClicked(CCObject* sender, TouchEventType type);
+	void pageRightButtonClicked(CCObject* sender, TouchEventType type);
+
+	CREATE_FUNC(UIWeponTakeUp);
 };
 
 #endif

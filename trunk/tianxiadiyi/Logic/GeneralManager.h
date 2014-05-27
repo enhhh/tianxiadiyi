@@ -15,6 +15,15 @@ using namespace cocos2d::extension;
 using namespace std;
 
 // ќд∆ч°Ґ±шЈы°Ґ±ш й°ҐошЉ„°Ґ≈ыЈз°Ґ„ш∆п
+enum General_EQUIPMENT_TYPE
+{
+	GENERAL_WU_QI = 0,
+	GENERAL_BING_FU,
+	GENERAL_BING_SHU,
+	GENERAL_KAI_JIA,
+	GENERAL_PI_FENG,
+	ZUO_JI
+};
 
 class GeneralManager
 {

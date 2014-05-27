@@ -86,8 +86,6 @@ struct _DBC_EQUIPMENT
 	char* zhongLeiMingCheng;
 	// 种类
 	int zhongLei;
-	// 武器种类
-	int wuQiZhongLei;
 	// 开启级数
 	int kaiQiJiShu;
 	// 强化等级
