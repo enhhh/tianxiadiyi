@@ -13,6 +13,19 @@ using namespace cocos2d;
 using namespace CocosDenshion;
 using namespace cocos2d::extension;
 
+enum EQUIPMENT_TYPE
+{
+	BING_FU = 1,
+	KAI_JIA,
+	PI_FENG,
+	SHANG_ZI,
+	JIAN,
+	QIANG,
+	DAO,
+	GONG_JIAN,
+	BING_SHU
+};
+
 class Equipment : public Item
 {
 public:

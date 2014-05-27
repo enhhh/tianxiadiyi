@@ -8,18 +8,12 @@ GeneralManager::GeneralManager()
 	{
 		General* general = new General(i+1);
 
+		int equipmentId[6] = {36, 1, 1, 15, 35, 35};
+
 		// 将领数组
 		for (int i = 0; i < 6; i++)
 		{
-			if (i % 2 == 0)
-			{
-				int id = rand() % 70 + 1;
-				general->equipmentArray[i] = new Equipment(id);
-			}
-			else
-			{
-				general->equipmentArray[i] = NULL;
-			}
+			general->equipmentArray[i] = new Equipment(equipmentId[i]);
 		}
 
 		generalVector.push_back(general);

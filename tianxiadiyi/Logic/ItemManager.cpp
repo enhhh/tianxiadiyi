@@ -12,7 +12,7 @@ ItemManager::ItemManager()
 		itemVector.push_back(gem);
 	}
 
-	for (int i = 0; i < 34; i++)
+	for (int i = 0; i < 76; i++)
 	{
 		Equipment* equipment = new Equipment(i+1);
 		
@@ -39,7 +39,7 @@ ItemManager::ItemManager()
 			itemArray[i] = NULL;
 		}
 
-		for (int i = 0; i < 40; i++)
+		for (int i = 0; i < 76; i++)
 		{
 			itemArray[i] = itemVector[i];
 		}

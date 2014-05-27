@@ -7,6 +7,8 @@
 UIGeneral::UIGeneral()
 {
 	generalManager = GeneralManager::getTheOnlyInstance();
+	weponTakeUpManager = WeponTakeUpManager::getTheOnlyInstance();
+	weponManager= WeponManager::getTheOnlyInstance();;	
 }
 
 UIGeneral::~UIGeneral()
@@ -104,7 +106,6 @@ void UIGeneral::refresh()
 
 	for (int i = 0; i < 3; i++)
 	{
-
 		if (i < num)
 		{
 			int j = generalManager->pageNum * 3 + i;
@@ -183,10 +184,11 @@ void UIGeneral::equipmentButtonClicked( CCObject* sender, TouchEventType type )
 			if (strcmp(button->getName(), s) == 0)
 			{
 				generalManager->selectEquipmentId = i;
+				weponTakeUpManager->init();
 
 				if (generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[i] != NULL)
 				{
-					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = UIWeponTakeup::create();
+					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = UIWeponTakeUp::create();
 					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->retain();
 					TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup);
 				}
