@@ -1,14 +1,13 @@
 #include "UIGeneral.h"
 #include "UIWepon.h"
 #include "UIAdvanced.h"
+#include "UIGeneral.h"
 
 #include "..\TianXiaDiYi.h"
 
 UIGeneral::UIGeneral()
 {
 	generalManager = GeneralManager::getTheOnlyInstance();
-	weponTakeUpManager = WeponTakeUpManager::getTheOnlyInstance();
-	weponManager= WeponManager::getTheOnlyInstance();;	
 }
 
 UIGeneral::~UIGeneral()
@@ -92,6 +91,15 @@ void UIGeneral::onEnter()
 
 void UIGeneral::refresh()
 {
+	headFeatureImageView->setVisible(false);
+
+	if (generalManager->selectGeneralId < generalManager->generalVector.size())
+	{
+		const char* s = CCString::createWithFormat("png/general/%s.png", generalManager->generalVector[generalManager->selectGeneralId]->attribute.tuPian)->getCString();
+		headFeatureImageView->loadTexture(s);
+		headFeatureImageView->setVisible(true);
+	}
+
 	// ½«ÁìÍ¼Æ¬
 	int num;
 
@@ -121,23 +129,20 @@ void UIGeneral::refresh()
 
 	for (int i = 0; i < 6; i++)
 	{
-		Equipment* equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[i];
+		equipmentImageView[i]->setVisible(false);
 
-		if (equipment != NULL)
+		if (generalManager->selectGeneralId < generalManager->generalVector.size())
 		{
-			const char* s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
-			equipmentImageView[i]->loadTexture(s);
-			equipmentImageView[i]->setVisible(true);
+			Equipment* equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[i];
+
+			if (equipment != NULL)
+			{
+				const char* s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
+				equipmentImageView[i]->loadTexture(s);
+				equipmentImageView[i]->setVisible(true);
+			}	
 		}
-		else
-		{
-			equipmentImageView[i]->setVisible(false);
-		}		
 	}
-
-	const char* s = CCString::createWithFormat("png/general/%s.png", generalManager->generalVector[generalManager->selectGeneralId]->attribute.tuPian)->getCString();
-	headFeatureImageView->loadTexture(s);
-	headFeatureImageView->setVisible(true);
 }
 
 void UIGeneral::closeButtonClicked( CCObject* sender, TouchEventType type )
@@ -149,30 +154,33 @@ void UIGeneral::closeButtonClicked( CCObject* sender, TouchEventType type )
 
 void UIGeneral::headButtonClicked( CCObject* sender, TouchEventType type )
 {
-	UIButton* button = (UIButton*)sender;
-
-	for (int i = 0; i < 3; i++)
+	if (type == CCTOUCHBEGAN)
 	{
-		const char* s = CCString::createWithFormat("HeadButton_%d", i+1)->getCString();
-	
-		if (strcmp(button->getName(), s) == 0)
+		UIButton* button = (UIButton*)sender;
+
+		for (int i = 0; i < 3; i++)
 		{
-			selectFrameImageView->setPosition(button->getPosition());
-			int n = generalManager->pageNum * 3 + i;
+			const char* s = CCString::createWithFormat("HeadButton_%d", i+1)->getCString();
 
-			if (n < generalManager->generalVector.size())
+			if (strcmp(button->getName(), s) == 0)
 			{
-				generalManager->selectGeneralId = n;
+				selectFrameImageView->setPosition(button->getPosition());
+				generalManager->selectGeneralId = generalManager->pageNum * 3 + i;
 				refresh();
-			}
 
-			break;
+				break;
+			}
 		}
-	}
+	}	
 }
 
 void UIGeneral::equipmentButtonClicked( CCObject* sender, TouchEventType type )
 {
+	if (generalManager->selectGeneralId >= generalManager->generalVector.size())
+	{
+		return;
+	}
+
 	UIButton* button = (UIButton*)sender;
 
 	if (type == CCTOUCHBEGAN)
@@ -184,14 +192,10 @@ void UIGeneral::equipmentButtonClicked( CCObject* sender, TouchEventType type )
 			if (strcmp(button->getName(), s) == 0)
 			{
 				generalManager->selectEquipmentId = i;
-				weponTakeUpManager->init();
 
-				if (generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[i] != NULL)
-				{
-					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = UIWeponTakeUp::create();
-					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->retain();
-					TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup);
-				}
+				TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = UIWeponTakeUp::create();
+				TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->retain();
+				TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup);
 			}
 		}
 	}

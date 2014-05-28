@@ -60,8 +60,22 @@ ItemManager* ItemManager::getTheOnlyInstance()
 	return itemManager;
 }
 
-vector<Equipment*> ItemManager::getEquipmentList( int type )
+int ItemManager::getGemNum()
 {
-	vector<Equipment*> equipmentVector;
-	return equipmentVector;
+	int num = 0;
+
+	for (int i = 0; i < itemManager->maxPageNum*16; i++)
+	{
+		Item* item = itemManager->itemArray[i];
+
+		if (item != NULL)
+		{
+			if (item->type == GEM)
+			{
+				num++;
+			}
+		}
+	}
+
+	return num;
 }

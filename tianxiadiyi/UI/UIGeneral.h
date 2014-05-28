@@ -9,7 +9,6 @@
 
 #include "Logic\Equipment.h"
 #include "Logic\GeneralManager.h"
-#include "Logic\WeponTakeUpManager.h"
 #include "Logic\WeponManager.h"
 
 using namespace cocos2d;
@@ -22,8 +21,6 @@ class UIGeneral : public CCLayer
 {
 public:
 	GeneralManager* generalManager;
-	WeponTakeUpManager* weponTakeUpManager;
-	WeponManager* weponManager;
 
 	UILayer* uiLayer;
 	UIImageView* selectFrameImageView;

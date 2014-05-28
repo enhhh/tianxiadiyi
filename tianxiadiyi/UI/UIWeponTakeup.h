@@ -24,6 +24,7 @@ public:
 	UILayer* uiLayer;
 
 	UIImageView* equipmentFeatureImageView;
+	UIImageView* roundImageView;
 
 	UIImageView* equipmentImageView[3];
 
@@ -35,6 +36,7 @@ public:
 	void refresh();
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
+	void takeUpButtonClicked(CCObject* sender, TouchEventType type);
 	void fillButtonClicked(CCObject* sender, TouchEventType type);
 	void equipmentButtonClicked(CCObject* sender, TouchEventType type);
 
