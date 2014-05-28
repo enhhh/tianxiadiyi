@@ -5,6 +5,7 @@
 #include "cocos-ext.h"
 #include "SimpleAudioEngine.h"
 #include "Item.h"
+#include "Gem.h"
 
 #include "tinytab\DataBase.h"
 #include "tinytab\DBC_Struct.h"
@@ -23,7 +24,8 @@ enum EQUIPMENT_TYPE
 	QIANG,
 	DAO,
 	GONG_JIAN,
-	BING_SHU
+	BING_SHU,
+	ZUO_JI
 };
 
 class Equipment : public Item
@@ -31,6 +33,7 @@ class Equipment : public Item
 public:
 
 	_DBC_EQUIPMENT attribute;
+	Gem* gem;
 
 	Equipment(int id);
 	~Equipment();

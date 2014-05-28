@@ -13,7 +13,8 @@ GeneralManager::GeneralManager()
 		// 将领数组
 		for (int i = 0; i < 6; i++)
 		{
-			general->equipmentArray[i] = new Equipment(equipmentId[i]);
+			// general->equipmentArray[i] = new Equipment(equipmentId[i]);
+			general->equipmentArray[i] = NULL;
 		}
 
 		generalVector.push_back(general);

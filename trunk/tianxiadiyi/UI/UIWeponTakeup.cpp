@@ -1,4 +1,5 @@
 #include "UIWeponTakeUp.h"
+#include "UIGeneral.h"
 
 #include "..\TianXiaDiYi.h"
 
@@ -6,6 +7,8 @@ UIWeponTakeUp::UIWeponTakeUp()
 {
 	generalManager = GeneralManager::getTheOnlyInstance();
 	weponTakeUpManager = WeponTakeUpManager::getTheOnlyInstance();
+
+	weponTakeUpManager->init();
 }
 
 UIWeponTakeUp::~UIWeponTakeUp()
@@ -27,10 +30,14 @@ bool UIWeponTakeUp::init()
 	UIButton* closeButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CloseButton"));
 	closeButton->addTouchEventListener(this, toucheventselector(UIWeponTakeUp::closeButtonClicked));
 
+	UIButton* takeUpButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("TakeUpButton"));
+	takeUpButton->addTouchEventListener(this, toucheventselector(UIWeponTakeUp::takeUpButtonClicked));
+
 	UIButton* fillButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("FillButton"));
 	fillButton->addTouchEventListener(this, toucheventselector(UIWeponTakeUp::fillButtonClicked));
 
 	equipmentFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("EquipmentFeatureImageView"));
+	roundImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("RoundImageView"));
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -65,17 +72,21 @@ void UIWeponTakeUp::onEnter()
 
 void UIWeponTakeUp::refresh()
 {
-	Equipment* equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[generalManager->selectEquipmentId];
+	equipmentFeatureImageView->setVisible(false);
+	roundImageView->setVisible(false);
 
-	if (equipment != NULL)
+	if (weponTakeUpManager->equipment != NULL)
 	{
-		const char* s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
+		const char* s = CCString::createWithFormat("png/equipment/%s.png", weponTakeUpManager->equipment->attribute.tuPian)->getCString();
 		equipmentFeatureImageView->loadTexture(s);
 		equipmentFeatureImageView->setVisible(true);
-	}
-	else
-	{
-		equipmentFeatureImageView->setVisible(false);
+
+		if (weponTakeUpManager->equipment->gem != NULL)
+		{
+			const char* s = CCString::createWithFormat("png/gem/%s.png", weponTakeUpManager->equipment->gem->attribute.tuPian)->getCString();
+			roundImageView->loadTexture(s);
+			roundImageView->setVisible(true);
+		}
 	}
 
 	int num;
@@ -112,6 +123,17 @@ void UIWeponTakeUp::closeButtonClicked( CCObject* sender, TouchEventType type )
 	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = NULL;
 }
 
+void UIWeponTakeUp::takeUpButtonClicked( CCObject* sender, TouchEventType type )
+{
+	weponTakeUpManager->takeUp();
+
+	TianXiaDiYi::getTheOnlyInstance()->removeChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup, true);
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->release();
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = NULL;
+	
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiGeneral->refresh();
+}
+
 void UIWeponTakeUp::fillButtonClicked( CCObject* sender, TouchEventType type )
 {
 	if (type == CCTOUCHBEGAN)
@@ -124,18 +146,32 @@ void UIWeponTakeUp::fillButtonClicked( CCObject* sender, TouchEventType type )
 
 void UIWeponTakeUp::equipmentButtonClicked( CCObject* sender, TouchEventType type )
 {
-	UIButton* button = (UIButton*)sender;
-
-	for (int i = 0; i < 3; i++)
+	if (type == CCTOUCHBEGAN)
 	{
-		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
+		UIButton* button = (UIButton*)sender;
 
-		if (strcmp(button->getName(), s) == 0)
+		for (int i = 0; i < 3; i++)
 		{
-			weponTakeUpManager->selectEquipmentId = weponTakeUpManager->pageNum * 3 + i;
-			refresh();
+			const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
 
-			break;
+			if (strcmp(button->getName(), s) == 0)
+			{
+				weponTakeUpManager->selectEquipmentId = weponTakeUpManager->pageNum * 3 + i;
+
+				// Ñ¡Ôñ×°±¸
+				if (weponTakeUpManager->selectEquipmentId < weponTakeUpManager->equipmentVector.size())
+				{
+					weponTakeUpManager->equipment = weponTakeUpManager->equipmentVector[weponTakeUpManager->selectEquipmentId].equipment;
+				}
+				else
+				{
+					weponTakeUpManager->equipment = NULL;
+				}
+
+				refresh();
+
+				break;
+			}
 		}
 	}
 }

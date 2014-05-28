@@ -22,7 +22,7 @@ enum General_EQUIPMENT_TYPE
 	GENERAL_BING_SHU,
 	GENERAL_KAI_JIA,
 	GENERAL_PI_FENG,
-	ZUO_JI
+	GENERAL_ZUO_JI
 };
 
 class GeneralManager

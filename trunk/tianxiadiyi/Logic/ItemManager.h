@@ -34,8 +34,7 @@ public:
 
 	static ItemManager* getTheOnlyInstance();
 
-	vector<Equipment*> getEquipmentList(int type);
-
+	int getGemNum();
 };
 
 #endif
