@@ -4,7 +4,7 @@ static ItemManager* itemManager = NULL;
 
 ItemManager::ItemManager()
 {
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		Gem* gem = new Gem(i);
 
@@ -78,4 +78,39 @@ int ItemManager::getGemNum()
 	}
 
 	return num;
+}
+
+void ItemManager::sort()
+{
+	selectItemId = 0;
+
+	int j = 0;
+
+	for (int i = 0; i < itemManager->maxPageNum*16; i++)
+	{
+		Item* item = itemManager->itemArray[i];
+
+		if (item != NULL)
+		{
+			itemManager->itemArray[j++] = itemManager->itemArray[i];
+		}
+	}
+
+	for (int i = j; i < itemManager->maxPageNum*16; i++)
+	{
+		itemManager->itemArray[i++] = NULL;
+	}
+
+	pageNum = 0;
+	maxPageNum = (j-1) / 16 + 1;
+
+	if (j == 0)
+	{
+		maxPageNum = 0;
+	}
+}
+
+void ItemManager::sell()
+{
+	itemManager->itemArray[itemManager->selectItemId] = NULL;
 }

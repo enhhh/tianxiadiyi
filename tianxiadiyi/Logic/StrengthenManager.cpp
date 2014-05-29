@@ -32,6 +32,38 @@ StrengthenManager* StrengthenManager::getTheOnlyInstance()
 
 void StrengthenManager::init()
 {
+	strengthenGemVector.clear();
+	protectGemVector.clear();
+	luckyGemVector.clear();
+
+	for (int i = 0; i < itemManager->maxPageNum*16; i++)
+	{
+		Item* item = itemManager->itemArray[i];
+
+		if (item != NULL)
+		{
+			if (item->type == GEM)
+			{
+				Gem* gem = (Gem*)item;
+
+				StrengthenGem strengthenGem = {i, gem};
+				
+				switch (gem->attribute.zhongLei)
+				{
+				case QIANG_HUA_SHI:
+					strengthenGemVector.push_back(strengthenGem);
+					break;
+				case XING_YUN_SHI:
+					luckyGemVector.push_back(strengthenGem);
+					break;
+				case BAO_HU_SHI:
+					protectGemVector.push_back(strengthenGem);
+					break;
+				}
+			}
+		}
+	}
+
 	equipmentVector.clear();
 
 	if (selectGeneralId == 0)

@@ -34,6 +34,9 @@ public:
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
 	void itemButtonClicked(CCObject* sender, TouchEventType type);
+	void sortButtonClicked(CCObject* sender, TouchEventType type);
+	void sellButtonClicked(CCObject* sender, TouchEventType type);
+
 	void pageLeftButtonClicked(CCObject* sender, TouchEventType type);
 	void pageRightButtonClicked(CCObject* sender, TouchEventType type);
 
