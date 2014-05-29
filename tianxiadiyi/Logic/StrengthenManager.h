@@ -18,6 +18,12 @@ using namespace CocosDenshion;
 using namespace cocos2d::extension;
 using namespace std;
 
+enum STRENGTHEN_GEM_TYPE
+{
+	STRENGTHEN_GEM_PROTECT = 0,
+	STRENGTHEN_GEM_LUCKY
+};
+
 struct StrengthenEquipment
 {
 	int id;
@@ -49,7 +55,7 @@ public:
 	// 选择的装备
 	int selectEquipmentId;
 
-	// 选择的装备
+	// 选择的宝石
 	int selectGemId;
 
 	// 装备当前页
@@ -62,6 +68,7 @@ public:
 	static StrengthenManager* getTheOnlyInstance();
 
 	void init();
+	void strengthen();
 };
 
 #endif

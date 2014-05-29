@@ -39,7 +39,7 @@ ItemManager::ItemManager()
 			itemArray[i] = NULL;
 		}
 
-		for (int i = 0; i < 76; i++)
+		for (int i = 0; i < itemVector.size(); i++)
 		{
 			itemArray[i] = itemVector[i];
 		}
