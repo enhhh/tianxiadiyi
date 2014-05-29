@@ -27,10 +27,9 @@ public:
 	// ±³°ü
 	Item** itemArray;
 
+	int selectItemId;
 	int pageNum;
 	int maxPageNum;
-
-	int selectItemId;
 
 	static ItemManager* getTheOnlyInstance();
 

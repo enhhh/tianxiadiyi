@@ -25,7 +25,6 @@ public:
 
 	UIImageView* equipmentFeatureImageView;
 	UIImageView* roundImageView;
-
 	UIImageView* equipmentImageView[3];
 
 	UIWeponTakeUp();
@@ -33,6 +32,7 @@ public:
 
 	virtual bool init();
 	virtual void onEnter();
+	void clear();
 	void refresh();
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);

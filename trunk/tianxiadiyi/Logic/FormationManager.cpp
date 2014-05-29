@@ -75,9 +75,6 @@ bool formationArrary[11][3][3] =
 
 FormationManager::FormationManager()
 {
-	selectPreId = 0; 
-	selectId = 0;
-
 	for (int i = 0; i < 11; i++)
 	{
 		formationVector.push_back(new Formation(i));
@@ -93,6 +90,9 @@ FormationManager::FormationManager()
 			generalSpriteArray[i][j].sprite = NULL;
 		}
 	}
+
+	selectPreId = 0; 
+	selectId = 0;
 
 	pageNum = 0;
 	maxPageNum = (generalVector.size()-1) / 8 + 1;

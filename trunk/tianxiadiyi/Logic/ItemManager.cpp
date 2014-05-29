@@ -20,10 +20,10 @@ ItemManager::ItemManager()
 		itemVector.push_back(equipment);
 	}
 
+	selectItemId = 0;
+
 	pageNum = 0;
 	maxPageNum = (itemVector.size()-1) / 16 + 1;
-
-	selectItemId = 0;
 
 	if (itemVector.size() == 0)
 	{

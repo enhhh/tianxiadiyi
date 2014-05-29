@@ -20,21 +20,21 @@ class UIWepon : public CCLayer
 {
 public:
 	WeponManager* weponManager;
-
 	bool isPage;
+	GemSprite selectGemSprite;
 
 	UILayer* uiLayer;
 	UIImageView* equipmentFeatureImageView;
 	UIImageView* roundImageView;
 
 	UIImageView* gemImageView[4];
-	GemSprite selectGemSprite;
 
 	UIWepon();
 	~UIWepon();
 
 	virtual bool init();
 	virtual void onEnter();
+	void clear();
 	void refresh();
 
 	// 重写触屏回调函数
@@ -44,7 +44,6 @@ public:
 	virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
-
 	void pageLeftButtonClicked(CCObject* sender, TouchEventType type);
 	void pageRightButtonClicked(CCObject* sender, TouchEventType type);
 

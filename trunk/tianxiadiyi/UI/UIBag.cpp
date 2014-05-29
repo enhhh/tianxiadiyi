@@ -55,8 +55,8 @@ bool UIBag::init()
 	itemFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("ItemFeatureImageView"));
 
 	addChild(uiLayer);
-	setVisible(false);
 
+	setVisible(false);
 	refresh();
 	return true;
 }
@@ -67,7 +67,7 @@ void UIBag::onEnter()
 	setTouchEnabled(true);
 }
 
-void UIBag::refresh()
+void UIBag::clear()
 {
 	for (int i = 0; i < 16; i++)
 	{
@@ -75,11 +75,11 @@ void UIBag::refresh()
 	}
 
 	itemFeatureImageView->setVisible(false);
+}
 
-	if (itemManager->maxPageNum <= 0)
-	{
-		return;
-	}
+void UIBag::refresh()
+{
+	clear();
 
 	for (int i = 0; i < 16; i++)
 	{

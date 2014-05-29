@@ -20,9 +20,8 @@ public:
 	UILayer* uiLayer;
 
 	UIButton* fightingTestButton;
-
 	UIPanel* chapterPanel;
-	vector<CCSprite*> chapterSelectSpriteVector;
+	vector<CCSprite*> tableViewSpriteVector;
 
 	UIFighting();
 	~UIFighting();

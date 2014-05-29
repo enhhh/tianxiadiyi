@@ -140,3 +140,22 @@ struct _DBC_SOUL_BEAD
 	// 动画
 	char* dongHua;
 };
+
+#define DBC_RIDE 8
+struct _DBC_RIDE
+{
+	// 编号	
+	int id;
+	// 名字
+	const char* name;
+	// 图片
+	const char* tuPian;
+	// 星级	
+	int xingJi;
+	// 初始攻击
+	int chuShiGongJi;
+	// 初始防御
+	int chuShiFangYu;
+	// 初始生命
+	int chuShiShengMing;
+};

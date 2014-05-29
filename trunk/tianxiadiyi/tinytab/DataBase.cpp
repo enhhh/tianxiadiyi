@@ -160,8 +160,9 @@ VOID CDataBaseSystem::OpenAllDataBase(VOID)
 		{ DBC_FORMATION,  "formation.txt"	},	// 阵型表
 		{ DBC_EQUIPMENT,  "equipment.txt"	},	// 装备表
 		{ DBC_SKILL,  "skill.txt"	},	// 技能表
-		{ DBC_GEM,  "gem.txt"	},	// 技能表
+		{ DBC_GEM,  "gem.txt"	},	// 宝石表
 		{ DBC_SOUL_BEAD,  "soulBead.txt"	},	// 魂珠表
+		{ DBC_RIDE,  "ride.txt"	},	// 坐骑表
 	};
 
 	// 打开所有数据库

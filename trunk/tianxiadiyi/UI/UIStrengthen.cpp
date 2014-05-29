@@ -39,6 +39,20 @@ bool UIStrengthen::init()
 
 	for (int i = 0; i < 4; i++)
 	{
+		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
+		UIButton* equipmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
+		equipmentButton->addTouchEventListener(this, toucheventselector(UIStrengthen::equipmentButtonClicked));
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		const char* s = CCString::createWithFormat("GemButton_%d", i+1)->getCString();
+		UIButton* gemButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
+		gemButton->addTouchEventListener(this, toucheventselector(UIStrengthen::gemButtonClicked));
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
 		const char* s = CCString::createWithFormat("EquipmentImageView_%d", i+1)->getCString();
 		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
@@ -55,7 +69,7 @@ bool UIStrengthen::init()
 		gemFrontImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	featureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("FeatureImageView"));
+	strengthenfeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("FeatureImageView"));
 
 	strengthenTestButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("StrengthenTestButton"));
 
@@ -72,24 +86,10 @@ bool UIStrengthen::init()
 	strengthenTableView->setDelegate(this);
 	strengthenTableView->reloadData();
 
-	for (int i = 0; i < 4; i++)
-	{
-		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
-		UIButton* equipmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
-		equipmentButton->addTouchEventListener(this, toucheventselector(UIStrengthen::equipmentButtonClicked));
-	}
-
-	for (int i = 0; i < 2; i++)
-	{
-		const char* s = CCString::createWithFormat("GemButton_%d", i+1)->getCString();
-		UIButton* gemButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
-		gemButton->addTouchEventListener(this, toucheventselector(UIStrengthen::gemButtonClicked));
-	}
-
 	addChild(uiLayer);
 	addChild(strengthenTableView);
-	setVisible(false);
 
+	setVisible(false);
 	refresh();
 	return true;
 }
@@ -100,55 +100,56 @@ void UIStrengthen::onEnter()
 	setTouchEnabled(true);
 }
 
+void UIStrengthen::clear()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		equipmentImageView[i]->setVisible(false);
+	}
+
+	strengthenfeatureImageView->setVisible(false);
+
+	for (int i = 0; i < 2; i++)
+	{
+		gemFrontImageView[i]->setVisible(false);
+	}
+
+	gemImageView[0]->setVisible(false);
+	gemImageView[1]->setVisible(false);
+	gemImageView[2]->setVisible(false);
+}
+
 void UIStrengthen::refresh()
 {
-	int num;
-
-	if (strengthenManager->pageNum < (strengthenManager->maxPageNum-1))
-	{
-		num = 4;
-	}
-	else
-	{
-		num = strengthenManager->equipmentVector.size() - strengthenManager->pageNum * 4;
-	}
+	clear();
 
 	for (int i = 0; i < 4; i++)
 	{
-		if (i < num)
+		int j = strengthenManager->pageNum * 4 + i;
+
+		if (j < strengthenManager->equipmentVector.size())
 		{
-			int j = strengthenManager->pageNum * 4 + i;
 			const char* s = CCString::createWithFormat("png/equipment/%s.png", strengthenManager->equipmentVector[j].equipment->attribute.tuPian)->getCString();
 
 			equipmentImageView[i]->loadTexture(s);
 			equipmentImageView[i]->setVisible(true);
 		}
-		else
-		{
-			equipmentImageView[i]->setVisible(false);
-		}
 	}
-
-	featureImageView->setVisible(false);
 
 	if (strengthenManager->selectEquipmentId < strengthenManager->equipmentVector.size())
 	{
 		const char* s = CCString::createWithFormat("png/equipment/%s.png", strengthenManager->equipmentVector[strengthenManager->selectEquipmentId].equipment->attribute.tuPian)->getCString();
-		featureImageView->loadTexture(s);
-		featureImageView->setVisible(true);
+		strengthenfeatureImageView->loadTexture(s);
+		strengthenfeatureImageView->setVisible(true);
 	}
 
 	for (int i = 0; i < 2; i++)
 	{
-		gemFrontImageView[i]->setVisible(false);
-
 		if (strengthenManager->selectGemId == i)
 		{
 			gemFrontImageView[i]->setVisible(true);
 		}
 	}
-
-	gemImageView[0]->setVisible(false);
 
 	if (strengthenManager->strengthenGemVector.size() != 0)
 	{
@@ -157,16 +158,12 @@ void UIStrengthen::refresh()
 		gemImageView[0]->setVisible(true);
 	}
 
-	gemImageView[1]->setVisible(false);
-
 	if (strengthenManager->protectGemVector.size() != 0)
 	{
 		const char* s = CCString::createWithFormat("png/gem/%s.png", strengthenManager->protectGemVector[0].gem->attribute.tuPian)->getCString();
 		gemImageView[1]->loadTexture(s);
 		gemImageView[1]->setVisible(true);
 	}
-
-	gemImageView[2]->setVisible(false);
 
 	if (strengthenManager->luckyGemVector.size() != 0)
 	{

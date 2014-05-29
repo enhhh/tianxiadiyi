@@ -70,10 +70,20 @@ void UIWeponTakeUp::onEnter()
 	setTouchEnabled(true);
 }
 
-void UIWeponTakeUp::refresh()
+void UIWeponTakeUp::clear()
 {
 	equipmentFeatureImageView->setVisible(false);
 	roundImageView->setVisible(false);
+
+	for (int i = 0; i < 3; i++)
+	{
+		equipmentImageView[i]->setVisible(false);
+	}
+}
+
+void UIWeponTakeUp::refresh()
+{
+	clear();
 
 	if (weponTakeUpManager->equipment != NULL)
 	{
@@ -89,22 +99,12 @@ void UIWeponTakeUp::refresh()
 		}
 	}
 
-	int num;
-
-	if (weponTakeUpManager->pageNum < (weponTakeUpManager->maxPageNum-1))
-	{
-		num = 3;
-	}
-	else
-	{
-		num = weponTakeUpManager->equipmentVector.size() - weponTakeUpManager->pageNum * 3;
-	}
-
 	for (int i = 0; i < 3; i++)
 	{
-		if (i < num)
+		int j = weponTakeUpManager->pageNum * 3 + i;
+
+		if (j < weponTakeUpManager->equipmentVector.size())
 		{
-			int j = weponTakeUpManager->pageNum * 3 + i;
 			const char* s = CCString::createWithFormat("png/equipment/%s.png", weponTakeUpManager->equipmentVector[j].equipment->attribute.tuPian)->getCString();
 			equipmentImageView[i]->loadTexture(s);
 			equipmentImageView[i]->setVisible(true);

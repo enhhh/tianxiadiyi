@@ -40,22 +40,6 @@ bool UIGeneral::init()
 
 	for (int i = 0; i < 3; i++)
 	{
-		const char* s = CCString::createWithFormat("HeadImageView_%d", i+1)->getCString();
-		headImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
-	}
-
-	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
-
-	for (int i = 0; i < 6; i++)
-	{
-		const char* s = CCString::createWithFormat("EquipmentImageView_%d", i+1)->getCString();
-		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
-	}
-
-	headFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("HeadFeatureImageView"));
-
-	for (int i = 0; i < 3; i++)
-	{
 		const char* s = CCString::createWithFormat("HeadButton_%d", i+1)->getCString();
 		UIButton* headButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
 		headButton->addTouchEventListener(this, toucheventselector(UIGeneral::headButtonClicked));
@@ -64,21 +48,35 @@ bool UIGeneral::init()
 	for (int i = 0; i < 6; i++)
 	{
 		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
-		UIButton* headButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
-		headButton->addTouchEventListener(this, toucheventselector(UIGeneral::equipmentButtonClicked));
+		UIButton* equipmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
+		equipmentButton->addTouchEventListener(this, toucheventselector(UIGeneral::equipmentButtonClicked));
 	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		const char* s = CCString::createWithFormat("HeadImageView_%d", i+1)->getCString();
+		headImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		const char* s = CCString::createWithFormat("EquipmentImageView_%d", i+1)->getCString();
+		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
+	}
+
+	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
+	headFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("HeadFeatureImageView"));
 
 	UIPanel* spritePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SpritePanel"));
 	CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo("ui/StarringSprite0.png", "ui/StarringSprite0.plist", "ui/StarringSprite.ExportJson");
 	CCArmature* spriteAarmature = CCArmature::create("StarringSprite");
 	spriteAarmature->getAnimation()->play("StandDown");
 	spriteAarmature->setPosition(spritePanel->getPosition());
-
+	
 	uiLayer->addChild(spriteAarmature);
 
 	addChild(uiLayer);
 	setVisible(false);
-
 	refresh();
 	return true;
 }
@@ -89,9 +87,25 @@ void UIGeneral::onEnter()
 	setTouchEnabled(true);
 }
 
-void UIGeneral::refresh()
+
+void UIGeneral::clear()
 {
 	headFeatureImageView->setVisible(false);
+
+	for (int i = 0; i < 3; i++)
+	{
+		headImageView[i]->setVisible(false);
+	}
+
+	for (int i = 0; i < 6; i++)
+	{
+		equipmentImageView[i]->setVisible(false);
+	}
+}
+
+void UIGeneral::refresh()
+{
+	clear();
 
 	if (generalManager->selectGeneralId < generalManager->generalVector.size())
 	{
@@ -101,36 +115,20 @@ void UIGeneral::refresh()
 	}
 
 	// ½«ÁìÍ¼Æ¬
-	int num;
-
-	if (generalManager->pageNum < (generalManager->maxPageNum-1))
-	{
-		num = 3;
-	}
-	else
-	{
-		num = generalManager->generalVector.size() - generalManager->pageNum * 3;
-	}
-
 	for (int i = 0; i < 3; i++)
 	{
-		if (i < num)
+		int j = generalManager->pageNum * 3 + i;
+
+		if (j < generalManager->generalVector.size())
 		{
-			int j = generalManager->pageNum * 3 + i;
 			const char* s = CCString::createWithFormat("png/general/%s.png", generalManager->generalVector[j]->attribute.tuPian)->getCString();
 			headImageView[i]->loadTexture(s);
 			headImageView[i]->setVisible(true);
-		}
-		else
-		{
-			headImageView[i]->setVisible(false);
 		}
 	}
 
 	for (int i = 0; i < 6; i++)
 	{
-		equipmentImageView[i]->setVisible(false);
-
 		if (generalManager->selectGeneralId < generalManager->generalVector.size())
 		{
 			Equipment* equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[i];

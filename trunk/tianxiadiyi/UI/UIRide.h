@@ -7,6 +7,8 @@
 #include "cocos-ext.h"
 #include "SimpleAudioEngine.h"
 
+#include "Logic\RideManager.h"
+
 using namespace cocos2d;
 using namespace CocosDenshion;
 using namespace cocos2d::extension;
@@ -17,16 +19,28 @@ class UIRide : public CCLayer
 {
 public:
 
+	RideManager* rideManager;
+
 	UILayer* uiLayer;
+
+	UIImageView* rideImageView[8];
+	UILabel* attributeValueLabel[5];
 
 	UIRide();
 	~UIRide();
 
 	virtual bool init();
 	virtual void onEnter();
+
+	void clear();
 	void refresh();
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
+	void rideButtonClicked(CCObject* sender, TouchEventType type);
+	void ridingButtonClicked(CCObject* sender, TouchEventType type);
+	void strengthenButtonClicked(CCObject* sender, TouchEventType type);
+	void pageLeftButtonClicked(CCObject* sender, TouchEventType type);
+	void pageRightButtonClicked(CCObject* sender, TouchEventType type);
 
 	CREATE_FUNC(UIRide);
 };

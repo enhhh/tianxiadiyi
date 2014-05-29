@@ -20,13 +20,15 @@ using namespace std;
 class UIGeneral : public CCLayer
 {
 public:
+
 	GeneralManager* generalManager;
 
 	UILayer* uiLayer;
-	UIImageView* selectFrameImageView;
+	
 	UIImageView* headImageView[3];
 	UIImageView* equipmentImageView[6];
 
+	UIImageView* selectFrameImageView;
 	UIImageView* headFeatureImageView;
 
 	UIGeneral();
@@ -34,6 +36,7 @@ public:
 
 	virtual bool init();
 	virtual void onEnter();
+	void clear();
 	void refresh();
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);

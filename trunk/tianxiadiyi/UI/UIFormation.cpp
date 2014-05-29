@@ -77,8 +77,90 @@ bool UIFormation::init()
 	formationTableView->setDelegate(this);
 	formationTableView->reloadData();
 
+	CGFormationList formationList;
+	formationList.playerGuid = 4528;
+	TianXiaDiYi::getTheOnlyInstance()->socketWrap->SendPacket(&formationList);
+
+	CGGeneralList generalList;
+	generalList.playerGuid = 4528;
+	TianXiaDiYi::getTheOnlyInstance()->socketWrap->SendPacket(&generalList);
+
 	addChild(uiLayer);
 	addChild(formationTableView);
+	setVisible(false);
+	refresh();
+
+	return true;
+}
+
+void UIFormation::onEnter()
+{
+	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, -1, false);
+	CCLayer::onEnter();
+}
+
+void UIFormation::clear()
+{
+	// 将领图片
+	for (int i = 0; i < 8; i++)
+	{
+		headImage[i]->setVisible(false);
+	}
+
+	// 阵型图片
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			headFormationImage[i][j]->setVisible(false);
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			CCSprite* sprite = formationManager->generalSpriteArray[i][j].sprite;
+
+			if (sprite != NULL)
+			{
+				formationManager->generalSpriteArray[i][j].general->isFormation = false;
+				formationManager->generalSpriteArray[i][j].general = NULL;
+				formationManager->generalSpriteArray[i][j].sprite = NULL;
+				removeChild(sprite, true);
+			}
+		}
+	}
+}
+
+void UIFormation::refresh()
+{
+	clear();
+
+	// 将领图片
+	for (int i = 0; i < 8; i++)
+	{
+		int j = formationManager->pageNum * 8 + i;
+
+		if (j < formationManager->generalVector.size())
+		{	
+			const char* s = CCString::createWithFormat("png/general/%s.png", formationManager->generalVector[j]->attribute.tuPian)->getCString();
+			headImage[i]->loadTexture(s);
+			headImage[i]->setVisible(true);
+		}
+	}
+
+	// 阵型图片
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (formationArrary[formationManager->selectId][i][j])
+			{
+				headFormationImage[i][j]->setVisible(true);
+			}
+		}
+	}
 
 	// 阵型图片
 	for (int i = 0; i < 3; i++)
@@ -98,101 +180,6 @@ bool UIFormation::init()
 					addChild(sprite);
 					formationManager->generalSpriteArray[i][j].sprite = sprite;
 				}
-			}
-		}
-	}
-
-	setVisible(false);
-
-	CGFormationList formationList;
-	formationList.playerGuid = 4528;
-	TianXiaDiYi::getTheOnlyInstance()->socketWrap->SendPacket(&formationList);
-
-	CGGeneralList generalList;
-	generalList.playerGuid = 4528;
-	TianXiaDiYi::getTheOnlyInstance()->socketWrap->SendPacket(&generalList);
-
-	refresh();
-
-	return true;
-}
-
-void UIFormation::onEnter()
-{
-	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, -1, false);
-	CCLayer::onEnter();
-}
-
-void UIFormation::refresh()
-{
-	// 将领图片
-	int num;
-
-	if (formationManager->pageNum < (formationManager->maxPageNum-1))
-	{
-		num = 8;
-	}
-	else
-	{
-		num = formationManager->generalVector.size() - formationManager->pageNum * 8;
-	}
-
-	for (int i = 0; i < 8; i++)
-	{
-
-		if (i < num)
-		{
-			int j = formationManager->pageNum * 8 + i;
-			const char* s = CCString::createWithFormat("png/general/%s.png", formationManager->generalVector[j]->attribute.tuPian)->getCString();
-			headImage[i]->loadTexture(s);
-			headImage[i]->setVisible(true);
-		}
-		else
-		{
-			headImage[i]->setVisible(false);
-		}
-	}
-
-	// 阵型图片
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (formationArrary[formationManager->selectId][i][j])
-			{
-				headFormationImage[i][j]->setVisible(true);
-			}
-			else
-			{
-				headFormationImage[i][j]->setVisible(false);
-			}
-		}
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			// 清除阵型图片
-			CCSprite* sprite = formationManager->generalSpriteArray[i][j].sprite;
-
-			if (sprite != NULL)
-			{
-				if (formationManager->selectPreId != formationManager->selectId)
-				{
-					formationManager->generalSpriteArray[i][j].general->isFormation = false;
-					formationManager->generalSpriteArray[i][j].general = NULL;
-					formationManager->generalSpriteArray[i][j].sprite = NULL;
-					removeChild(sprite, true);
-				}
-			}
-
-			// 显示阵型图片
-			sprite = formationManager->generalSpriteArray[i][j].sprite;
-
-			if (sprite != NULL)
-			{
-				sprite->setVisible(true);
 			}
 		}
 	}
@@ -367,7 +354,7 @@ CCTableViewCell* UIFormation::tableCellAtIndex( CCTableView* table, unsigned int
 		formationEnabledSprite->setVisible(false);
 		cell->addChild(formationEnabledSprite);
 
-		selectFormationSpriteVector.push_back(formationEnabledSprite);
+		tableViewSpriteVector.push_back(formationEnabledSprite);
 
 		if (idx == formationManager->selectId)
 		{
@@ -387,9 +374,9 @@ void UIFormation::tableCellHighlight( CCTableView* table, extension::CCTableView
 {
 	CCLOG("cell tableCellHighlight at index: %i", cell->getIdx());
 
-	for (int i = 0; i < selectFormationSpriteVector.size(); i++)
+	for (int i = 0; i < tableViewSpriteVector.size(); i++)
 	{
-		selectFormationSpriteVector[i]->setVisible(false);
+		tableViewSpriteVector[i]->setVisible(false);
 	}
 
 	CCSprite* formationEnabledSprite =(CCSprite*)cell->getChildByTag(8);
