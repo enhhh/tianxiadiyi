@@ -31,7 +31,7 @@ bool UIFighting::init()
 	enterButton->addTouchEventListener(this, toucheventselector(UIFighting::enterButtonClicked));
 
 	fightingTestButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("FightingTestButton"));
-
+	
 	chapterPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("ChapterPanel"));
 
 	// уб╫зап╠М
@@ -127,7 +127,7 @@ CCTableViewCell* UIFighting::tableCellAtIndex( CCTableView* table, unsigned int 
 		chapterSelectSprite->setVisible(false);
 		cell->addChild(chapterSelectSprite);
 
-		chapterSelectSpriteVector.push_back(chapterSelectSprite);
+		tableViewSpriteVector.push_back(chapterSelectSprite);
 	}
 
 	return cell;
@@ -142,9 +142,9 @@ void UIFighting::tableCellHighlight( CCTableView* table, extension::CCTableViewC
 {
 	CCLOG("cell tableCellHighlight at index: %i", cell->getIdx());
 
-	for (int i = 0; i < chapterSelectSpriteVector.size(); i++)
+	for (int i = 0; i < tableViewSpriteVector.size(); i++)
 	{
-		chapterSelectSpriteVector[i]->setVisible(false);
+		tableViewSpriteVector[i]->setVisible(false);
 	}
 
 	UIImageView* chapterSelectImageView = (UIImageView*)cell->getChildByTag(8);

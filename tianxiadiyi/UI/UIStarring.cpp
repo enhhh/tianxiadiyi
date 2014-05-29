@@ -125,6 +125,7 @@ bool UIStarring::init()
 
 	addChild(uiLayer);
 	setVisible(false);
+	refresh();
 	return true;
 }
 

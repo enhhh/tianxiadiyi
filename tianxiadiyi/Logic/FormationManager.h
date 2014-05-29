@@ -25,19 +25,6 @@ struct GeneralSprite
 class FormationManager
 {
 public:
-
-	// 前一个选择的阵型
-	int selectPreId;
-
-	// 选择的阵型
-	int selectId;
-	
-	// 将领当前页数
-	int pageNum;
-
-	// 将领最大页数
-	int maxPageNum;
-
 	// 阵型列表
 	vector<Formation*> formationVector;
 
@@ -46,6 +33,18 @@ public:
 
 	// 阵型将领数组
 	GeneralSprite generalSpriteArray[3][3];
+
+	// 前一个选择的阵型
+	int selectPreId;
+
+	// 选择的阵型
+	int selectId;
+
+	// 将领当前页数
+	int pageNum;
+
+	// 将领最大页数
+	int maxPageNum;
 
 	FormationManager();
 	~FormationManager();

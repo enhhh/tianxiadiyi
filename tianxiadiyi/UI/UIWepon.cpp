@@ -32,8 +32,12 @@ bool UIWepon::init()
 	UIButton* closeButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CloseButton"));
 	closeButton->addTouchEventListener(this, toucheventselector(UIWepon::closeButtonClicked));
 
-	equipmentFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("EquipmentFeatureImageView"));
-	roundImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("RoundImageView"));
+	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
+	pageLeftButton->addTouchEventListener(this, toucheventselector(UIWepon::pageLeftButtonClicked));
+
+	UIButton* pageRightButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageRightButton"));
+	pageRightButton->addTouchEventListener(this, toucheventselector(UIWepon::pageRightButtonClicked));
+
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -41,11 +45,8 @@ bool UIWepon::init()
 		gemImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
-	pageLeftButton->addTouchEventListener(this, toucheventselector(UIWepon::pageLeftButtonClicked));
-
-	UIButton* pageRightButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageRightButton"));
-	pageRightButton->addTouchEventListener(this, toucheventselector(UIWepon::pageRightButtonClicked));
+	equipmentFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("EquipmentFeatureImageView"));
+	roundImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("RoundImageView"));
 
 	addChild(uiLayer);
 	refresh();
@@ -58,35 +59,14 @@ void UIWepon::onEnter()
 	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, -3, false);
 }
 
-void UIWepon::refresh()
+void UIWepon::clear()
 {
-	if (weponManager->equipment != NULL)
+	equipmentFeatureImageView->setVisible(false);
+
+	if (weponManager->gemFillSprite.sprite != NULL)
 	{
-		const char* s = CCString::createWithFormat("png/equipment/%s.png", weponManager->equipment->attribute.tuPian)->getCString();
-		equipmentFeatureImageView->loadTexture(s);
-		equipmentFeatureImageView->setVisible(true);
-
-		if (weponManager->equipment->gem != NULL)
-		{
-			if (weponManager->gemFillSprite.sprite != NULL)
-			{
-				uiLayer->removeChild(weponManager->gemFillSprite.sprite, true);
-				weponManager->gemFillSprite.sprite = NULL;
-			}
-
-			const char* s = CCString::createWithFormat("png/gem/%s.png", weponManager->equipment->gem->attribute.tuPian)->getCString();
-			weponManager->gemFillSprite.sprite = CCSprite::create(s);
-			weponManager->gemFillSprite.sprite->setPosition(roundImageView->getPosition());
-			uiLayer->addChild(weponManager->gemFillSprite.sprite);
-
-			weponManager->gemFillSprite.weponGem.gem = weponManager->equipment->gem;
-		}
-	}
-
-
-	if (weponManager->maxPageNum <= 0)
-	{
-		return;
+		uiLayer->removeChild(weponManager->gemFillSprite.sprite, true);
+		weponManager->gemFillSprite.sprite = NULL;
 	}
 
 	for (int i = 0; i < 4; i++)
@@ -96,7 +76,37 @@ void UIWepon::refresh()
 			uiLayer->removeChild(weponManager->gemSpriteArray[i].sprite, true);
 			weponManager->gemSpriteArray[i].sprite = NULL;
 		}
+	}
+}
 
+void UIWepon::refresh()
+{
+	clear();
+
+	if (weponManager->equipment != NULL)
+	{
+		const char* s = CCString::createWithFormat("png/equipment/%s.png", weponManager->equipment->attribute.tuPian)->getCString();
+		equipmentFeatureImageView->loadTexture(s);
+		equipmentFeatureImageView->setVisible(true);
+
+		if (weponManager->equipment->gem != NULL)
+		{
+			const char* s = CCString::createWithFormat("png/gem/%s.png", weponManager->equipment->gem->attribute.tuPian)->getCString();
+			weponManager->gemFillSprite.sprite = CCSprite::create(s);
+			weponManager->gemFillSprite.sprite->setPosition(roundImageView->getPosition());
+			uiLayer->addChild(weponManager->gemFillSprite.sprite);
+
+			weponManager->gemFillSprite.weponGem.gem = weponManager->equipment->gem;
+		}
+	}
+
+	if (weponManager->maxPageNum <= 0)
+	{
+		return;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
 		int j = weponManager->pageNum * 4 + i;
 
 		if (weponManager->weponGemArray[j].gem != NULL)

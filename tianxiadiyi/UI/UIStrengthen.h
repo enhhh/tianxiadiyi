@@ -33,7 +33,7 @@ public:
 	UIImageView* gemImageView[3];
 	UIImageView* gemFrontImageView[2];
 
-	UIImageView* featureImageView;
+	UIImageView* strengthenfeatureImageView;
 	UIImageView* selectFrameImageView;
 	
 	UIStrengthen();
@@ -41,6 +41,7 @@ public:
 
 	virtual bool init();
 	virtual void onEnter();
+	void clear();
 	void refresh();
 
 	virtual void scrollViewDidScroll(CCScrollView* view);

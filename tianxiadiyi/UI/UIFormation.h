@@ -34,13 +34,14 @@ public:
 	GeneralSprite selectGeneralSprite;
 
 	UIButton* formationTestButton;
-	vector<CCSprite*> selectFormationSpriteVector;
+	vector<CCSprite*> tableViewSpriteVector;
 
 	UIFormation();
 	~UIFormation();
 
 	virtual bool init();
 	virtual void onEnter();
+	void clear();
 	void refresh();
 
 	// 重写触屏回调函数
