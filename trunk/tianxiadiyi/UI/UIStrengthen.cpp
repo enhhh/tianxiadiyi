@@ -28,6 +28,9 @@ bool UIStrengthen::init()
 	UIButton* closeButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CloseButton"));
 	closeButton->addTouchEventListener(this, toucheventselector(UIStrengthen::closeButtonClicked));
 
+	UIButton* strengthenButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("StrengthenButton"));
+	strengthenButton->addTouchEventListener(this, toucheventselector(UIStrengthen::strengthenButtonClicked));
+
 	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
 	pageLeftButton->addTouchEventListener(this, toucheventselector(UIStrengthen::pageLeftButtonClicked));
 
@@ -44,6 +47,12 @@ bool UIStrengthen::init()
 	{
 		const char* s = CCString::createWithFormat("GemImageView_%d", i+1)->getCString();
 		gemImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		const char* s = CCString::createWithFormat("GemFrontImageView_%d", i+1)->getCString();
+		gemFrontImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
 	featureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("FeatureImageView"));
@@ -68,6 +77,13 @@ bool UIStrengthen::init()
 		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
 		UIButton* equipmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
 		equipmentButton->addTouchEventListener(this, toucheventselector(UIStrengthen::equipmentButtonClicked));
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		const char* s = CCString::createWithFormat("GemButton_%d", i+1)->getCString();
+		UIButton* gemButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
+		gemButton->addTouchEventListener(this, toucheventselector(UIStrengthen::gemButtonClicked));
 	}
 
 	addChild(uiLayer);
@@ -122,6 +138,18 @@ void UIStrengthen::refresh()
 		featureImageView->setVisible(true);
 	}
 
+	for (int i = 0; i < 2; i++)
+	{
+		gemFrontImageView[i]->setVisible(false);
+
+		if (strengthenManager->selectGemId == i)
+		{
+			gemFrontImageView[i]->setVisible(true);
+		}
+	}
+
+	gemImageView[0]->setVisible(false);
+
 	if (strengthenManager->strengthenGemVector.size() != 0)
 	{
 		const char* s = CCString::createWithFormat("png/gem/%s.png", strengthenManager->strengthenGemVector[0].gem->attribute.tuPian)->getCString();
@@ -129,12 +157,16 @@ void UIStrengthen::refresh()
 		gemImageView[0]->setVisible(true);
 	}
 
+	gemImageView[1]->setVisible(false);
+
 	if (strengthenManager->protectGemVector.size() != 0)
 	{
 		const char* s = CCString::createWithFormat("png/gem/%s.png", strengthenManager->protectGemVector[0].gem->attribute.tuPian)->getCString();
 		gemImageView[1]->loadTexture(s);
 		gemImageView[1]->setVisible(true);
 	}
+
+	gemImageView[2]->setVisible(false);
 
 	if (strengthenManager->luckyGemVector.size() != 0)
 	{
@@ -267,6 +299,33 @@ void UIStrengthen::equipmentButtonClicked( CCObject* sender, TouchEventType type
 		}
 	}
 }
+
+void UIStrengthen::gemButtonClicked( CCObject* sender, TouchEventType type )
+{
+	UIButton* button = (UIButton*)sender;
+
+	for (int i = 0; i < 2; i++)
+	{
+		const char* s = CCString::createWithFormat("GemButton_%d", i+1)->getCString();
+
+		if (strcmp(button->getName(), s) == 0)
+		{
+			strengthenManager->selectGemId = i;
+			refresh();
+			break;
+		}
+	}
+}
+
+void UIStrengthen::strengthenButtonClicked( CCObject* sender, TouchEventType type )
+{
+	if (type == CCTOUCHBEGAN)
+	{
+		strengthenManager->strengthen();
+		refresh();
+	}	
+}
+
 
 void UIStrengthen::pageLeftButtonClicked( CCObject* sender, TouchEventType type )
 {

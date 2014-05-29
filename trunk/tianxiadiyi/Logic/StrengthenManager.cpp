@@ -13,6 +13,8 @@ StrengthenManager::StrengthenManager()
 	// 选择的装备
 	selectEquipmentId = 0;
 
+	// 选择的宝石
+	selectEquipmentId = 0;
 	init();
 }
 
@@ -103,5 +105,36 @@ void StrengthenManager::init()
 	if (equipmentVector.size() == 0)
 	{
 		maxPageNum = 0;
+	}
+}
+
+void StrengthenManager::strengthen()
+{
+	if (strengthenGemVector.size() != 0)
+	{
+		itemManager->itemArray[strengthenGemVector[0].id] = NULL;
+		strengthenGemVector.erase(strengthenGemVector.begin());
+	}
+
+	switch(selectGemId)
+	{
+	case STRENGTHEN_GEM_PROTECT:
+
+		if (protectGemVector.size() != 0)
+		{
+			itemManager->itemArray[protectGemVector[0].id] = NULL;
+			protectGemVector.erase(protectGemVector.begin());
+		}
+		
+		break;
+	case STRENGTHEN_GEM_LUCKY:
+
+		if (luckyGemVector.size() != 0)
+		{
+			itemManager->itemArray[luckyGemVector[0].id] = NULL;
+			luckyGemVector.erase(luckyGemVector.begin());
+		}
+
+		break;
 	}
 }

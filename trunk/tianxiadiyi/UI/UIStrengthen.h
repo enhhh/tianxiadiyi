@@ -25,19 +25,17 @@ public:
 	FormationManager* formationManager;
 	StrengthenManager* strengthenManager;
 
-
 	UILayer* uiLayer;
 	UIButton* strengthenTestButton;
 	vector<CCSprite*> generalSelectSpriteVector;
 
 	UIImageView* equipmentImageView[4];
-
 	UIImageView* gemImageView[3];
+	UIImageView* gemFrontImageView[2];
 
 	UIImageView* featureImageView;
-
 	UIImageView* selectFrameImageView;
-
+	
 	UIStrengthen();
 	~UIStrengthen();
 
@@ -56,6 +54,8 @@ public:
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
 	void equipmentButtonClicked(CCObject* sender, TouchEventType type);
+	void gemButtonClicked(CCObject* sender, TouchEventType type);
+	void strengthenButtonClicked(CCObject* sender, TouchEventType type);
 
 	void pageLeftButtonClicked(CCObject* sender, TouchEventType type);
 	void pageRightButtonClicked(CCObject* sender, TouchEventType type);
