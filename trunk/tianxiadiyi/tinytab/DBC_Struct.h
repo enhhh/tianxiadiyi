@@ -118,6 +118,8 @@ struct _DBC_GEM
 	int id;
 	// Ãû³Æ
 	int name;
+	// ÖÖÀà
+	int zhongLei;
 	// Í¼Æ¬
 	char* tuPian;
 };

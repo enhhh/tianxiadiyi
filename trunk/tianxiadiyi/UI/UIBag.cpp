@@ -34,6 +34,12 @@ bool UIBag::init()
 		itemButton->addTouchEventListener(this, toucheventselector(UIBag::itemButtonClicked));
 	}
 
+	UIButton* sortButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("SortButton"));
+	sortButton->addTouchEventListener(this, toucheventselector(UIBag::sortButtonClicked));
+
+	UIButton* sellButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("SellButton"));
+	sellButton->addTouchEventListener(this, toucheventselector(UIBag::sellButtonClicked));
+
 	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
 	pageLeftButton->addTouchEventListener(this, toucheventselector(UIBag::pageLeftButtonClicked));
 
@@ -63,6 +69,13 @@ void UIBag::onEnter()
 
 void UIBag::refresh()
 {
+	for (int i = 0; i < 16; i++)
+	{
+		itemImageView[i]->setVisible(false);
+	}
+
+	itemFeatureImageView->setVisible(false);
+
 	if (itemManager->maxPageNum <= 0)
 	{
 		return;
@@ -70,8 +83,6 @@ void UIBag::refresh()
 
 	for (int i = 0; i < 16; i++)
 	{
-		itemImageView[i]->setVisible(false);
-
 		int j = itemManager->pageNum * 16 + i;
 
 		Item* item = itemManager->itemArray[j];
@@ -96,8 +107,6 @@ void UIBag::refresh()
 			itemImageView[i]->setVisible(true);
 		}
 	}
-
-	itemFeatureImageView->setVisible(false);
 
 	Item* item = itemManager->itemArray[itemManager->selectItemId];
 	
@@ -145,6 +154,18 @@ void UIBag::itemButtonClicked( CCObject* sender, TouchEventType type )
 			break;
 		}
 	}
+}
+
+void UIBag::sortButtonClicked( CCObject* sender, TouchEventType type )
+{
+	itemManager->sort();
+	refresh();
+}
+
+void UIBag::sellButtonClicked( CCObject* sender, TouchEventType type )
+{
+	itemManager->sell();
+	refresh();
 }
 
 void UIBag::pageLeftButtonClicked( CCObject* sender, TouchEventType type )

@@ -24,12 +24,22 @@ struct StrengthenEquipment
 	Equipment* equipment;
 };
 
+struct StrengthenGem
+{
+	int id;
+	Gem* gem;
+};
+
 class StrengthenManager
 {
 public:
 	
 	FormationManager* formationManager;
 	ItemManager* itemManager;
+
+	vector<StrengthenGem>strengthenGemVector;
+	vector<StrengthenGem>protectGemVector;
+	vector<StrengthenGem>luckyGemVector;
 
 	vector<StrengthenEquipment>equipmentVector;
 
@@ -38,6 +48,9 @@ public:
 
 	// 选择的装备
 	int selectEquipmentId;
+
+	// 选择的装备
+	int selectGemId;
 
 	// 装备当前页
 	int pageNum;

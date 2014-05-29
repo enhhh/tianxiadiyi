@@ -86,7 +86,6 @@ void UIStrengthen::onEnter()
 
 void UIStrengthen::refresh()
 {
-	// ½«ÁìÍ¼Æ¬
 	int num;
 
 	if (strengthenManager->pageNum < (strengthenManager->maxPageNum-1))
@@ -116,7 +115,6 @@ void UIStrengthen::refresh()
 
 	featureImageView->setVisible(false);
 
-
 	if (strengthenManager->selectEquipmentId < strengthenManager->equipmentVector.size())
 	{
 		const char* s = CCString::createWithFormat("png/equipment/%s.png", strengthenManager->equipmentVector[strengthenManager->selectEquipmentId].equipment->attribute.tuPian)->getCString();
@@ -124,11 +122,25 @@ void UIStrengthen::refresh()
 		featureImageView->setVisible(true);
 	}
 
-	for (int i = 0; i < 3; i++)
+	if (strengthenManager->strengthenGemVector.size() != 0)
 	{
-		const char* s = CCString::createWithFormat("png/gem/%s.png", itemManager->gemVector[i]->attribute.tuPian)->getCString();
-		gemImageView[i]->loadTexture(s);
-		gemImageView[i]->setVisible(true);
+		const char* s = CCString::createWithFormat("png/gem/%s.png", strengthenManager->strengthenGemVector[0].gem->attribute.tuPian)->getCString();
+		gemImageView[0]->loadTexture(s);
+		gemImageView[0]->setVisible(true);
+	}
+
+	if (strengthenManager->protectGemVector.size() != 0)
+	{
+		const char* s = CCString::createWithFormat("png/gem/%s.png", strengthenManager->protectGemVector[0].gem->attribute.tuPian)->getCString();
+		gemImageView[1]->loadTexture(s);
+		gemImageView[1]->setVisible(true);
+	}
+
+	if (strengthenManager->luckyGemVector.size() != 0)
+	{
+		const char* s = CCString::createWithFormat("png/gem/%s.png", strengthenManager->luckyGemVector[0].gem->attribute.tuPian)->getCString();
+		gemImageView[2]->loadTexture(s);
+		gemImageView[2]->setVisible(true);
 	}
 }
 
@@ -201,6 +213,11 @@ CCTableViewCell* UIStrengthen::tableCellAtIndex( CCTableView* table, unsigned in
 		cell->addChild(generalSelectSprite);
 
 		generalSelectSpriteVector.push_back(generalSelectSprite);
+
+		if (idx == formationManager->selectId)
+		{
+			tableCellHighlight(table, cell);
+		}
 	}
 
 	return cell;

@@ -35,6 +35,10 @@ public:
 	static ItemManager* getTheOnlyInstance();
 
 	int getGemNum();
+
+	void sort();
+
+	void sell();
 };
 
 #endif
