@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="1" height="1" tilewidth="1971" tileheight="1308">
+ <tileset firstgid="1" name="huLaoChapterMap" tilewidth="1971" tileheight="1308">
+  <image source="huLaoChapterMap.png" width="1971" height="1308"/>
+ </tileset>
+ <layer name="块层 1" width="1" height="1">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgAAAACAAC
+  </data>
+ </layer>
+</map>
