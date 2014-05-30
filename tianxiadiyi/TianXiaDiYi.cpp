@@ -99,9 +99,7 @@ bool TianXiaDiYi::init()
 	chapterScene = NULL;
 	fightingScene = NULL;
 
-	CGHeartBeat heartBeat;
-	heartBeat.heartBeat1 = 8;
-	socketWrap->SendPacket(&heartBeat);
+	
 
 	CGFormationList formationList;
 	formationList.playerGuid = 4528;
@@ -123,6 +121,18 @@ void TianXiaDiYi::draw()
 
 void TianXiaDiYi::update( float delta )
 {
+	static long long lastTime = getCurrentTime();
+	long long nowTime = getCurrentTime();
+	int time = nowTime - lastTime;
+	
+	if (time >= 25 * 1000)
+	{
+		lastTime = getCurrentTime();
+		CGHeartBeat heartBeat;
+		heartBeat.heartBeat1 = 8;
+		socketWrap->SendPacket(&heartBeat);
+	}
+
 	socketWrap->Tick();
 
 	if (mainCityScene != NULL)
@@ -171,9 +181,16 @@ void TianXiaDiYi::onExit()
 	SimpleAudioEngine::sharedEngine()->stopBackgroundMusic(true);
 }
 
-void TianXiaDiYi::setScene(int type)
+void TianXiaDiYi::setSceneType(int type)
 {
 	this->sceneType = sceneType;
+}
+
+long long TianXiaDiYi::getCurrentTime()
+{
+	struct cc_timeval now;
+	CCTime::gettimeofdayCocos2d(&now, NULL);
+	return (now.tv_sec * 1000 + now.tv_usec / 1000);
 }
 
 CCAnimation* animation;
