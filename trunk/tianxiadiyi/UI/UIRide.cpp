@@ -103,7 +103,12 @@ void UIRide::closeButtonClicked( CCObject* sender, TouchEventType type )
 
 void UIRide::rideButtonClicked( CCObject* sender, TouchEventType type )
 {
-
+	if (type == CCTOUCHBEGAN)
+	{
+		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRideStrengthen = UIRideStrengthen::create();
+		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRideStrengthen->retain();
+		TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRideStrengthen);
+	}
 }
 
 void UIRide::ridingButtonClicked( CCObject* sender, TouchEventType type )

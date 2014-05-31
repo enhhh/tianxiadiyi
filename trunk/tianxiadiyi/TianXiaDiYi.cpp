@@ -99,8 +99,6 @@ bool TianXiaDiYi::init()
 	chapterScene = NULL;
 	fightingScene = NULL;
 
-	
-
 	CGFormationList formationList;
 	formationList.playerGuid = 4528;
 	socketWrap->SendPacket(&formationList);
