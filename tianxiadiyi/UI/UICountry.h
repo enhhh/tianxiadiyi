@@ -16,7 +16,7 @@ using namespace gui;
 using namespace std;
 
 
-class UICountry : public CCLayer
+class UICountry : public CCLayer, public CCTableViewDataSource, public CCTableViewDelegate
 {
 public:
 
@@ -24,12 +24,25 @@ public:
 
 	UILayer* uiLayer;
 
+	UIButton* coutryTestButton;
+	UIPanel* memberPanel;
+	vector<UIImageView*> tableViewSpriteVector;
+
 	UICountry();
 	~UICountry();
 
 	virtual bool init();
 	virtual void onEnter();
 	void refresh();
+
+	virtual void scrollViewDidScroll(CCScrollView* view);
+	virtual void scrollViewDidZoom(CCScrollView* view);
+	virtual void tableCellTouched(CCTableView* table, CCTableViewCell* cell);
+	virtual CCSize cellSizeForTable(CCTableView* table);
+	virtual CCTableViewCell* tableCellAtIndex(CCTableView* table, unsigned int idx);
+	virtual unsigned int numberOfCellsInTableView(cocos2d::extension::CCTableView *table);
+	void tableCellHighlight(CCTableView* table, extension::CCTableViewCell* cell);
+	void tableCellUnhighlight(CCTableView* table, extension::CCTableViewCell* cell);
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
 	void verifyButtonClicked(CCObject* sender, TouchEventType type);
