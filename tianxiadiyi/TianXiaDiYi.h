@@ -70,8 +70,10 @@ public:
 
 	virtual void onExit();
 
-	void setScene(int sceneType);
+	void setSceneType(int sceneType);
 
+	long long getCurrentTime();
+	
 	void playCgAction();
 
 	void playCgActionCallback(CCNode* pSender);

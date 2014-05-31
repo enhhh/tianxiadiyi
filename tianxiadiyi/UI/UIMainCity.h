@@ -17,6 +17,7 @@
 #include "UIBag.h"
 #include "UIStrengthen.h"
 #include "UIRide.h"
+#include "UIRideStrengthen.h"
 #include "UICountry.h"
 
 using namespace cocos2d;
@@ -42,6 +43,7 @@ public:
 	UIBag* uiBag;
 	UIStrengthen* uiStrengthen;
 	UIRide* uiRide;
+	UIRideStrengthen* uiRideStrengthen;
 	UICountry* uiCountry;
 
 	UIMainCity();

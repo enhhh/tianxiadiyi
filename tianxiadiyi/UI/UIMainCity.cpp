@@ -15,6 +15,7 @@ UIMainCity::UIMainCity()
 	uiBag = NULL;
 	uiStrengthen = NULL;
 	uiRide = NULL;
+	uiRideStrengthen = NULL;
 	uiCountry = NULL;
 }
 

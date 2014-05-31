@@ -39,6 +39,7 @@ public:
 	void rideButtonClicked(CCObject* sender, TouchEventType type);
 	void ridingButtonClicked(CCObject* sender, TouchEventType type);
 	void strengthenButtonClicked(CCObject* sender, TouchEventType type);
+	
 	void pageLeftButtonClicked(CCObject* sender, TouchEventType type);
 	void pageRightButtonClicked(CCObject* sender, TouchEventType type);
 
