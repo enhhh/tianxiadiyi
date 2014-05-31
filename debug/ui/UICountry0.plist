@@ -213,6 +213,44 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
+			<key>MemberBG1.png</key>
+			<dict>
+				<key>width</key>
+				<integer>689</integer>
+				<key>height</key>
+				<integer>70</integer>
+				<key>originalWidth</key>
+				<integer>689</integer>
+				<key>originalHeight</key>
+				<integer>70</integer>
+				<key>x</key>
+				<integer>186</integer>
+				<key>y</key>
+				<integer>624</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
+			<key>MemberBG2.png</key>
+			<dict>
+				<key>width</key>
+				<integer>689</integer>
+				<key>height</key>
+				<integer>69</integer>
+				<key>originalWidth</key>
+				<integer>689</integer>
+				<key>originalHeight</key>
+				<integer>69</integer>
+				<key>x</key>
+				<integer>0</integer>
+				<key>y</key>
+				<integer>834</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
 			<key>Modify.png</key>
 			<dict>
 				<key>width</key>
@@ -224,9 +262,9 @@
 				<key>originalHeight</key>
 				<integer>59</integer>
 				<key>x</key>
-				<integer>186</integer>
+				<integer>0</integer>
 				<key>y</key>
-				<integer>624</integer>
+				<integer>905</integer>
 				<key>offsetX</key>
 				<real>0</real>
 				<key>offsetY</key>
@@ -243,9 +281,9 @@
 				<key>originalHeight</key>
 				<integer>59</integer>
 				<key>x</key>
-				<integer>0</integer>
+				<integer>190</integer>
 				<key>y</key>
-				<integer>834</integer>
+				<integer>696</integer>
 				<key>offsetX</key>
 				<real>0</real>
 				<key>offsetY</key>
@@ -289,6 +327,25 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
+			<key>SelectCountryFrame.png</key>
+			<dict>
+				<key>width</key>
+				<integer>689</integer>
+				<key>height</key>
+				<integer>70</integer>
+				<key>originalWidth</key>
+				<integer>689</integer>
+				<key>originalHeight</key>
+				<integer>70</integer>
+				<key>x</key>
+				<integer>190</integer>
+				<key>y</key>
+				<integer>757</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
 			<key>Verify.png</key>
 			<dict>
 				<key>width</key>
@@ -327,6 +384,25 @@
 				<key>offsetY</key>
 				<real>0</real>
 			</dict>
+			<key>C:/Program Files (x86)/CocoStudio/EditorDefaultRes/GUI/button.png</key>
+			<dict>
+				<key>width</key>
+				<integer>103</integer>
+				<key>height</key>
+				<integer>40</integer>
+				<key>originalWidth</key>
+				<integer>103</integer>
+				<key>originalHeight</key>
+				<integer>40</integer>
+				<key>x</key>
+				<integer>0</integer>
+				<key>y</key>
+				<integer>374</integer>
+				<key>offsetX</key>
+				<real>0</real>
+				<key>offsetY</key>
+				<real>0</real>
+			</dict>
 		</dict>
 		<key>metadata</key>
 		<dict>
@@ -337,14 +413,14 @@
 			<key>realTextureFileName</key>
 			<string>UICountry0.png</string>
 			<key>size</key>
-			<string>{2048,1024}</string>
+			<string>{2048,2048}</string>
 		</dict>
 		<key>texture</key>
 		<dict>
 			<key>width</key>
 			<integer>2048</integer>
 			<key>height</key>
-			<integer>1024</integer>
+			<integer>2048</integer>
 		</dict>
 	</dict>
 </plist>
