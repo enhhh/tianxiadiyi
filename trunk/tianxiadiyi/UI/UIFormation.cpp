@@ -347,7 +347,7 @@ CCTableViewCell* UIFormation::tableCellAtIndex( CCTableView* table, unsigned int
 		formationSprite->setPosition(CCPointZero);
 		cell->addChild(formationSprite);
 
-		CCSprite* formationEnabledSprite = CCSprite::create("png/FormationEnabled.png");
+		CCSprite* formationEnabledSprite = CCSprite::create("png/FamationSelectFrame.png");
 		formationEnabledSprite->setPosition(ccp(-4,-2));
 		formationEnabledSprite->setAnchorPoint(CCPointZero);
 		formationEnabledSprite->setTag(8);

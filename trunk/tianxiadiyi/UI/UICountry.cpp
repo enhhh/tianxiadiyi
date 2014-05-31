@@ -47,9 +47,24 @@ bool UICountry::init()
 	UIButton* countryLand = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CountryLandButton"));
 	countryLand->addTouchEventListener(this, toucheventselector(UICountry::countryLandButtonClicked));
 
-	addChild(uiLayer);
-	setVisible(false);
+	coutryTestButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CountryTestButton"));
+	memberPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("MemberPanel"));
 
+	// 国家成员列表
+	UIPanel* tableViewPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("TableViewPanel"));
+
+	CCTableView* memberTableView = CCTableView::create(this, CCSizeMake(tableViewPanel->getContentSize().width, tableViewPanel->getContentSize().height));
+	memberTableView->setDirection(kCCScrollViewDirectionVertical);
+	memberTableView->setVerticalFillOrder(kCCTableViewFillTopDown);
+
+	CCPoint coutryTestButtonPosition = coutryTestButton->getPosition();
+	memberTableView->setPosition(ccp(coutryTestButtonPosition.x, coutryTestButtonPosition.y - tableViewPanel->getContentSize().height));
+	memberTableView->setDelegate(this);
+	memberTableView->reloadData();
+
+	addChild(uiLayer);
+	addChild(memberTableView);
+	setVisible(false);
 	refresh();
 	return true;
 }
@@ -61,6 +76,106 @@ void UICountry::onEnter()
 }
 
 void UICountry::refresh()
+{
+}
+
+void UICountry::scrollViewDidScroll( CCScrollView* view )
+{
+
+}
+
+void UICountry::scrollViewDidZoom( CCScrollView* view )
+{
+}
+
+void UICountry::tableCellTouched( CCTableView* table, CCTableViewCell* cell )
+{
+	CCLOG("cell touched at index: %i", cell->getIdx());
+}
+
+cocos2d::CCSize UICountry::cellSizeForTable( CCTableView* table )
+{
+	return  CCSizeMake(memberPanel->getContentSize().width, memberPanel->getContentSize().height);
+}
+
+CCTableViewCell* UICountry::tableCellAtIndex( CCTableView* table, unsigned int idx )
+{
+	CCTableViewCell* cell = table->cellAtIndex(idx);
+
+	if (!cell)
+	{
+		cell = new CCTableViewCell();
+		cell->autorelease();
+
+		UIPanel* panel = UIPanel::create();
+		panel->setTag(8);
+		panel->setContentSize(memberPanel->getContentSize());
+
+		UIImageView* memberBGImageView = UIImageView::create();
+
+		if (idx % 2 == 0)
+		{
+			memberBGImageView->loadTexture("png/MemberBG2.png");
+		}
+		else
+		{
+			memberBGImageView->loadTexture("png/MemberBG1.png");
+		}
+		
+		UIImageView* memberBGImageViewEXT = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("MemberBGImageView"));
+		memberBGImageView->setPosition(memberBGImageViewEXT->getPosition());
+		panel->addChild(memberBGImageView);
+
+		string memberName[] = {"柳生飘絮", "郡主", "188", "18602", "4份钟前"};
+
+		for (int i = 0; i < 5; i++)
+		{
+			UILabel* memberLabel = UILabel::create();
+			memberLabel->setZOrder(5);
+			memberLabel->setColor(ccRED);
+			memberLabel->setText(memberName[i].c_str());
+			
+			const char* s = CCString::createWithFormat("MemberLabel_%d", i+1)->getCString();
+			UILabel* memberLableEXT = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
+			memberLabel->setPosition(memberLableEXT->getPosition());
+
+			panel->addChild(memberLabel);
+		}
+
+		UIImageView* selectCoutryFrameImageView = UIImageView::create();
+		selectCoutryFrameImageView->loadTexture("png/SelectCountryFrame.png");
+		selectCoutryFrameImageView->setVisible(false);
+		selectCoutryFrameImageView->setTag(8);
+		UIImageView* selectCoutryFrameImageViewEXT = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectCoutryFrameImageView"));
+		selectCoutryFrameImageView->setPosition(selectCoutryFrameImageViewEXT->getPosition());
+		panel->addChild(selectCoutryFrameImageView);
+
+		cell->addChild(panel);
+
+		tableViewSpriteVector.push_back(selectCoutryFrameImageView);
+	}
+
+	return cell;
+}
+
+unsigned int UICountry::numberOfCellsInTableView( cocos2d::extension::CCTableView *table )
+{
+	return 10;
+}
+
+void UICountry::tableCellHighlight( CCTableView* table, extension::CCTableViewCell* cell )
+{
+	for (int i = 0; i < tableViewSpriteVector.size(); i++)
+	{
+		tableViewSpriteVector[i]->setVisible(false);
+	}
+
+	UIPanel* panel = (UIPanel*)cell->getChildByTag(8);
+	UIImageView* selectCoutryFrameImageView = (UIImageView*)panel->getChildByTag(8);
+	selectCoutryFrameImageView->setVisible(true);
+}
+
+void UICountry::tableCellUnhighlight( CCTableView* table, extension::CCTableViewCell* cell )
 {
 }
 

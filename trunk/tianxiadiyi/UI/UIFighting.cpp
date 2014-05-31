@@ -75,8 +75,8 @@ void UIFighting::tableCellTouched( CCTableView* table, CCTableViewCell* cell )
 
 cocos2d::CCSize UIFighting::cellSizeForTable( CCTableView* table )
 {
-	CCSize size = chapterPanel->getContentSize();
-	return  CCSizeMake(chapterPanel->getContentSize().width-60, chapterPanel->getContentSize().height);
+	UIButton* chapterFrameImageViewEXT = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("ChapterButton"));
+	return  CCSizeMake(chapterFrameImageViewEXT->getContentSize().width, chapterPanel->getContentSize().height);
 }
 
 CCTableViewCell* UIFighting::tableCellAtIndex( CCTableView* table, unsigned int idx )
@@ -92,7 +92,7 @@ CCTableViewCell* UIFighting::tableCellAtIndex( CCTableView* table, unsigned int 
 		panel->setContentSize(chapterPanel->getContentSize());
 
 		UIImageView* chapterFrameImageView = UIImageView::create();
-		chapterFrameImageView->loadTexture("png/SelectFrame.png");
+		chapterFrameImageView->loadTexture("png/ChapterBG.png");
 		UIButton* chapterFrameImageViewEXT = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("ChapterButton"));
 		chapterFrameImageView->setPosition(chapterFrameImageViewEXT->getPosition());
 		chapterFrameImageView->setZOrder(2);
@@ -120,7 +120,7 @@ CCTableViewCell* UIFighting::tableCellAtIndex( CCTableView* table, unsigned int 
 
 		cell->addChild(panel);
 
-		CCSprite* chapterSelectSprite = CCSprite::create("png/ChapterSelect.png");
+		CCSprite* chapterSelectSprite = CCSprite::create("png/ChapterSelectFrame.png");
 		chapterSelectSprite->setPosition(ccp(-4,-2));
 		chapterSelectSprite->setAnchorPoint(CCPointZero);
 		chapterSelectSprite->setTag(8);
