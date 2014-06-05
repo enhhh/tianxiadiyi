@@ -1,4 +1,5 @@
 #include "UICountry.h"
+#include "UICountryLand.h"
 
 #include "..\TianXiaDiYi.h"
 
@@ -53,7 +54,7 @@ bool UICountry::init()
 	// 国家成员列表
 	UIPanel* tableViewPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("TableViewPanel"));
 
-	CCTableView* memberTableView = CCTableView::create(this, CCSizeMake(tableViewPanel->getContentSize().width, tableViewPanel->getContentSize().height));
+	memberTableView = CCTableView::create(this, CCSizeMake(tableViewPanel->getContentSize().width, tableViewPanel->getContentSize().height));
 	memberTableView->setDirection(kCCScrollViewDirectionVertical);
 	memberTableView->setVerticalFillOrder(kCCTableViewFillTopDown);
 
@@ -91,6 +92,7 @@ void UICountry::scrollViewDidZoom( CCScrollView* view )
 void UICountry::tableCellTouched( CCTableView* table, CCTableViewCell* cell )
 {
 	CCLOG("cell touched at index: %i", cell->getIdx());
+	countryManager->selectId = cell->getIdx();
 }
 
 cocos2d::CCSize UICountry::cellSizeForTable( CCTableView* table )
@@ -160,11 +162,13 @@ CCTableViewCell* UICountry::tableCellAtIndex( CCTableView* table, unsigned int i
 
 unsigned int UICountry::numberOfCellsInTableView( cocos2d::extension::CCTableView *table )
 {
-	return 10;
+	return countryManager->countryMemberVector.size();
 }
 
 void UICountry::tableCellHighlight( CCTableView* table, extension::CCTableViewCell* cell )
 {
+	countryManager->selectId = cell->getIdx();
+
 	for (int i = 0; i < tableViewSpriteVector.size(); i++)
 	{
 		tableViewSpriteVector[i]->setVisible(false);
@@ -208,7 +212,11 @@ void UICountry::quitButtonClicked( CCObject* sender, TouchEventType type )
 
 void UICountry::kickButtonClicked( CCObject* sender, TouchEventType type )
 {
-	countryManager->kick();
+	if (type == CCTOUCHBEGAN)
+	{
+		countryManager->kick();
+		memberTableView->reloadData();
+	}
 }
 
 void UICountry::countryRankButtonClicked( CCObject* sender, TouchEventType type )
@@ -217,4 +225,10 @@ void UICountry::countryRankButtonClicked( CCObject* sender, TouchEventType type 
 
 void UICountry::countryLandButtonClicked( CCObject* sender, TouchEventType type )
 {
+	if (type == CCTOUCHBEGAN)
+	{
+		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryLand = UICountryLand::create();
+		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryLand->retain();
+		TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryLand);
+	}
 }

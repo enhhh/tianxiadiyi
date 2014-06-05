@@ -17,6 +17,7 @@ UIMainCity::UIMainCity()
 	uiRide = NULL;
 	uiRideStrengthen = NULL;
 	uiCountry = NULL;
+	uiCountryLand = NULL;
 }
 
 UIMainCity::~UIMainCity()

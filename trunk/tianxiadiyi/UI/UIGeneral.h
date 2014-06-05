@@ -27,7 +27,7 @@ public:
 	
 	UIImageView* headImageView[3];
 	UIImageView* equipmentImageView[6];
-
+	UILabel* attributeValueLabel[12];
 	UIImageView* selectFrameImageView;
 	UIImageView* headFeatureImageView;
 
@@ -42,6 +42,7 @@ public:
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
 	void headButtonClicked(CCObject* sender, TouchEventType type);
 	void equipmentButtonClicked(CCObject* sender, TouchEventType type);
+	void addButtonClicked(CCObject* sender, TouchEventType type);
 	void advancedButtonClicked(CCObject* sender, TouchEventType type);
 
 	void pageLeftButtonClicked(CCObject* sender, TouchEventType type);

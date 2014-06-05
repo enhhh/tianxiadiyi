@@ -38,7 +38,7 @@ public:
 
 	// 切割字符串，将用“|”分割的字符串顺序拆分出来，并输出需求的字符。
 	// 参数：(需要解析的字符串， 第几块数据， 输出的字符串)
-	static BOOL					GetSplitData( const CHAR* szData, UINT nCount, CHAR* szOutStr );
+	static vector<CHAR*>	    GetSplitData( const CHAR* szData);
 
 	//利用GetSplitData,将切割后的值,按INT型返回
 	static INT					GetSplitData_Int( const CHAR* szData, UINT nCount);

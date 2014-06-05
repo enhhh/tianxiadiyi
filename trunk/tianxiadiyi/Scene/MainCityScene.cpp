@@ -31,6 +31,25 @@ bool MainCityScene::init()
 	player->armature->setPosition(ccp(450, 360));
 	addChild(player->armature);
 
+	/*string spritePlist[4][4] = 
+	{
+		{"ui/SquareCircleSprite0.png", "ui/SquareCircleSprite0.plist", "ui/SquareCircleSprite.ExportJson", "SquareCircleSprite"},
+		{"ui/HeritageSprite0.png", "ui/HeritageSprite0.plist", "ui/HeritageSprite.ExportJson", "HeritageSprite"},
+		{"ui/ShopSprite0.png", "ui/ShopSprite0.plist", "ui/ShopSprite.ExportJson", "ShopSprite"},
+		{"ui/GemSprite0.png", "ui/GemSprite0.plist", "ui/GemSprite.ExportJson", "GemSprite"}
+	};
+	
+	CCPoint spritePosition[4] = {ccp(1998, 436), ccp(1139, 1057), ccp(1076, 409), ccp(530, 475)};
+
+	for (int i = 0; i < 4; i++)
+	{
+		CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo(spritePlist[i][0].c_str(), spritePlist[i][1].c_str(), spritePlist[i][2].c_str());
+		CCArmature* spriteAarmature = CCArmature::create(spritePlist[i][3].c_str());
+		spriteAarmature->getAnimation()->play("Stand");
+		spriteAarmature->setPosition(spritePosition[i]);
+		addChild(spriteAarmature);
+	}*/
+
 	player->setMainCity(mainCity);
 	StateMachine* stateMachine = new StateMachine(player);
 	player->setStateMachine(stateMachine);

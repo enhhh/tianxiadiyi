@@ -77,13 +77,13 @@ bool UIFormation::init()
 	formationTableView->setDelegate(this);
 	formationTableView->reloadData();
 
-	CGFormationList formationList;
-	formationList.playerGuid = 4528;
+	/*CGFormationList formationList;
+	formationList.playerGuid = 1;
 	TianXiaDiYi::getTheOnlyInstance()->socketWrap->SendPacket(&formationList);
 
 	CGGeneralList generalList;
-	generalList.playerGuid = 4528;
-	TianXiaDiYi::getTheOnlyInstance()->socketWrap->SendPacket(&generalList);
+	generalList.playerGuid = 1;
+	TianXiaDiYi::getTheOnlyInstance()->socketWrap->SendPacket(&generalList);*/
 
 	addChild(uiLayer);
 	addChild(formationTableView);
@@ -442,4 +442,3 @@ void UIFormation::pageRightButtonClicked( CCObject* sender, TouchEventType type 
 		refresh();
 	}
 }
-

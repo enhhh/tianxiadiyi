@@ -15,17 +15,8 @@ using namespace CocosDenshion;
 using namespace cocos2d::extension;
 using namespace std;
 
-class Player : public Sprite
+struct PlayerAttribute
 {
-public:
-	Player();
-	~Player();
-
-	int guid;
-	
-	// 等级
-	int level;
-
 	// 武力
 	int wuLi;
 
@@ -58,6 +49,35 @@ public:
 
 	// 暴击伤害
 	int baoJiShangHai;
+
+	// 物理攻击
+	int wuLiGongJi;
+
+	// 物理防御
+	int wuLiFangYu;
+
+	// 法术攻击
+	int faShuGongJi;
+
+	// 法术防御
+	int faShuFangYu;
+
+	// 生命
+	int shengMing;
+};
+
+class Player : public Sprite
+{
+public:
+	Player();
+	~Player();
+
+	PlayerAttribute attribute;
+
+	// 全局唯一编号
+	int guid;
+	// 等级
+	int lv;
 
 	void updateEXT(float delta);
 };

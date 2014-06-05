@@ -2,9 +2,6 @@
 
 GCGeneralList::GCGeneralList()
 {
-	m_nLength = GetPacketSize();
-	m_pData = new char[m_nLength];
-	memset(m_pData,0,m_nLength);
 }
 
 GCGeneralList::~GCGeneralList()

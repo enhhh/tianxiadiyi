@@ -19,6 +19,7 @@
 #include "UIRide.h"
 #include "UIRideStrengthen.h"
 #include "UICountry.h"
+#include "UICountryLand.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
@@ -45,6 +46,7 @@ public:
 	UIRide* uiRide;
 	UIRideStrengthen* uiRideStrengthen;
 	UICountry* uiCountry;
+	UICountryLand* uiCountryLand;
 
 	UIMainCity();
 	~UIMainCity();

@@ -5,7 +5,9 @@
 Player::Player()
 {
 	guid = 10086;
+	lv = 10;
 
+	memset(&attribute, 0, sizeof(attribute));
 	CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo("HeroAnimation0.png", "HeroAnimation0.plist", "HeroAnimation.ExportJson");;
 	armature = CCArmature::create("HeroAnimation");
 
@@ -24,7 +26,6 @@ Player::Player()
 
 Player::~Player()
 {
-
 }
 
 void Player::updateEXT(float delta)

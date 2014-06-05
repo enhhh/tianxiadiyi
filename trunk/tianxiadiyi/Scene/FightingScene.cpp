@@ -78,7 +78,7 @@ bool FightingScene::init()
 
 			Monster* monster = gs.general;
 			gs.general->creatArmature();
-			monster->reInit();
+			monster->setAttribute();
 			monster->setPosition(ccp(formationGeneralPositions[j][i].x, formationGeneralPositions[j][i].y));
 			monster->setOriginalPosition(monster->position);
 			monster->armature->setPosition(monster->position);
@@ -130,7 +130,7 @@ bool FightingScene::init()
 			Solider* solider = new Solider(1);
 			solider->creatArmature();
 			Monster* monster = solider;
-			monster->reInit();
+			monster->setAttribute();
 			monster->setPosition(ccp(formationSoldierPositions[j][i].x, formationSoldierPositions[j][i].y));
 			monster->armature->setPosition(monster->position);
 			monster->setOriginalPosition(monster->position);

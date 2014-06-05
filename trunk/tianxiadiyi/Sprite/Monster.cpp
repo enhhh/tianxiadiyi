@@ -14,7 +14,7 @@ Monster::Monster(int type)
 	direction = LEFT;
 	face = LEFT;
 
-	reInit();
+	setAttribute();
 	setType(MONSTER);
 }
 
@@ -32,7 +32,7 @@ void Monster::setIsFriend(bool isFriend)
 	this->isFriend = isFriend;
 }
 
-void Monster::reInit()
+void Monster::setAttribute()
 {
 	agility = rand() % 100;
 	anger = 0;

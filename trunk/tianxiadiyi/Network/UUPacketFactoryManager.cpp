@@ -1,9 +1,16 @@
 #include "UUPacketFactoryManager.h"
+
 #include "Packets\GCHeartBeat.h"
 
-#include "Packets\Formation\GCFormationList.h"
-#include "Packets\Formation\GCGeneralList.h"
-
+#include "Packets\Starring\GCStarringAttribute.h"
+#include "Packets\Starring\GCCulture.h"
+#include "Packets\Starring\GCTelentList.h"
+#include "Packets\Starring\GCLightUpTelent.h"
+#include "Packets\Starring\GCSoulBeadList.h"
+#include "Packets\Starring\GCSoulBeadEquipList.h"
+#include "Packets\Starring\GCPutOnSoulBead.h"
+#include "Packets\Starring\GCTakeOffSoulBead.h"
+#include "Packets\Starring\GCSwapSoulBead.h"
 
 UUPacketFactoryManager* g_pPacketFactoryManager = NULL ;
 
@@ -45,8 +52,16 @@ void UUPacketFactoryManager::AddFactory( UUPacketFactory* pFactory )
 void UUPacketFactoryManager::Init()
 {
 	AddFactory( new GCHeartBeatFactory());
-	AddFactory( new GCFormationListFactory());
-	AddFactory( new GCGeneralListFactory());
+
+	AddFactory( new GCStarringAttributeFactory());
+	AddFactory( new GCCultureFactory());
+	AddFactory( new GCTelentListFactory());
+	AddFactory( new GCLightUpTelentFactory());
+	AddFactory( new GCSoulBeadListFactory());
+	AddFactory( new GCSoulBeadEquipListFactory());
+	AddFactory( new GCPutOnSoulBeadFactory());
+	AddFactory( new GCTakeOffSoulBeadFactory());
+	AddFactory( new GCSwapSoulBeadFactory());
 }
 
 UUPacketEXT* UUPacketFactoryManager::CreatePacket( unsigned short packetID )

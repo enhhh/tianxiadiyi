@@ -22,7 +22,7 @@ public:
 
 	virtual unsigned short	GetPacketID() const { return MAKE_PACKET_ID(PACKET_CG_LEVEL_UP_FORMATION, PACKET_GENERAL); }
 
-	virtual unsigned int	GetPacketSize() const { return sizeof(char) * 2; }
+	virtual unsigned int	GetPacketSize() const { return 0; }
 };
 
 class GCLevelUpFormationFactory : public UUPacketFactory

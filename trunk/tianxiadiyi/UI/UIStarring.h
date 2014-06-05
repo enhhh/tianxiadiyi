@@ -19,21 +19,25 @@ using namespace std;
 class UIStarring : public CCLayer
 {
 public:
-
 	StarringManager* starringManager;
-
 	UILayer* uiLayer;
 
+	// 操作
 	UIPanel* operatePanel;
-	
+
+	// 角色
 	UIPanel* starringAttributePanel;
 	UIPanel* attributePanel;
 	CCArmature* spriteAarmature;
+	UILabel* attributeLabel[4];
 
+	// 培养
 	UIPanel* cultureModePanel;
+	UIButton* cultureRadioButtonArray[4];
 	UIImageView* cultureImageView;
-	UIButton* cultureButtonArray[4];
+	UILabel* successRateLabel;
 
+	// 天赋
 	UIPanel* telentModePanel;
 	UIPanel* telentPanelArrary[5];
 	UIButton* telentButtonArray[5][20];
@@ -85,8 +89,10 @@ public:
 	void pageRightSoulButtonClicked(CCObject* sender, TouchEventType type);
 
 	void soulButtonEXTClicked(CCObject* sender, TouchEventType type);
-	void cultureButtonEXTClicked(CCObject* sender, TouchEventType type);
+	void cultureRadioButtonClicked(CCObject* sender, TouchEventType type);
 	void telentButtonEXTClicked(CCObject* sender, TouchEventType type);
+
+	void cultureModeButtonClicked(CCObject* sender, TouchEventType type);
 
 	CREATE_FUNC(UIStarring);
 };
