@@ -26,6 +26,8 @@ public:
 
 	UIButton* coutryTestButton;
 	UIPanel* memberPanel;
+
+	CCTableView* memberTableView;
 	vector<UIImageView*> tableViewSpriteVector;
 
 	UICountry();

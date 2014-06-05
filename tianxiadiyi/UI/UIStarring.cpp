@@ -30,7 +30,20 @@ bool UIStarring::init()
 	uiLayer->addWidget(starringRoot);
 
 	operatePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("OperatePanel"));
+	
+	UIButton* operateCloseButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("OperateCloseButton"));
+	operateCloseButton->addTouchEventListener(this, toucheventselector(UIStarring::operateCloseButtonClicked));
 
+	UIButton* cultureButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CultureButton"));
+	cultureButton->addTouchEventListener(this, toucheventselector(UIStarring::cultureButtonClicked));
+
+	UIButton* talentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("TalentButton"));
+	talentButton->addTouchEventListener(this, toucheventselector(UIStarring::telentButtonClicked));
+
+	UIButton* soulButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("SoulButton"));
+	soulButton->addTouchEventListener(this, toucheventselector(UIStarring::soulButtonClicked));
+
+	// 主角
 	starringAttributePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("StarringAttributePanel"));	
 	attributePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("AttributePanel"));;
 	UIPanel* spritePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SpritePanel"));
@@ -40,17 +53,36 @@ bool UIStarring::init()
 	spriteAarmature->setPosition(ccp(starringAttributePanel->getPositionX()+spritePanel->getPositionX(), starringAttributePanel->getPositionY()+spritePanel->getPositionY()));
 	uiLayer->addChild(spriteAarmature);
 
-	cultureModePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("CultureModePanel"));
-	cultureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("CultureImageView"));
+	for (int i = 0; i < 4; i++)
+	{
+		const char* s = CCString::createWithFormat("AttributeValueLabel_%d", i+1)->getCString();
+		attributeLabel[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
+	}
 
+	// 培养
+	cultureModePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("CultureModePanel"));
+	
+	UIButton* cultureCloseButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CultureCloseButton"));
+	cultureCloseButton->addTouchEventListener(this, toucheventselector(UIStarring::cultureCloseButtonClicked));
+
+	UIButton* cultureModeButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CultureModeButton"));
+	cultureModeButton->addTouchEventListener(this, toucheventselector(UIStarring::cultureModeButtonClicked));
+	
 	for (int i = 0; i < 3; i++)
 	{
 		const char* s = CCString::createWithFormat("CultureRadioButton_%d", i+1)->getCString();
-		cultureButtonArray[i] = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
-		cultureButtonArray[i]->addTouchEventListener(this, toucheventselector(UIStarring::cultureButtonEXTClicked));
+		cultureRadioButtonArray[i] = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
+		cultureRadioButtonArray[i]->addTouchEventListener(this, toucheventselector(UIStarring::cultureRadioButtonClicked));
 	}
 
+	cultureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("CultureImageView"));
+	successRateLabel = dynamic_cast<UILabel*>(uiLayer->getWidgetByName("SuccessRateLabel"));;
+
+	// 天赋
 	telentModePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("TelentModePanel"));
+
+	UIButton* telentCloseButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("TelentCloseButton"));
+	telentCloseButton->addTouchEventListener(this, toucheventselector(UIStarring::telentCloseButtonClicked));
 
 	char* telentPanelName[5] = {"BaiHuPanel", "XuanWuPanel", "QingLongPanel", "ZhuQuePanel", "QiLinPanel"};
 
@@ -58,8 +90,8 @@ bool UIStarring::init()
 	{
 		telentPanelArrary[i] = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName(telentPanelName[i]));
 	}
-	
-	for (int i = 0; i < 1; i++)
+
+	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 20; j++)
 		{
@@ -72,8 +104,18 @@ bool UIStarring::init()
 		}
 	}
 
+	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
+	pageLeftButton->addTouchEventListener(this, toucheventselector(UIStarring::pageLeftButtonClicked));
+
+	UIButton* pageRightButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageRightButton"));
+	pageRightButton->addTouchEventListener(this, toucheventselector(UIStarring::pageRightButtonClicked));
+
+	// 魂珠
 	soulAttributePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SoulAttributePanel"));
 	soulPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SoulPanel"));
+
+	UIButton* soulCloseButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("SoulCloseButton"));
+	soulCloseButton->addTouchEventListener(this, toucheventselector(UIStarring::soulCloseButtonClicked));
 
 	for (int i = 0; i < 12; i++)
 	{
@@ -87,41 +129,14 @@ bool UIStarring::init()
 		soulBeadCircleImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	soulBeadFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SoulFeatureImageView"));
-	selectSoulFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SoulSelectFrameImageView"));
-
-	UIButton* operateCloseButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("OperateCloseButton"));
-	operateCloseButton->addTouchEventListener(this, toucheventselector(UIStarring::operateCloseButtonClicked));
-
-	UIButton* cultureCloseButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CultureCloseButton"));
-	cultureCloseButton->addTouchEventListener(this, toucheventselector(UIStarring::cultureCloseButtonClicked));
-
-	UIButton* telentCloseButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("TelentCloseButton"));
-	telentCloseButton->addTouchEventListener(this, toucheventselector(UIStarring::telentCloseButtonClicked));
-
-	UIButton* soulCloseButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("SoulCloseButton"));
-	soulCloseButton->addTouchEventListener(this, toucheventselector(UIStarring::soulCloseButtonClicked));
-
-	UIButton* cultureButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CultureButton"));
-	cultureButton->addTouchEventListener(this, toucheventselector(UIStarring::cultureButtonClicked));
-
-	UIButton* talentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("TalentButton"));
-	talentButton->addTouchEventListener(this, toucheventselector(UIStarring::telentButtonClicked));
-
-	UIButton* soulButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("SoulButton"));
-	soulButton->addTouchEventListener(this, toucheventselector(UIStarring::soulButtonClicked));
-
-	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
-	pageLeftButton->addTouchEventListener(this, toucheventselector(UIStarring::pageLeftButtonClicked));
-
-	UIButton* pageRightButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageRightButton"));
-	pageRightButton->addTouchEventListener(this, toucheventselector(UIStarring::pageRightButtonClicked));
-
 	UIButton* pageLeftSoulButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftSoulButton"));
 	pageLeftSoulButton->addTouchEventListener(this, toucheventselector(UIStarring::pageLeftSoulButtonClicked));
 
 	UIButton* pageRightSoulButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageRightSoulButton"));
 	pageRightSoulButton->addTouchEventListener(this, toucheventselector(UIStarring::pageRightSoulButtonClicked));
+
+	soulBeadFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SoulFeatureImageView"));
+	selectSoulFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SoulSelectFrameImageView"));
 
 	addChild(uiLayer);
 	setVisible(false);
@@ -137,6 +152,27 @@ void UIStarring::onEnter()
 
 void UIStarring::refresh()
 {
+	// 武力
+	const char* wuLi = CCString::createWithFormat("%d", starringManager->player->attribute.wuLi)->getCString();
+	// 智力
+	const char* zhiLi = CCString::createWithFormat("%d", starringManager->player->attribute.zhiLi)->getCString();
+	// 体力
+	const char* tiLi = CCString::createWithFormat("%d", starringManager->player->attribute.tiLi)->getCString();
+	// 敏捷
+	const char* minJie = CCString::createWithFormat("%d", starringManager->player->attribute.minJie)->getCString();
+
+	const char* attribute[4] = {wuLi, zhiLi, tiLi, minJie};
+
+	for (int i = 0; i < 4; i++)
+	{
+		attributeLabel[i]->setText(attribute[i]);
+	}
+
+	if (cultureModePanel->isVisible())
+	{
+		refreshCulture();
+	}
+
 	if (telentModePanel->isVisible())
 	{
 		refreshTelent();
@@ -150,6 +186,9 @@ void UIStarring::refresh()
 
 void UIStarring::refreshCulture()
 {
+	int rate = starringManager->cultureSuccessRate[starringManager->selectCultureId];
+	const char* s = CCString::createWithFormat("%d%", rate)->getCString();
+	successRateLabel->setText(s);
 }
 
 void UIStarring::refreshTelent()
@@ -163,6 +202,16 @@ void UIStarring::refreshTelent()
 		else
 		{
 			telentPanelArrary[i]->setVisible(false);
+		}
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		if (i < starringManager->telentLightPoint[starringManager->telentPageNum])
+		{
+			telentImageViewArray[starringManager->telentPageNum][i]->setVisible(true);
+			telentButtonArray[starringManager->telentPageNum][i]->setVisible(false);
+			telentButtonArray[starringManager->telentPageNum][i]->setEnabled(false);
 		}
 	}
 }
@@ -310,7 +359,7 @@ bool UIStarring::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
 		{
 			starringManager->isSelectSoulBead = false;
 
-			starringManager->selectSoulBeadCircleId = i;
+			starringManager->selectSoulBeadEquipId = i;
 			selectSoulBeadSprite = starringManager->soulBeadEquipSpriteArray[i];
 
 			starringManager->soulBeadEquipSpriteArray[i].armature = NULL;
@@ -380,6 +429,7 @@ void UIStarring::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 					selectSoulBeadSprite.armature = NULL;
 					selectSoulBeadSprite.soulBead = NULL;
 
+					starringManager->swapSoulBead(1);
 					int id = starringManager->soulPageNum * 12 + i;
 					SoulBead* s = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
 					starringManager->soulBeadArray[starringManager->selectSoulBeadId] = starringManager->soulBeadArray[id];
@@ -402,6 +452,8 @@ void UIStarring::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 
 				if (rect.containsPoint(touchPosition))
 				{
+					starringManager->selectSoulBeadEquipId = i;
+
 					// 目的位置是否有魂珠
 					if (starringManager->soulBeadEquipSpriteArray[i].armature != NULL)
 					{
@@ -418,9 +470,8 @@ void UIStarring::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 						starringManager->soulBeadEquipSpriteArray[i] = selectSoulBeadSprite;
 					}
 
-					SoulBead* s = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
-					starringManager->soulBeadArray[starringManager->selectSoulBeadId] = starringManager->soulBeadEquipArray[i];
-					starringManager->soulBeadEquipArray[i] = s;
+					starringManager->putOnSoulBead();
+					refresh();
 
 					selectSoulBeadSprite.armature = NULL;
 					selectSoulBeadSprite.soulBead = NULL;
@@ -436,7 +487,7 @@ void UIStarring::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 		}
 		else
 		{
-			int circleId = starringManager->selectSoulBeadCircleId;
+			int circleId = starringManager->selectSoulBeadEquipId;
 			CCPoint soulAttributePanelPosition = soulAttributePanel->getPosition();
 			CCPoint soulBeadCircleImageViewPosition = soulBeadCircleImageView[circleId]->getPosition();
 			CCPoint soulBeadCirclePosition = CCPoint(soulAttributePanelPosition.x+soulBeadCircleImageViewPosition.x, soulAttributePanelPosition.y+soulBeadCircleImageViewPosition.y);
@@ -469,8 +520,10 @@ void UIStarring::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 						starringManager->soulBeadEquipSpriteArray[i] = selectSoulBeadSprite;
 					}
 
-					SoulBead* s = starringManager->soulBeadEquipArray[starringManager->selectSoulBeadCircleId];
-					starringManager->soulBeadEquipArray[starringManager->selectSoulBeadCircleId] = starringManager->soulBeadEquipArray[i];
+					starringManager->swapSoulBead(2);
+
+					SoulBead* s = starringManager->soulBeadEquipArray[starringManager->selectSoulBeadEquipId];
+					starringManager->soulBeadEquipArray[starringManager->selectSoulBeadEquipId] = starringManager->soulBeadEquipArray[i];
 					starringManager->soulBeadEquipArray[i] = s;
 
 					selectSoulBeadSprite.armature = NULL;
@@ -499,9 +552,8 @@ void UIStarring::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 						starringManager->soulBeadSpriteArray[i].armature->setPosition(soulBeadCirclePosition);
 						selectSoulBeadSprite.armature->setPosition(position);
 
-						int id = starringManager->soulPageNum * 12 + i;
-						starringManager->soulBeadEquipSpriteArray[circleId] = starringManager->soulBeadSpriteArray[id];
-						starringManager->soulBeadSpriteArray[id] = selectSoulBeadSprite;
+						starringManager->soulBeadEquipSpriteArray[circleId] = starringManager->soulBeadSpriteArray[i];
+						starringManager->soulBeadSpriteArray[i] = selectSoulBeadSprite;
 					}
 					else
 					{
@@ -509,11 +561,9 @@ void UIStarring::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 						starringManager->soulBeadSpriteArray[i] = selectSoulBeadSprite;
 					}
 
-
-					int id = starringManager->soulPageNum * 12 + i;
-					SoulBead* s = starringManager->soulBeadArray[starringManager->selectSoulBeadCircleId];
-					starringManager->soulBeadEquipArray[starringManager->selectSoulBeadCircleId] = starringManager->soulBeadArray[id];
-					starringManager->soulBeadArray[id] = s;
+					starringManager->selectSoulBeadId = starringManager->soulPageNum * 12 + i;
+					starringManager->takeOffSoulBead();
+					refresh();
 
 					selectSoulBeadSprite.armature = NULL;
 					selectSoulBeadSprite.soulBead = NULL;
@@ -607,6 +657,8 @@ void UIStarring::cultureButtonClicked( CCObject* sender, TouchEventType type )
 	cultureModePanel->setZOrder(4);
 	telentModePanel->setZOrder(3);
 	soulPanel->setZOrder(2);
+
+	refresh();
 }
 
 void UIStarring::telentButtonClicked( CCObject* sender, TouchEventType type )
@@ -625,6 +677,8 @@ void UIStarring::telentButtonClicked( CCObject* sender, TouchEventType type )
 	cultureModePanel->setZOrder(2);
 	telentModePanel->setZOrder(4);
 	soulPanel->setZOrder(3);
+
+	refresh();
 }
 
 void UIStarring::soulButtonClicked( CCObject* sender, TouchEventType type )
@@ -723,25 +777,26 @@ void UIStarring::pageRightSoulButtonClicked( CCObject* sender, TouchEventType ty
 
 void UIStarring::soulButtonEXTClicked( CCObject* sender, TouchEventType type )
 {
-	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->player->wuLi += 0;
-	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->player->zhiLi += 0;
-	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->player->tiLi+= 0;
-	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->player->minJie += 0;
+	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->player->attribute.wuLi += 0;
+	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->player->attribute.zhiLi += 0;
+	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->player->attribute.tiLi+= 0;
+	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->player->attribute.minJie += 0;
 }
 
-void UIStarring::cultureButtonEXTClicked( CCObject* sender, TouchEventType type )
+void UIStarring::cultureRadioButtonClicked( CCObject* sender, TouchEventType type )
 {
 	UIButton* button = (UIButton*)sender;
 
 	for (int i = 0; i < 3; i++)
 	{
 		const char* s = CCString::createWithFormat("CultureRadioButton_%d", i+1)->getCString();
-		
+
 		if (strcmp(button->getName(), s) == 0)
 		{
 			cultureImageView->setVisible(true);
 			cultureImageView->setPosition(button->getPosition());
-
+			starringManager->selectCultureId = i;
+			refresh();
 			break;
 		}
 	}
@@ -751,19 +806,26 @@ void UIStarring::telentButtonEXTClicked( CCObject* sender, TouchEventType type )
 {
 	UIButton* button = (UIButton*)sender;
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 20; i++)
 	{
-		for (int j = 0; j < 20; j++)
-		{
-			const char* s = CCString::createWithFormat("Telent%dButton_%d", i+1, j+1)->getCString();
+		const char* s = CCString::createWithFormat("Telent%dButton_%d", starringManager->telentPageNum+1, i+1)->getCString();
 
-			if (strcmp(button->getName(), s) == 0)
-			{
-				telentImageViewArray[i][j]->setVisible(true);
-				button->setEnabled(false);
-				button->setVisible(false);
-				return;
-			}
+		if (strcmp(button->getName(), s) == 0)
+		{
+			starringManager->selectTelentPointId = i;
+			starringManager->lightUpTelentPoint();
+			refresh();
+
+			return;
 		}
+	}
+}
+
+void UIStarring::cultureModeButtonClicked( CCObject* sender, TouchEventType type )
+{
+	if (type == CCTOUCHBEGAN)
+	{
+		starringManager->culture();
+		refresh();
 	}
 }

@@ -52,6 +52,13 @@ bool UIGeneral::init()
 		equipmentButton->addTouchEventListener(this, toucheventselector(UIGeneral::equipmentButtonClicked));
 	}
 
+	for (int i = 0; i < 4; i++)
+	{
+		const char* s = CCString::createWithFormat("AddButton_%d", i+1)->getCString();
+		UIButton* addButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
+		addButton->addTouchEventListener(this, toucheventselector(UIGeneral::addButtonClicked));
+	}
+
 	for (int i = 0; i < 3; i++)
 	{
 		const char* s = CCString::createWithFormat("HeadImageView_%d", i+1)->getCString();
@@ -62,6 +69,12 @@ bool UIGeneral::init()
 	{
 		const char* s = CCString::createWithFormat("EquipmentImageView_%d", i+1)->getCString();
 		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		const char* s = CCString::createWithFormat("AttributeValueLabel_%d", i+1)->getCString();
+		attributeValueLabel[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
 	}
 
 	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
@@ -101,6 +114,11 @@ void UIGeneral::clear()
 	{
 		equipmentImageView[i]->setVisible(false);
 	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		attributeValueLabel[i]->setText("0");
+	}
 }
 
 void UIGeneral::refresh()
@@ -139,6 +157,27 @@ void UIGeneral::refresh()
 				equipmentImageView[i]->loadTexture(s);
 				equipmentImageView[i]->setVisible(true);
 			}	
+		}
+	}
+
+	if (generalManager->selectGeneralId < generalManager->generalVector.size())
+	{
+		General* general = generalManager->generalVector[generalManager->selectGeneralId];
+		
+		// 武力
+		const char* wuLi = CCString::createWithFormat("%d", general->attribute.wuLi)->getCString();
+		// 智力
+		const char* zhiLi = CCString::createWithFormat("%d", general->attribute.zhiLi)->getCString();
+		// 体力
+		const char* tiLi = CCString::createWithFormat("%d", general->attribute.tiLi)->getCString();
+		// 敏捷
+		const char* minJie = CCString::createWithFormat("%d", general->attribute.minJie)->getCString();
+
+		const char* attribute[4] = {wuLi, zhiLi, tiLi, minJie};
+
+		for (int i = 0; i < 4; i++)
+		{
+			attributeValueLabel[i]->setText(attribute[i]);
 		}
 	}
 }
@@ -194,6 +233,24 @@ void UIGeneral::equipmentButtonClicked( CCObject* sender, TouchEventType type )
 				TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = UIWeponTakeUp::create();
 				TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->retain();
 				TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup);
+			}
+		}
+	}
+}
+
+void UIGeneral::addButtonClicked( CCObject* sender, TouchEventType type )
+{
+	UIButton* button = (UIButton*)sender;
+
+	if (type == CCTOUCHBEGAN)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			const char* s = CCString::createWithFormat("AddButton_%d", i+1)->getCString();
+
+			if (strcmp(button->getName(), s) == 0)
+			{
+				generalManager->addAttribute(i);
 			}
 		}
 	}

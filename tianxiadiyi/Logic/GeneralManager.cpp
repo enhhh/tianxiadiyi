@@ -44,3 +44,8 @@ GeneralManager* GeneralManager::getTheOnlyInstance()
 
 	return generalManager;
 }
+
+void GeneralManager::addAttribute( int type )
+{
+
+}

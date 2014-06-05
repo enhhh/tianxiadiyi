@@ -89,9 +89,22 @@ BOOL CDataBase::OpenFromTXT(const CHAR* szFileName)
 }
 
 
-BOOL CDataBase::GetSplitData(const CHAR* szData, UINT nCount, CHAR* szOutStr)
+vector<CHAR*> CDataBase::GetSplitData(const CHAR* szData)
 {
-	return FALSE;
+	vector<CHAR*> splitVector;
+	CHAR s[] = "1|2|3|4|5";
+	const CHAR* d = "|";
+	CHAR* p;
+
+	p = strtok(s, d);
+
+	while(p)
+	{
+		splitVector.push_back(p);
+		p = strtok(NULL, d);
+	}
+
+	return splitVector;
 }
 
 INT CDataBase::GetSplitData_Int( const CHAR* szData, UINT nCount)
@@ -163,6 +176,7 @@ VOID CDataBaseSystem::OpenAllDataBase(VOID)
 		{ DBC_GEM,  "gem.txt"	},	// 宝石表
 		{ DBC_SOUL_BEAD,  "soulBead.txt"	},	// 魂珠表
 		{ DBC_RIDE,  "ride.txt"	},	// 坐骑表
+		{ DBC_TELENT,  "talent.txt"	},	// 天赋表
 	};
 
 	// 打开所有数据库

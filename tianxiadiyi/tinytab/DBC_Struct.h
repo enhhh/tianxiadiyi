@@ -131,6 +131,8 @@ struct _DBC_SOUL_BEAD
 	int id;
 	// 名称	
 	char* name;
+	// 种类
+	int zhongLei;
 	// 属性值	
 	float shuXingZhi;
 	// 等级
@@ -158,4 +160,56 @@ struct _DBC_RIDE
 	int chuShiFangYu;
 	// 初始生命
 	int chuShiShengMing;
+};
+
+#define DBC_TELENT 9
+
+struct _DBC_TELENT
+{
+	// 编号	
+	int id;
+	// 名称	
+	char* name;
+	// 加成属性	
+	char* jiaChengShuXing;
+	// 第一个点
+	int diYiGeDian;
+	// 第二个点
+	int diErGeDian;
+	// 第三个点
+	int diSanGeDian;
+	// 第四个点
+	int diSiGeDian;
+	// 第五个点
+	int diWuGeDian;
+	// 第六个点
+	int diLiuGeDian;
+	// 第七个点
+	int diQiGeDian;
+	// 第八个点
+	int diBaGeDian;
+	// 第九个点
+	int diJiuGeDian;
+	// 第十个点
+	int diShiGeDian;
+	// 第十一个点
+	int diShiYiGeDian;
+	// 第十二个点
+	int diShiErGeDian;
+	// 第十三个点
+	int diShiSanGeDian;
+	// 第十四个点
+	int diShiSiGeDian;
+	// 第十五个点
+	int diShiWuGeDian;
+	// 第十六个点
+	int diShiLiuGeDian;
+	// 第十七个点
+	int diShiQiGeDian;
+	// 第十八个点
+	int diShiBaGeDian;
+	// 第十九个点
+	int diShiJiuGeDian;
+	// 第二十个点
+	int	diErShiGeDian;
 };

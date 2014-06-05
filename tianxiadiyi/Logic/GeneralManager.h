@@ -31,7 +31,7 @@ public:
 
 	// 将领列表
 	vector<General*>generalVector;
-	
+
 	// 选择的将领
 	int selectGeneralId;
 
@@ -48,6 +48,7 @@ public:
 	~GeneralManager();
 
 	static GeneralManager* getTheOnlyInstance();
+	void addAttribute(int type);
 };
 
 #endif

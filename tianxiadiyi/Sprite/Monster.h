@@ -39,7 +39,7 @@ public:
 
 	void setIsFriend(bool isFriend);
 
-	void reInit();
+	void setAttribute();
 };
 
 #endif

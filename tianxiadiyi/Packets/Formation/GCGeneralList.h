@@ -26,7 +26,7 @@ public:
 
 	virtual unsigned short	GetPacketID() const { return MAKE_PACKET_ID(PACKET_CG_GENERAL_LIST, PACKET_GENERAL); }
 
-	virtual unsigned int	GetPacketSize() const { return sizeof(int)*generalVector.size() + sizeof(unsigned char); }
+	virtual unsigned int	GetPacketSize() const { return 0; }
 };
 
 class GCGeneralListFactory : public UUPacketFactory

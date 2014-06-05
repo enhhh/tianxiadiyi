@@ -1,7 +1,10 @@
 #include "TianXiaDiYi.h"
 #include "Packets\CGHeartBeat.h"
-#include "Packets\Formation\CGFormationList.h"
-#include "Packets\Formation\CGGeneralList.h"
+
+#include "Packets\Starring\CGStarringAttribute.h"
+#include "Packets\Starring\CGTelentList.h"
+#include "Packets\Starring\CGSoulBeadList.h"
+#include "Packets\Starring\CGSoulBeadEquipList.h"
 
 #include "tinytab\DataBase.h"
 #include "tinytab\DBC_Struct.h"
@@ -41,6 +44,7 @@ bool TianXiaDiYi::init()
 	visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 	CDataBaseSystem::GetMe()->Initial(NULL);
+	CDataBase::GetSplitData(NULL);
 
 	// xml
 	/*
@@ -98,14 +102,6 @@ bool TianXiaDiYi::init()
 	mainCityScene = NULL;
 	chapterScene = NULL;
 	fightingScene = NULL;
-
-	CGFormationList formationList;
-	formationList.playerGuid = 4528;
-	socketWrap->SendPacket(&formationList);
-
-	CGGeneralList generalList;
-	generalList.playerGuid = 4528;
-	socketWrap->SendPacket(&generalList);
 
 	setKeypadEnabled(true);
 	scheduleUpdate();
@@ -282,4 +278,20 @@ void TianXiaDiYi::yiActionCallback( CCNode* pSender )
 	addChild(uiMainCity);
 
 	uiMainCity->setVisible(true);
+
+	CGStarringAttribute starringAttribute;
+	starringAttribute.playerGuid = 1;
+	socketWrap->SendPacket(&starringAttribute);
+
+	CGTelentList telentList;
+	telentList.playerGuid = 1;
+	socketWrap->SendPacket(&telentList);
+
+	CGSoulBeadList soulBeadList;
+	soulBeadList.playerGuid = 1;
+	socketWrap->SendPacket(&soulBeadList);
+
+	CGSoulBeadEquipList soulBeadEquipList;
+	soulBeadEquipList.playerGuid = 1;
+	socketWrap->SendPacket(&soulBeadEquipList);
 }

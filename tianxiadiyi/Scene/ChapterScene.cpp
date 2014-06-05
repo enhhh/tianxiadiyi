@@ -110,7 +110,7 @@ bool ChapterScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
 				TianXiaDiYi::getTheOnlyInstance()->fightingScene->retain();
 				TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->fightingScene);
 				return true;
-			
+
 				break;
 			}
 		}

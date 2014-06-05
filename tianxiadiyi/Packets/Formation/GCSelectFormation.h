@@ -21,7 +21,7 @@ public:
 
 	virtual unsigned short	GetPacketID() const { return MAKE_PACKET_ID(PACKET_CG_SELECT_FORMATION, PACKET_GENERAL); }
 
-	virtual unsigned int	GetPacketSize() const { return sizeof(unsigned char)*9; }
+	virtual unsigned int	GetPacketSize() const { return 0; }
 };
 
 class GCSelectFormationFactory : public UUPacketFactory

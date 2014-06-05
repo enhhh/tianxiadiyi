@@ -18,7 +18,7 @@ struct CountryMember
 	// 玩家id
 	int id;
 	// 玩家名称
-	string* name;
+	char* name;
 	// 职务
 	int job;
 	// 贡献度
@@ -43,6 +43,9 @@ public:
 
 	// 成员
 	vector<CountryMember>countryMemberVector;
+
+	// 选中当前项
+	int selectId;
 
 	CountryManager();
 	~CountryManager();
