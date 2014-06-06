@@ -213,3 +213,34 @@ struct _DBC_TELENT
 	// 第二十个点
 	int	diErShiGeDian;
 };
+
+#define DBC_GEM_STRENGTHEN 10
+struct _DBC_GEM_STRENGTHEN
+{
+	// 编号
+	int id;
+	// 名称
+	char* name;
+	// 加成属性
+	char* jiaChengShuXing;
+	// 一级属性值
+	int yiJiShuXingZhi;
+	// 二级属性值
+	int erJiShuXingZhi;
+	// 三级属性值
+	int sanJiShuXingZhi;
+	// 四级属性值
+	int siJiShuXingZhi;
+	// 五级属性值
+	int wuJiShuXingZhi;
+	// 六级属性值
+	int liuJiShuXingZhi;
+	// 七级属性值
+	int qiJiShuXingZhi;
+	// 八级属性值
+	int baJiShuXingZhi;
+	// 九级属性值
+	int jiuJiShuXingZhi;
+	// 十级属性值
+	int shiJiShuXingZhi;
+};

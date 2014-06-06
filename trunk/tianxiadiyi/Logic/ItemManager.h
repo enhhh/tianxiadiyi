@@ -21,8 +21,6 @@ public:
 	~ItemManager();
 
 	vector<Item*>itemVector;
-	vector<Gem*>gemVector;
-	vector<Equipment*>equipmentVector;
 
 	// ±³°ü
 	Item** itemArray;
@@ -33,7 +31,7 @@ public:
 
 	static ItemManager* getTheOnlyInstance();
 
-	int getGemNum();
+	int getGemNum(int type);
 
 	void sort();
 

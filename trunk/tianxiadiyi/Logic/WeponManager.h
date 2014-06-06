@@ -53,6 +53,7 @@ public:
 
 	static WeponManager* getTheOnlyInstance();
 	void init();
+	void fillEXT();
 	void fill();
 };
 

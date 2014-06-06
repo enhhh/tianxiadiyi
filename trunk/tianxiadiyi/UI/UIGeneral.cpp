@@ -181,7 +181,7 @@ void UIGeneral::refresh()
 	// 敏捷
 	const char* minJie = CCString::createWithFormat("%d", general->attribute.minJie)->getCString();
 	// 天赋
-	const char* tianFu = general->attribute.tianFu;
+	const char* tianFu = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.tianFu);
 	// 生命 = 体力*5
 	const char* shengMing = CCString::createWithFormat("%d", general->attribute.tiLi*5)->getCString();
 	// 暴击
@@ -195,11 +195,9 @@ void UIGeneral::refresh()
 	// 暴击伤害
 	const char* baoJiShangHai = CCString::createWithFormat("%d", general->attribute.baoJiShangHai)->getCString();
 	// 识破
-	const char* shiPo = CCString::createWithFormat("%f.%%", general->attribute.shiPoLv*100)->getCString();
-
+	const char* shiPo = CCString::createWithFormat("%.f%%", general->attribute.shiPoLv*100)->getCString();
 	// 职业
 	const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.zhiYeMingCheng);
-
 	// 技能
 	const char* jiNeng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.JiNeng);
 

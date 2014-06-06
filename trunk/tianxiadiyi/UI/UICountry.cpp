@@ -152,7 +152,7 @@ CCTableViewCell* UICountry::tableCellAtIndex( CCTableView* table, unsigned int i
 			memberLabel->setZOrder(5);
 			memberLabel->setColor(ccRED);
 			memberLabel->setText(attribute[i]);
-			
+
 			const char* s = CCString::createWithFormat("MemberLabel_%d", i+1)->getCString();
 			UILabel* memberLableEXT = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
 			memberLabel->setPosition(memberLableEXT->getPosition());

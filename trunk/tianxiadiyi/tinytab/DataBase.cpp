@@ -177,6 +177,7 @@ VOID CDataBaseSystem::OpenAllDataBase(VOID)
 		{ DBC_SOUL_BEAD,  "soulBead.txt"	},	// 魂珠表
 		{ DBC_RIDE,  "ride.txt"	},	// 坐骑表
 		{ DBC_TELENT,  "talent.txt"	},	// 天赋表
+		{ DBC_GEM_STRENGTHEN, "gemStrengthen.txt"} // 宝石强化表
 	};
 
 	// 打开所有数据库

@@ -36,7 +36,6 @@ bool UIWeponTakeUp::init()
 	UIButton* fillButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("FillButton"));
 	fillButton->addTouchEventListener(this, toucheventselector(UIWeponTakeUp::fillButtonClicked));
 
-
 	for (int i = 0; i < 3; i++)
 	{
 		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
@@ -53,7 +52,7 @@ bool UIWeponTakeUp::init()
 		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		const char* s = CCString::createWithFormat("EquipmentAttributeValueLabel_%d", i+1)->getCString();
 		equipmentAttributeValueLable[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
@@ -87,9 +86,9 @@ void UIWeponTakeUp::clear()
 		equipmentImageView[i]->setVisible(false);
 	}
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		equipmentAttributeValueLable[i]->setText("");
+		equipmentAttributeValueLable[i]->setText(" ");
 	}
 }
 
@@ -129,21 +128,23 @@ void UIWeponTakeUp::refresh()
 	const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponTakeUpManager->equipment->attribute.name);
 	// 职业
 	const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponTakeUpManager->equipment->attribute.zhiYeXuQiu);
-	
 	// 物理攻击
-	const char* wuLiGongJi = "10";
+	const char* wuLiGongJi = CCString::createWithFormat("%d", weponTakeUpManager->equipment->attribute.chuShiDianShu)->getCString();
 	// 强化等级
-	const char* qiangHuaDengJi = "10";
+	const char* qiangHuaDengJi = CCString::createWithFormat("%d", weponTakeUpManager->equipment->attribute.qiangHuaDengJi)->getCString();
+	// 道具描述
+	const char* miaoShu = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponTakeUpManager->equipment->attribute.miaoShu);
 
-	const char* attribute[4] = {mingCheng, zhiYe, wuLiGongJi, qiangHuaDengJi};
+	const char* attribute[5] = {mingCheng, zhiYe, wuLiGongJi, qiangHuaDengJi, miaoShu};
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		equipmentAttributeValueLable[i]->setText(attribute[i]);
 	}
 
 	delete[] mingCheng;
 	delete[] zhiYe;
+	delete[] miaoShu;
 }
 
 void UIWeponTakeUp::closeButtonClicked( CCObject* sender, TouchEventType type )
@@ -160,7 +161,7 @@ void UIWeponTakeUp::takeUpButtonClicked( CCObject* sender, TouchEventType type )
 	TianXiaDiYi::getTheOnlyInstance()->removeChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup, true);
 	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->release();
 	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = NULL;
-	
+
 	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiGeneral->refresh();
 }
 

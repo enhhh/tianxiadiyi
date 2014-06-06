@@ -32,6 +32,9 @@ bool UIWepon::init()
 	UIButton* closeButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CloseButton"));
 	closeButton->addTouchEventListener(this, toucheventselector(UIWepon::closeButtonClicked));
 
+	UIButton* fillButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("FillButton"));
+	fillButton->addTouchEventListener(this, toucheventselector(UIWepon::fillButtonClicked));
+
 	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
 	pageLeftButton->addTouchEventListener(this, toucheventselector(UIWepon::pageLeftButtonClicked));
 
@@ -40,7 +43,6 @@ bool UIWepon::init()
 
 	equipmentFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("EquipmentFeatureImageView"));
 	roundImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("RoundImageView"));
-
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -94,21 +96,50 @@ void UIWepon::refresh()
 {
 	clear();
 
+	// 是否有装备
 	if (weponManager->equipment != NULL)
 	{
+		// 装备预览
 		const char* s = CCString::createWithFormat("png/equipment/%s.png", weponManager->equipment->attribute.tuPian)->getCString();
 		equipmentFeatureImageView->loadTexture(s);
 		equipmentFeatureImageView->setVisible(true);
 
+		int v = 0;
+
 		if (weponManager->equipment->gem != NULL)
 		{
-			const char* s = CCString::createWithFormat("png/gem/%s.png", weponManager->equipment->gem->attribute.tuPian)->getCString();
+			v -= weponManager->equipment->gem->getAttributeValue();
+		}
+
+		Gem* gem = weponManager->gemFillSprite.weponGem.gem;
+
+		if (gem != NULL)
+		{
+			v += gem->getAttributeValue();
+			const char* s = CCString::createWithFormat("png/gem/%s.png", gem->attribute.tuPian)->getCString();
 			weponManager->gemFillSprite.sprite = CCSprite::create(s);
 			weponManager->gemFillSprite.sprite->setPosition(roundImageView->getPosition());
 			uiLayer->addChild(weponManager->gemFillSprite.sprite);
-
-			weponManager->gemFillSprite.weponGem.gem = weponManager->equipment->gem;
 		}
+
+		// 名称
+		const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponManager->equipment->attribute.name);
+		// 职业
+		const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponManager->equipment->attribute.zhiYeXuQiu);
+		// 物理攻击
+		const char* wuLiGongJi = CCString::createWithFormat("%d", weponManager->equipment->attribute.chuShiDianShu+v)->getCString();
+		// 强化等级
+		const char* qiangHuaDengJi = CCString::createWithFormat("%d", weponManager->equipment->attribute.qiangHuaDengJi)->getCString();
+
+		const char* attribute[4] = {mingCheng, zhiYe, wuLiGongJi, qiangHuaDengJi};
+
+		for (int i = 0; i < 4; i++)
+		{
+			equipmentAttributeValueLable[i]->setText(attribute[i]);
+		}
+
+		delete[] mingCheng;
+		delete[] zhiYe;
 	}
 
 	if (weponManager->maxPageNum <= 0)
@@ -120,6 +151,7 @@ void UIWepon::refresh()
 	{
 		int j = weponManager->pageNum * 4 + i;
 
+		// 宝石栏是否有宝石
 		if (weponManager->weponGemArray[j].gem != NULL)
 		{
 			const char* s = CCString::createWithFormat("png/gem/%s.png", weponManager->weponGemArray[j].gem->attribute.tuPian)->getCString();
@@ -129,27 +161,6 @@ void UIWepon::refresh()
 			weponManager->gemSpriteArray[i].weponGem = weponManager->weponGemArray[i];
 		}
 	}
-
-	// 名称
-	const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponManager->equipment->attribute.name);
-	// 职业
-	const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponManager->equipment->attribute.zhiYeXuQiu);
-
-	// 物理攻击
-	const char* wuLiGongJi = "10";
-
-	// 强化等级
-	const char* qiangHuaDengJi = "10";
-
-	const char* attribute[4] = {mingCheng, zhiYe, wuLiGongJi, qiangHuaDengJi};
-
-	for (int i = 0; i < 4; i++)
-	{
-		equipmentAttributeValueLable[i]->setText(attribute[i]);
-	}
-
-	delete[] mingCheng;
-	delete[] zhiYe;
 }
 
 bool UIWepon::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
@@ -220,25 +231,20 @@ void UIWepon::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 				selectGemSprite.sprite->setPosition(position);
 
 				weponManager->gemSpriteArray[imageViewId] = weponManager->gemFillSprite;
-				weponManager->gemFillSprite = selectGemSprite;
+				weponManager->gemFillSprite.sprite = selectGemSprite.sprite;
 			}
 			else
 			{
 				selectGemSprite.sprite->setPosition(position);
-				weponManager->gemFillSprite = selectGemSprite;
+				weponManager->gemFillSprite.sprite = selectGemSprite.sprite;
 			}
 
 			// 交换宝石数据
-			weponManager->fill();
-
+			weponManager->fillEXT();
 			selectGemSprite.sprite = NULL;
 			selectGemSprite.weponGem.gem = NULL;
+			refresh();
 
-			TianXiaDiYi::getTheOnlyInstance()->removeChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon, true);
-			TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon->release();
-			TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon = NULL;
-
-			TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->refresh();
 			return;
 		}
 
@@ -259,6 +265,18 @@ void UIWepon::closeButtonClicked( CCObject* sender, TouchEventType type )
 	TianXiaDiYi::getTheOnlyInstance()->removeChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon, true);
 	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon->release();
 	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon = NULL;
+}
+
+void UIWepon::fillButtonClicked( CCObject* sender, TouchEventType type )
+{
+	// 交换宝石数据
+	weponManager->fill();
+
+	TianXiaDiYi::getTheOnlyInstance()->removeChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon, true);
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon->release();
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWepon = NULL;
+
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->refresh();
 }
 
 void UIWepon::pageLeftButtonClicked( CCObject* sender, TouchEventType type )

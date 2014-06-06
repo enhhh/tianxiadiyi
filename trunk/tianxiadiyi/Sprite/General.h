@@ -18,6 +18,14 @@ using namespace CocosDenshion;
 using namespace cocos2d::extension;
 using namespace gui;
 
+enum GENERAL_TYPE
+{
+	// √ÕΩ´
+	MENG_JIANG = 1,
+	//  ı ø
+	MOU_SHI
+};
+
 class General : public Monster
 {
 public:
