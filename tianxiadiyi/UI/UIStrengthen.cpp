@@ -230,7 +230,10 @@ CCTableViewCell* UIStrengthen::tableCellAtIndex( CCTableView* table, unsigned in
 		{
 			CCLabelTTF* generalNameLabel = CCLabelTTF::create();
 			generalNameLabel->setPosition(ccp(generalNameBGSprite->getContentSize().width/2, generalNameBGSprite->getContentSize().height/2));
-			generalNameLabel->setString(formationManager->generalVector[idx-1]->attribute.tuPian);
+			
+			const char* name = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(formationManager->generalVector[idx-1]->attribute.name);
+
+			generalNameLabel->setString(name);
 			cell->addChild(generalNameLabel);
 		}
 

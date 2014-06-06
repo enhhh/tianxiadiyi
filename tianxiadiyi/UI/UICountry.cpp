@@ -130,12 +130,28 @@ CCTableViewCell* UICountry::tableCellAtIndex( CCTableView* table, unsigned int i
 
 		string memberName[] = {"柳生飘絮", "郡主", "188", "18602", "4份钟前"};
 
+		CountryMember countryMember = countryManager->countryMemberVector[idx];
+
+		// 玩家
+		const char* name = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(countryMember.name);
+		// 职务
+		const char* job = CCString::createWithFormat("%d", countryMember.job)->getCString();
+		// 等级
+		const char* lv = CCString::createWithFormat("%d", countryMember.lv)->getCString();
+		// 贡献度
+		const char* contribute = CCString::createWithFormat("%d", countryMember.contribute)->getCString();
+		// 登录时间
+		const char* login = CCString::createWithFormat("%d小时%d分钟", countryMember.hour, countryMember.minute)->getCString();
+		login = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(login);
+
+		const char* attribute[5] = {name, job, lv, contribute, login};
+
 		for (int i = 0; i < 5; i++)
 		{
 			UILabel* memberLabel = UILabel::create();
 			memberLabel->setZOrder(5);
 			memberLabel->setColor(ccRED);
-			memberLabel->setText(memberName[i].c_str());
+			memberLabel->setText(attribute[i]);
 			
 			const char* s = CCString::createWithFormat("MemberLabel_%d", i+1)->getCString();
 			UILabel* memberLableEXT = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
@@ -143,6 +159,9 @@ CCTableViewCell* UICountry::tableCellAtIndex( CCTableView* table, unsigned int i
 
 			panel->addChild(memberLabel);
 		}
+
+		delete[] name;
+		delete[] login;
 
 		UIImageView* selectCoutryFrameImageView = UIImageView::create();
 		selectCoutryFrameImageView->loadTexture("png/SelectCountryFrame.png");

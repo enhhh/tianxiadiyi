@@ -38,6 +38,9 @@ bool UIWepon::init()
 	UIButton* pageRightButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageRightButton"));
 	pageRightButton->addTouchEventListener(this, toucheventselector(UIWepon::pageRightButtonClicked));
 
+	equipmentFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("EquipmentFeatureImageView"));
+	roundImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("RoundImageView"));
+
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -45,9 +48,12 @@ bool UIWepon::init()
 		gemImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	equipmentFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("EquipmentFeatureImageView"));
-	roundImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("RoundImageView"));
-
+	for (int i = 0; i < 4; i++)
+	{
+		const char* s = CCString::createWithFormat("EquipmentAttributeValueLabel_%d", i+1)->getCString();
+		equipmentAttributeValueLable[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
+	}
+	
 	addChild(uiLayer);
 	refresh();
 	return true;
@@ -76,6 +82,11 @@ void UIWepon::clear()
 			uiLayer->removeChild(weponManager->gemSpriteArray[i].sprite, true);
 			weponManager->gemSpriteArray[i].sprite = NULL;
 		}
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		equipmentAttributeValueLable[i]->setText(" ");
 	}
 }
 
@@ -118,6 +129,27 @@ void UIWepon::refresh()
 			weponManager->gemSpriteArray[i].weponGem = weponManager->weponGemArray[i];
 		}
 	}
+
+	// 名称
+	const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponManager->equipment->attribute.name);
+	// 职业
+	const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponManager->equipment->attribute.zhiYeXuQiu);
+
+	// 物理攻击
+	const char* wuLiGongJi = "10";
+
+	// 强化等级
+	const char* qiangHuaDengJi = "10";
+
+	const char* attribute[4] = {mingCheng, zhiYe, wuLiGongJi, qiangHuaDengJi};
+
+	for (int i = 0; i < 4; i++)
+	{
+		equipmentAttributeValueLable[i]->setText(attribute[i]);
+	}
+
+	delete[] mingCheng;
+	delete[] zhiYe;
 }
 
 bool UIWepon::ccTouchBegan( CCTouch* pTouch, CCEvent* event )

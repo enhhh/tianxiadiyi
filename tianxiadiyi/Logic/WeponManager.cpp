@@ -34,8 +34,9 @@ void WeponManager::init()
 
 	gemFillSprite.weponGem.gem = NULL;
 	gemFillSprite.sprite = NULL;
+	// iconv_open
 
-	int gemNum = itemManager->getGemNum();
+	/*int gemNum = itemManager->getGemNum();
 	pageNum = 0;
 	maxPageNum = (gemNum-1) / 4 + 1;
 
@@ -71,13 +72,18 @@ void WeponManager::init()
 				}
 			}
 		}
-	}
+	}*/
 
 	equipment = weponTakeUpManager->equipment;
 }
 
 void WeponManager::fill()
 {
+	if (equipment == NULL)
+	{
+		return;
+	}
+
 	WeponGem weponGem = weponGemArray[selectGemId];
 	Gem* gem = equipment->gem;
 

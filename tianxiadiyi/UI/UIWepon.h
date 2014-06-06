@@ -26,8 +26,8 @@ public:
 	UILayer* uiLayer;
 	UIImageView* equipmentFeatureImageView;
 	UIImageView* roundImageView;
-
 	UIImageView* gemImageView[4];
+	UILabel* equipmentAttributeValueLable[4];
 
 	UIWepon();
 	~UIWepon();

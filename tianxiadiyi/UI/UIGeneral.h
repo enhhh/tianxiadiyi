@@ -27,9 +27,10 @@ public:
 	
 	UIImageView* headImageView[3];
 	UIImageView* equipmentImageView[6];
-	UILabel* attributeValueLabel[12];
+	UILabel* attributeValueLabel[15];
 	UIImageView* selectFrameImageView;
 	UIImageView* headFeatureImageView;
+	UIImageView* starImageView[10];
 
 	UIGeneral();
 	~UIGeneral();

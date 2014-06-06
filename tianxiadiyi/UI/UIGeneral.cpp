@@ -71,7 +71,7 @@ bool UIGeneral::init()
 		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		const char* s = CCString::createWithFormat("AttributeValueLabel_%d", i+1)->getCString();
 		attributeValueLabel[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
@@ -79,6 +79,12 @@ bool UIGeneral::init()
 
 	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
 	headFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("HeadFeatureImageView"));
+
+	for (int i = 0; i < 10; i++)
+	{
+		const char* s = CCString::createWithFormat("StarImageView_%d", i+1)->getCString();
+		starImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));;
+	}
 
 	UIPanel* spritePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SpritePanel"));
 	CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo("ui/StarringSprite0.png", "ui/StarringSprite0.plist", "ui/StarringSprite.ExportJson");
@@ -115,22 +121,20 @@ void UIGeneral::clear()
 		equipmentImageView[i]->setVisible(false);
 	}
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		attributeValueLabel[i]->setText("0");
+		starImageView[i]->setVisible(false);
+	}
+
+	for (int i = 0; i < 15; i++)
+	{
+		attributeValueLabel[i]->setText(" ");
 	}
 }
 
 void UIGeneral::refresh()
 {
 	clear();
-
-	if (generalManager->selectGeneralId < generalManager->generalVector.size())
-	{
-		const char* s = CCString::createWithFormat("png/general/%s.png", generalManager->generalVector[generalManager->selectGeneralId]->attribute.tuPian)->getCString();
-		headFeatureImageView->loadTexture(s);
-		headFeatureImageView->setVisible(true);
-	}
 
 	// 将领图片
 	for (int i = 0; i < 3; i++)
@@ -145,40 +149,76 @@ void UIGeneral::refresh()
 		}
 	}
 
-	for (int i = 0; i < 6; i++)
+	if (generalManager->selectGeneralId >= generalManager->generalVector.size())
 	{
-		if (generalManager->selectGeneralId < generalManager->generalVector.size())
-		{
-			Equipment* equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[i];
-
-			if (equipment != NULL)
-			{
-				const char* s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
-				equipmentImageView[i]->loadTexture(s);
-				equipmentImageView[i]->setVisible(true);
-			}	
-		}
+		return;
 	}
 
-	if (generalManager->selectGeneralId < generalManager->generalVector.size())
+	const char* s = CCString::createWithFormat("png/general/%s.png", generalManager->generalVector[generalManager->selectGeneralId]->attribute.tuPian)->getCString();
+	headFeatureImageView->loadTexture(s);
+	headFeatureImageView->setVisible(true);
+
+	for (int i = 0; i < 6; i++)
 	{
-		General* general = generalManager->generalVector[generalManager->selectGeneralId];
-		
-		// 武力
-		const char* wuLi = CCString::createWithFormat("%d", general->attribute.wuLi)->getCString();
-		// 智力
-		const char* zhiLi = CCString::createWithFormat("%d", general->attribute.zhiLi)->getCString();
-		// 体力
-		const char* tiLi = CCString::createWithFormat("%d", general->attribute.tiLi)->getCString();
-		// 敏捷
-		const char* minJie = CCString::createWithFormat("%d", general->attribute.minJie)->getCString();
+		Equipment* equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[i];
 
-		const char* attribute[4] = {wuLi, zhiLi, tiLi, minJie};
-
-		for (int i = 0; i < 4; i++)
+		if (equipment != NULL)
 		{
-			attributeValueLabel[i]->setText(attribute[i]);
-		}
+			const char* s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
+			equipmentImageView[i]->loadTexture(s);
+			equipmentImageView[i]->setVisible(true);
+		}	
+	}
+
+	General* general = generalManager->generalVector[generalManager->selectGeneralId];
+
+	// 武力
+	const char* wuLi = CCString::createWithFormat("%d", general->attribute.wuLi)->getCString();
+	// 智力
+	const char* zhiLi = CCString::createWithFormat("%d", general->attribute.zhiLi)->getCString();
+	// 体力
+	const char* tiLi = CCString::createWithFormat("%d", general->attribute.tiLi)->getCString();
+	// 敏捷
+	const char* minJie = CCString::createWithFormat("%d", general->attribute.minJie)->getCString();
+	// 天赋
+	const char* tianFu = general->attribute.tianFu;
+	// 生命 = 体力*5
+	const char* shengMing = CCString::createWithFormat("%d", general->attribute.tiLi*5)->getCString();
+	// 暴击
+	const char* baoJi = CCString::createWithFormat("%.f%%", general->attribute.BaoJiLv*100)->getCString();
+	// 格挡
+	const char* geDang = CCString::createWithFormat("%.f%%", general->attribute.geDangLv*100)->getCString();
+	// 命中
+	const char* mingZhong = CCString::createWithFormat("%.f%%", general->attribute.mingZhongLv*100)->getCString();
+	// 闪避
+	const char* shanBi = CCString::createWithFormat("%.f%%", general->attribute.shanBiLv*100)->getCString();
+	// 暴击伤害
+	const char* baoJiShangHai = CCString::createWithFormat("%d", general->attribute.baoJiShangHai)->getCString();
+	// 识破
+	const char* shiPo = CCString::createWithFormat("%f.%%", general->attribute.shiPoLv*100)->getCString();
+
+	// 职业
+	const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.zhiYeMingCheng);
+
+	// 技能
+	const char* jiNeng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.JiNeng);
+
+	const char* attribute[14] = {wuLi, zhiLi, tiLi, minJie, tianFu, shengMing, baoJi, geDang, mingZhong, shanBi, baoJiShangHai, shiPo, zhiYe, jiNeng};
+
+	for (int i = 0; i < 14; i++)
+	{
+		attributeValueLabel[i]->setText(attribute[i]);
+	}
+
+	delete[] zhiYe;
+	delete[] jiNeng;
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (i < general->attribute.xingJi*2)
+		{
+			starImageView[i]->setVisible(true);
+		}	
 	}
 }
 

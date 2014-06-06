@@ -187,6 +187,36 @@ long long TianXiaDiYi::getCurrentTime()
 	return (now.tv_sec * 1000 + now.tv_usec / 1000);
 }
 
+char* TianXiaDiYi::ansi2utf8(const char* inbuf)
+{
+	iconv_t cd;
+
+	cd = iconv_open("UTF-8", "GBK");
+
+	if (cd == 0)
+	{
+		return NULL;
+	}
+
+	size_t inbytesleft = strlen(inbuf);
+	size_t outbytesleft = inbytesleft * 2;
+	char* outbuf = new char[outbytesleft];
+
+	const char* in = inbuf;
+	char* out = outbuf;
+
+	memset(outbuf, 0, outbytesleft);
+
+	if (iconv(cd, &in, &inbytesleft, &out, &outbytesleft) == -1) 
+	{
+		delete[] outbuf;
+		return NULL;
+	}
+
+	iconv_close(cd);
+	return outbuf;
+}
+
 CCAnimation* animation;
 CCAnimate* animate;
 CCSequence* sequence;

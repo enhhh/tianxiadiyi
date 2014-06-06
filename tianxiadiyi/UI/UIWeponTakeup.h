@@ -26,6 +26,7 @@ public:
 	UIImageView* equipmentFeatureImageView;
 	UIImageView* roundImageView;
 	UIImageView* equipmentImageView[3];
+	UILabel* equipmentAttributeValueLable[4];
 
 	UIWeponTakeUp();
 	~UIWeponTakeUp();
