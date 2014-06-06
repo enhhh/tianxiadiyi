@@ -6,17 +6,16 @@ ItemManager::ItemManager()
 {
 	for (int i = 0; i < 8; i++)
 	{
-		Gem* gem = new Gem(i);
-
-		gemVector.push_back(gem);
-		itemVector.push_back(gem);
+		for (int j = 0; j < 2; j++)
+		{
+			Gem* gem = new Gem(i);
+			itemVector.push_back(gem);
+		}
 	}
 
 	for (int i = 0; i < 76; i++)
 	{
 		Equipment* equipment = new Equipment(i+1);
-		
-		equipmentVector.push_back(equipment);
 		itemVector.push_back(equipment);
 	}
 
@@ -60,7 +59,7 @@ ItemManager* ItemManager::getTheOnlyInstance()
 	return itemManager;
 }
 
-int ItemManager::getGemNum()
+int ItemManager::getGemNum(int type)
 {
 	int num = 0;
 
@@ -72,7 +71,12 @@ int ItemManager::getGemNum()
 		{
 			if (item->type == GEM)
 			{
-				num++;
+				Gem* gem = (Gem*)item;
+				
+				if (gem->attribute.zhongLei == type)
+				{
+					num++;
+				}
 			}
 		}
 	}

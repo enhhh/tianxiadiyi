@@ -44,6 +44,7 @@ public:
 	virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
+	void fillButtonClicked(CCObject* sender, TouchEventType type);
 	void pageLeftButtonClicked(CCObject* sender, TouchEventType type);
 	void pageRightButtonClicked(CCObject* sender, TouchEventType type);
 

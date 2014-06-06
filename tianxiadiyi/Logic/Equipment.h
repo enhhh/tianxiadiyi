@@ -37,6 +37,8 @@ public:
 
 	Equipment(int id);
 	~Equipment();
+
+	int getAttributeValue();
 };
 
 #endif

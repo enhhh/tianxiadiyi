@@ -29,6 +29,7 @@ public:
 	ItemManager* itemManager;
 	GeneralManager* generalManager;
 
+	General* general;
 	Equipment* equipment;
 	vector<WeponTakeUpEquipment>equipmentVector;
 	

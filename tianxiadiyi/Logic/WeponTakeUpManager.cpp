@@ -26,6 +26,9 @@ WeponTakeUpManager* WeponTakeUpManager::getTheOnlyInstance()
 
 void WeponTakeUpManager::init()
 {
+	general = generalManager->generalVector[generalManager->selectGeneralId];
+	equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[generalManager->selectEquipmentId];
+
 	equipmentVector.clear();
 
 	for (int i = 0; i < itemManager->maxPageNum*16; i++)
@@ -43,16 +46,30 @@ void WeponTakeUpManager::init()
 				{
 				case GENERAL_WU_QI:
 
-					if ((equipment->attribute.zhongLei == SHANG_ZI) ||
-						(equipment->attribute.zhongLei == JIAN) ||
-						(equipment->attribute.zhongLei == QIANG) ||
-						(equipment->attribute.zhongLei == DAO) ||
-						(equipment->attribute.zhongLei == GONG_JIAN)
-						)
+					switch(general->attribute.zhiYe)
 					{
-						equipmentVector.push_back(weponTakeUpEquipment);
-					}
+					case MENG_JIANG:
 
+						if ((equipment->attribute.zhongLei == DAO) ||
+							(equipment->attribute.zhongLei == GONG_JIAN) ||
+							(equipment->attribute.zhongLei == QIANG)
+							)
+						{
+							equipmentVector.push_back(weponTakeUpEquipment);
+						}
+
+						break;
+					case MOU_SHI:
+
+						if ((equipment->attribute.zhongLei == SHANG_ZI) ||
+							(equipment->attribute.zhongLei == JIAN)
+							)
+						{
+							equipmentVector.push_back(weponTakeUpEquipment);
+						}
+
+						break;
+					}
 					break;
 				case GENERAL_BING_FU:
 					
@@ -72,7 +89,7 @@ void WeponTakeUpManager::init()
 					break;
 				case GENERAL_KAI_JIA:
 
-					if (equipment->attribute.zhongLei == KAI_JIA)
+					if ((equipment->attribute.zhongLei == KAI_JIA) && (equipment->attribute.xingBie == equipment->attribute.xingBie))
 					{
 						equipmentVector.push_back(weponTakeUpEquipment);
 					}
@@ -80,7 +97,7 @@ void WeponTakeUpManager::init()
 					break;
 				case GENERAL_PI_FENG:
 
-					if (equipment->attribute.zhongLei == PI_FENG)
+					if ((equipment->attribute.zhongLei == PI_FENG) && (equipment->attribute.xingBie == equipment->attribute.xingBie))
 					{
 						equipmentVector.push_back(weponTakeUpEquipment);
 					}
@@ -108,8 +125,6 @@ void WeponTakeUpManager::init()
 	{
 		maxPageNum = 0;
 	}
-
-	equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[generalManager->selectEquipmentId];
 }
 
 void WeponTakeUpManager::takeUp()
@@ -132,6 +147,8 @@ void WeponTakeUpManager::takeUp()
 		{
 			generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[generalManager->selectEquipmentId] = weponTakeUpEquipment.equipment;
 			itemManager->itemArray[weponTakeUpEquipment.id] = NULL;
+
+			int zhiYe = generalManager->generalVector[generalManager->selectGeneralId]->attribute.zhiYe;
 		}
 	}
 }

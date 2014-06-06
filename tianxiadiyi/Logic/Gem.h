@@ -31,9 +31,12 @@ class Gem : public Item
 public:
 
 	_DBC_GEM attribute;
+	int lv;
 
 	Gem(int id);
 	~Gem();
+
+	int getAttributeValue();
 };
 
 #endif
