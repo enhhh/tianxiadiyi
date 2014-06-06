@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include "SimpleAudioEngine.h"
+#include "platform\third_party\win32\iconv\iconv.h"
 
 #include "Scene\MainCityScene.h"
 #include "Scene\FightingScene.h"
@@ -73,6 +74,8 @@ public:
 	void setSceneType(int sceneType);
 
 	long long getCurrentTime();
+
+	char* ansi2utf8(const char* inbuf);
 	
 	void playCgAction();
 

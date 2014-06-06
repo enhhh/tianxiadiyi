@@ -129,6 +129,12 @@ bool UIStarring::init()
 		soulBeadCircleImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
+	for (int i = 0; i < 3; i++)
+	{
+		const char* s = CCString::createWithFormat("SoulBeadAttributeValueLabel_%d", i+1)->getCString();
+		soulBeadAttributeValueLabel[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
+	}
+
 	UIButton* pageLeftSoulButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftSoulButton"));
 	pageLeftSoulButton->addTouchEventListener(this, toucheventselector(UIStarring::pageLeftSoulButtonClicked));
 
@@ -281,6 +287,8 @@ void UIStarring::refreshSoul()
 			starringManager->soulBeadEquipSpriteArray[i].soulBead = starringManager->soulBeadEquipArray[i];
 		}
 	}
+
+	refreshSoulFeatureSprite();
 }
 
 void UIStarring::refreshSoulFeatureSprite()
@@ -291,19 +299,42 @@ void UIStarring::refreshSoulFeatureSprite()
 		soulBeadFeatureSprite.armature = NULL;
 	}
 
-	if (starringManager->soulBeadArray[starringManager->selectSoulBeadId] != NULL)
+	SoulBead* soulBead = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
+
+	for (int i = 0; i < 3; i++)
 	{
-		const char* imagePath = CCString::createWithFormat("ui/%s0.png", starringManager->soulBeadArray[starringManager->selectSoulBeadId]->attribute.dongHua)->getCString();;
-		const char* plistPath = CCString::createWithFormat("ui/%s0.plist", starringManager->soulBeadArray[starringManager->selectSoulBeadId]->attribute.dongHua)->getCString();;
-		const char* configFilePath = CCString::createWithFormat("ui/%s.ExportJson", starringManager->soulBeadArray[starringManager->selectSoulBeadId]->attribute.dongHua)->getCString();
+		soulBeadAttributeValueLabel[i]->setText(" ");
+	}
+
+	if (soulBead != NULL)
+	{
+		const char* imagePath = CCString::createWithFormat("ui/%s0.png", soulBead->attribute.dongHua)->getCString();
+		const char* plistPath = CCString::createWithFormat("ui/%s0.plist", soulBead->attribute.dongHua)->getCString();
+		const char* configFilePath = CCString::createWithFormat("ui/%s.ExportJson", soulBead->attribute.dongHua)->getCString();
 
 		CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo(imagePath, plistPath, configFilePath);
-		soulBeadFeatureSprite.armature = CCArmature::create(starringManager->soulBeadArray[starringManager->selectSoulBeadId]->attribute.dongHua);
-		soulBeadFeatureSprite.armature->getAnimation()->play(starringManager->soulBeadArray[starringManager->selectSoulBeadId]->attribute.dongHua);
+		soulBeadFeatureSprite.armature = CCArmature::create(soulBead->attribute.dongHua);
+		soulBeadFeatureSprite.armature->getAnimation()->play(soulBead->attribute.dongHua);
 
 		soulBeadFeatureSprite.armature->setPosition(ccp(soulPanel->getPositionX()+soulBeadFeatureImageView->getPositionX(), soulPanel->getPositionY()+soulBeadFeatureImageView->getPositionY()));
 		uiLayer->addChild(soulBeadFeatureSprite.armature);
-		soulBeadFeatureSprite.soulBead = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
+		soulBeadFeatureSprite.soulBead = soulBead;
+
+		// 名称
+		const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(soulBead->attribute.name);
+		// 等级
+		const char* dengJi = CCString::createWithFormat("%d", soulBead->attribute.dengJi)->getCString();
+		// 属性值
+		const char* shuXing = CCString::createWithFormat("%.f%%", soulBead->attribute.shuXingZhi)->getCString();;
+
+		const char* attribute[3] = {mingCheng, dengJi, shuXing};
+
+		for (int i = 0; i < 3; i++)
+		{
+			soulBeadAttributeValueLabel[i]->setText(attribute[i]);
+		}
+
+		delete[] mingCheng;
 	}
 }
 

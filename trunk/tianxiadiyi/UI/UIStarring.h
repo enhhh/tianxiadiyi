@@ -51,6 +51,7 @@ public:
 	UIButton* soulBeadButton[12];
 	UIImageView* soulBeadFeatureImageView;
 	UIImageView* selectSoulFrameImageView;
+	UILabel* soulBeadAttributeValueLabel[3];
 
 	SoulBeadSprite soulBeadFeatureSprite;
 	SoulBeadSprite selectSoulBeadSprite;

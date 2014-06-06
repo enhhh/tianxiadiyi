@@ -6,7 +6,17 @@ CountryManager::CountryManager()
 {
 	for (int i = 0; i < 20; i++)
 	{
-		CountryMember countryMember;
+		CountryMember countryMember = 
+		{
+			10086,
+			"Ô¬ÁÖ",
+			1,
+			1,
+			10086,
+			3,
+			7
+		};
+
 		countryMemberVector.push_back(countryMember);
 	}
 

@@ -36,6 +36,14 @@ bool UIWeponTakeUp::init()
 	UIButton* fillButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("FillButton"));
 	fillButton->addTouchEventListener(this, toucheventselector(UIWeponTakeUp::fillButtonClicked));
 
+
+	for (int i = 0; i < 3; i++)
+	{
+		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
+		UIButton* equipmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
+		equipmentButton->addTouchEventListener(this, toucheventselector(UIWeponTakeUp::equipmentButtonClicked));
+	}
+
 	equipmentFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("EquipmentFeatureImageView"));
 	roundImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("RoundImageView"));
 
@@ -45,13 +53,12 @@ bool UIWeponTakeUp::init()
 		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
-		UIButton* equipmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
-		equipmentButton->addTouchEventListener(this, toucheventselector(UIWeponTakeUp::equipmentButtonClicked));
+		const char* s = CCString::createWithFormat("EquipmentAttributeValueLabel_%d", i+1)->getCString();
+		equipmentAttributeValueLable[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
 	}
-
+	
 	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
 	pageLeftButton->addTouchEventListener(this, toucheventselector(UIWeponTakeUp::pageLeftButtonClicked));
 
@@ -79,25 +86,16 @@ void UIWeponTakeUp::clear()
 	{
 		equipmentImageView[i]->setVisible(false);
 	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		equipmentAttributeValueLable[i]->setText("");
+	}
 }
 
 void UIWeponTakeUp::refresh()
 {
 	clear();
-
-	if (weponTakeUpManager->equipment != NULL)
-	{
-		const char* s = CCString::createWithFormat("png/equipment/%s.png", weponTakeUpManager->equipment->attribute.tuPian)->getCString();
-		equipmentFeatureImageView->loadTexture(s);
-		equipmentFeatureImageView->setVisible(true);
-
-		if (weponTakeUpManager->equipment->gem != NULL)
-		{
-			const char* s = CCString::createWithFormat("png/gem/%s.png", weponTakeUpManager->equipment->gem->attribute.tuPian)->getCString();
-			roundImageView->loadTexture(s);
-			roundImageView->setVisible(true);
-		}
-	}
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -109,11 +107,43 @@ void UIWeponTakeUp::refresh()
 			equipmentImageView[i]->loadTexture(s);
 			equipmentImageView[i]->setVisible(true);
 		}
-		else
-		{
-			equipmentImageView[i]->setVisible(false);
-		}
 	}
+
+	if (weponTakeUpManager->equipment == NULL)
+	{
+		return;
+	}
+
+	const char* s = CCString::createWithFormat("png/equipment/%s.png", weponTakeUpManager->equipment->attribute.tuPian)->getCString();
+	equipmentFeatureImageView->loadTexture(s);
+	equipmentFeatureImageView->setVisible(true);
+
+	if (weponTakeUpManager->equipment->gem != NULL)
+	{
+		const char* s = CCString::createWithFormat("png/gem/%s.png", weponTakeUpManager->equipment->gem->attribute.tuPian)->getCString();
+		roundImageView->loadTexture(s);
+		roundImageView->setVisible(true);
+	}
+
+	// 名称
+	const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponTakeUpManager->equipment->attribute.name);
+	// 职业
+	const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(weponTakeUpManager->equipment->attribute.zhiYeXuQiu);
+	
+	// 物理攻击
+	const char* wuLiGongJi = "10";
+	// 强化等级
+	const char* qiangHuaDengJi = "10";
+
+	const char* attribute[4] = {mingCheng, zhiYe, wuLiGongJi, qiangHuaDengJi};
+
+	for (int i = 0; i < 4; i++)
+	{
+		equipmentAttributeValueLable[i]->setText(attribute[i]);
+	}
+
+	delete[] mingCheng;
+	delete[] zhiYe;
 }
 
 void UIWeponTakeUp::closeButtonClicked( CCObject* sender, TouchEventType type )

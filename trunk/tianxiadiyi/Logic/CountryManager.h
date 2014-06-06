@@ -21,6 +21,8 @@ struct CountryMember
 	char* name;
 	// 职务
 	int job;
+	// 等级
+	int lv;
 	// 贡献度
 	int contribute;
 	// 在线小时
