@@ -42,6 +42,8 @@ public:
 
 	static WeponTakeUpManager* getTheOnlyInstance();
 	void init();
+
+	void addEquipmentAtrribute(Equipment* equipment, int add);
 	void takeUp();
 };
 

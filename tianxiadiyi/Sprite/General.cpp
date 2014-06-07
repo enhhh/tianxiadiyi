@@ -13,7 +13,7 @@ General::General( int id ) : Monster(GENERAL)
 	faShuFangYu = 6 * attribute.zhiLi;
 	hp = 10 * attribute.tiLi;
 
-
+	attributePoint = 5;
 
 	isFormation = false;
 }

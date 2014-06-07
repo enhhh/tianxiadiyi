@@ -127,6 +127,35 @@ void WeponTakeUpManager::init()
 	}
 }
 
+void WeponTakeUpManager::addEquipmentAtrribute( Equipment* equipment, int add )
+{
+	switch (generalManager->selectEquipmentId)
+	{
+	case GENERAL_WU_QI:
+
+		switch(general->attribute.zhiYe)
+		{
+		case MENG_JIANG:
+			general->wuLiGongJi += equipment->attribute.chuShiDianShu * add;
+			break;
+		case MOU_SHI:
+			general->faShuGongJi += equipment->attribute.chuShiDianShu * add;
+			break;
+		}
+
+		break;
+	case GENERAL_KAI_JIA:
+		general->wuLiFangYu += equipment->attribute.chuShiDianShu * add;
+		break;
+	case GENERAL_PI_FENG:
+		general->faShuFangYu += equipment->attribute.chuShiDianShu * add;
+		break;
+	case GENERAL_BING_FU:
+		general->hp += equipment->attribute.chuShiDianShu * add;
+		break;
+	}
+}
+
 void WeponTakeUpManager::takeUp()
 {
 	if (selectEquipmentId < equipmentVector.size())
@@ -137,18 +166,20 @@ void WeponTakeUpManager::takeUp()
 
 		if (generalEquipment != NULL)
 		{
+			Equipment* s = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[generalManager->selectEquipmentId];
 			Equipment* t = (Equipment*)itemManager->itemArray[weponTakeUpEquipment.id];
 			itemManager->itemArray[weponTakeUpEquipment.id] = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[generalManager->selectEquipmentId];
 			generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[generalManager->selectEquipmentId] = t;
-
 			equipmentVector.erase(equipmentVector.begin()+selectEquipmentId);
+			addEquipmentAtrribute(s, -1);
+			addEquipmentAtrribute(t, 1);
+
 		}
 		else
 		{
 			generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[generalManager->selectEquipmentId] = weponTakeUpEquipment.equipment;
 			itemManager->itemArray[weponTakeUpEquipment.id] = NULL;
-
-			int zhiYe = generalManager->generalVector[generalManager->selectGeneralId]->attribute.zhiYe;
+			addEquipmentAtrribute(equipment, 1);
 		}
 	}
 }

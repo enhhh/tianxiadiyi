@@ -22,12 +22,13 @@ class UIGeneral : public CCLayer
 public:
 
 	GeneralManager* generalManager;
-
 	UILayer* uiLayer;
-	
+
+	UIPanel* spritePanel;
+	CCArmature* spriteAarmature;
 	UIImageView* headImageView[3];
 	UIImageView* equipmentImageView[6];
-	UILabel* attributeValueLabel[15];
+	UILabel* attributeValueLabel[16];
 	UIImageView* selectFrameImageView;
 	UIImageView* headFeatureImageView;
 	UIImageView* starImageView[10];

@@ -8,6 +8,7 @@
 UIGeneral::UIGeneral()
 {
 	generalManager = GeneralManager::getTheOnlyInstance();
+	spriteAarmature = NULL;
 }
 
 UIGeneral::~UIGeneral()
@@ -71,7 +72,7 @@ bool UIGeneral::init()
 		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		const char* s = CCString::createWithFormat("AttributeValueLabel_%d", i+1)->getCString();
 		attributeValueLabel[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
@@ -86,13 +87,9 @@ bool UIGeneral::init()
 		starImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));;
 	}
 
-	UIPanel* spritePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SpritePanel"));
-	CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo("ui/StarringSprite0.png", "ui/StarringSprite0.plist", "ui/StarringSprite.ExportJson");
-	CCArmature* spriteAarmature = CCArmature::create("StarringSprite");
-	spriteAarmature->getAnimation()->play("StandDown");
-	spriteAarmature->setPosition(spritePanel->getPosition());
-	
-	uiLayer->addChild(spriteAarmature);
+	spritePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SpritePanel"));
+
+	General* general = generalManager->generalVector[generalManager->selectGeneralId];
 
 	addChild(uiLayer);
 	setVisible(false);
@@ -126,9 +123,14 @@ void UIGeneral::clear()
 		starImageView[i]->setVisible(false);
 	}
 
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		attributeValueLabel[i]->setText(" ");
+	}
+
+	if (spriteAarmature != NULL)
+	{
+		uiLayer->removeChild(spriteAarmature, true);
 	}
 }
 
@@ -200,16 +202,22 @@ void UIGeneral::refresh()
 	const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.zhiYeMingCheng);
 	// 技能
 	const char* jiNeng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.JiNeng);
+	// 羁绊
+	const char* jiBan = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8("天下第一");
+	// 名称
+	const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.name);
 
-	const char* attribute[14] = {wuLi, zhiLi, tiLi, minJie, tianFu, shengMing, baoJi, geDang, mingZhong, shanBi, baoJiShangHai, shiPo, zhiYe, jiNeng};
+	const char* attribute[16] = {wuLi, zhiLi, tiLi, minJie, tianFu, shengMing, baoJi, geDang, mingZhong, shanBi, baoJiShangHai, shiPo, zhiYe, jiNeng, jiBan, mingCheng};
 
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		attributeValueLabel[i]->setText(attribute[i]);
 	}
 
 	delete[] zhiYe;
 	delete[] jiNeng;
+	delete[] jiBan;
+	delete[] mingCheng;
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -218,6 +226,17 @@ void UIGeneral::refresh()
 			starImageView[i]->setVisible(true);
 		}	
 	}
+
+	const char* imagePath = CCString::createWithFormat("ui/%sSprite0.png", general->attribute.tuPian)->getCString();;
+	const char* plistPath = CCString::createWithFormat("ui/%sSprite0.plist", general->attribute.tuPian)->getCString();;
+	const char* configFilePath = CCString::createWithFormat("ui/%sSprite.ExportJson", general->attribute.tuPian)->getCString();
+
+	CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo(imagePath, plistPath, configFilePath);
+	const char* armatureName = CCString::createWithFormat("%sSprite", general->attribute.tuPian)->getCString();
+	spriteAarmature = CCArmature::create(armatureName);
+	spriteAarmature->getAnimation()->play("Stand");
+	spriteAarmature->setPosition(spritePanel->getPosition());
+	uiLayer->addChild(spriteAarmature);
 }
 
 void UIGeneral::closeButtonClicked( CCObject* sender, TouchEventType type )
@@ -289,6 +308,7 @@ void UIGeneral::addButtonClicked( CCObject* sender, TouchEventType type )
 			if (strcmp(button->getName(), s) == 0)
 			{
 				generalManager->addAttribute(i);
+				refresh();
 			}
 		}
 	}
@@ -298,6 +318,11 @@ void UIGeneral::advancedButtonClicked( CCObject* sender, TouchEventType type )
 {
 	if (type == CCTOUCHBEGAN)
 	{
+		if (generalManager->selectGeneralId >= generalManager->generalVector.size())
+		{
+			return;
+		}
+
 		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiAdvanced = UIAdvanced::create();
 		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiAdvanced->retain();
 		TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiAdvanced);
