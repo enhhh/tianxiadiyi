@@ -47,6 +47,9 @@ public:
 	// 生命
 	int hp;
 
+	// 属性点
+	int attributePoint;
+
 	// 是否上阵
 	bool isFormation;
 

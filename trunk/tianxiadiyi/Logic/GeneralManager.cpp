@@ -47,5 +47,42 @@ GeneralManager* GeneralManager::getTheOnlyInstance()
 
 void GeneralManager::addAttribute( int type )
 {
+	if (generalVector.size() == 0)
+	{
+		return;
+	}
 
+	if (selectGeneralId >= generalVector.size())
+	{
+		return;
+	}
+
+	General* general = generalManager->generalVector[generalManager->selectGeneralId];
+
+	if (general->attributePoint <= 0)
+	{
+		return;
+	}
+
+	general->attributePoint--;
+
+	switch(type)
+	{
+	case 0:
+		general->attribute.wuLi += 1;
+		// 武力
+		break;
+	case 1:
+		// 智力
+		general->attribute.zhiLi += 1;
+		break;
+	case 2:
+		// 体力
+		general->attribute.tiLi += 1;
+		break;
+	case 3:
+		// 敏捷
+		general->attribute.minJie += 1;
+		break;
+	}
 }

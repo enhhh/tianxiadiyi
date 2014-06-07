@@ -7,6 +7,8 @@
 #include "cocos-ext.h"
 #include "SimpleAudioEngine.h"
 
+#include "Logic\AdvanceManager.h"
+
 using namespace cocos2d;
 using namespace CocosDenshion;
 using namespace cocos2d::extension;
@@ -16,8 +18,11 @@ using namespace std;
 class UIAdvanced : public CCLayer
 {
 public:
-
+	AdvanceManager* advanceManager;
 	UILayer* uiLayer;
+
+	CCArmature* spriteAarmature1;
+	CCArmature* spriteAarmature2;
 
 	UIAdvanced();
 	~UIAdvanced();
