@@ -44,11 +44,11 @@ public:
 	// 法术防御
 	int faShuFangYu;
 
-	// 生命
-	int hp;
-
 	// 属性点
 	int attributePoint;
+
+	// 进阶
+	int advanced;
 
 	// 是否上阵
 	bool isFormation;

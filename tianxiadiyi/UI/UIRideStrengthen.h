@@ -7,6 +7,8 @@
 #include "cocos-ext.h"
 #include "SimpleAudioEngine.h"
 
+#include "Logic\RideStrengthenManager.h"
+
 using namespace cocos2d;
 using namespace CocosDenshion;
 using namespace cocos2d::extension;
@@ -17,7 +19,15 @@ class UIRideStrengthen : public CCLayer
 {
 public:
 
+	RideStrengthenManager* rideStrengthenManager;
+	
 	UILayer* uiLayer;
+
+	UIImageView* featureImageView;
+	UILabel* nameLabel;
+	UILabel* lvLabel;
+	UILabel* attribute1ValueLabel[5];
+	UILabel* attribute2ValueLabel[5];
 
 	UIRideStrengthen();
 	~UIRideStrengthen();

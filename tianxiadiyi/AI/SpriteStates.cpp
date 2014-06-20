@@ -471,6 +471,7 @@ void Attack::enter( Sprite* sprite )
 		if (monster->anger == 100)
 		{
 			monster->anger = 0;
+
 			TianXiaDiYi::getTheOnlyInstance()->fightingScene->fenNuYiJiEffect->armature->getAnimation()->play("FenNuYiJi");
 			TianXiaDiYi::getTheOnlyInstance()->fightingScene->fenNuYiJiEffect->armature->setVisible(true);
 

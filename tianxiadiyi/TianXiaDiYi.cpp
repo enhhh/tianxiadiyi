@@ -1,4 +1,5 @@
 #include "TianXiaDiYi.h"
+#include "UTF8\utf8vector.h"
 #include "Packets\CGHeartBeat.h"
 
 #include "Packets\Starring\CGStarringAttribute.h"
@@ -44,48 +45,6 @@ bool TianXiaDiYi::init()
 	visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 	CDataBaseSystem::GetMe()->Initial(NULL);
-	CDataBase::GetSplitData(NULL);
-
-	// xml
-	/*
-	TiXmlDocument doc("xml/huLaoMap.xml");
-	
-	if (!doc.LoadFile())
-	{
-		return false;
-	}
-
-	TiXmlHandle hDoc(&doc);
-	TiXmlElement* pElem;
-	TiXmlHandle hRoot(0);
-	pElem = hDoc.FirstChildElement().Element();
-
-	// should always have a valid root but handle gracefully if it does
-	if (!pElem) 
-	{
-		return false;
-	}
-
-	// save this for later
-	hRoot = TiXmlHandle(pElem);
-	pElem = hRoot.FirstChild( "name" ).Element();
-	const char* name = pElem->GetText();
-
-	pElem = hRoot.FirstChild( "xinFengBuDui" ).FirstChild().Element();
-
-	for(pElem; pElem; pElem = pElem->NextSiblingElement())
-	{
-		int elem = 0;
-		TiXmlElement* pSubElem = pElem->FirstChildElement()->FirstChildElement();
-
-		for(pSubElem; pSubElem; pSubElem = pSubElem->NextSiblingElement())
-		{
-			const char* pKey = pSubElem->Value();
-			const char* pText2 = pSubElem->GetText();
-			elem++;
-		}
-	}
-	*/
 
 	socketWrap = UUCSocketWrap::getTheOnlyInstance();
 	socketWrap->Init();
@@ -100,7 +59,6 @@ bool TianXiaDiYi::init()
 	playCgAction();
 
 	mainCityScene = NULL;
-	chapterScene = NULL;
 	fightingScene = NULL;
 
 	setKeypadEnabled(true);
@@ -118,7 +76,7 @@ void TianXiaDiYi::update( float delta )
 	static long long lastTime = getCurrentTime();
 	long long nowTime = getCurrentTime();
 	int time = nowTime - lastTime;
-	
+
 	if (time >= 25 * 1000)
 	{
 		lastTime = getCurrentTime();
@@ -132,11 +90,6 @@ void TianXiaDiYi::update( float delta )
 	if (mainCityScene != NULL)
 	{
 		mainCityScene->updateEXT(delta);
-	}
-
-	if (chapterScene != NULL)
-	{
-		chapterScene->updateEXT(delta);
 	}
 
 	if (fightingScene != NULL)
@@ -166,7 +119,7 @@ void TianXiaDiYi::ccTouchCancelled( CCTouch *pTouch, CCEvent *pEvent )
 
 void TianXiaDiYi::onEnter()
 {
-	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, false);
+	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 1, false);
 	CCLayer::onEnter();
 }
 
@@ -187,6 +140,53 @@ long long TianXiaDiYi::getCurrentTime()
 	return (now.tv_sec * 1000 + now.tv_usec / 1000);
 }
 
+UIPanel* TianXiaDiYi::getMultiString(const char* s, int maxLineWidth)
+{
+	UIPanel* multyStringPanel = UIPanel::create();
+	const char* multyStringUTF8 = ansi2utf8(s);
+
+	int lengthUTF8 = strlen(multyStringUTF8);
+	utf8vector vector = utf8vector_create(multyStringUTF8, lengthUTF8);
+
+	string utf8Line;
+	UILabel* utf8LineTestLabel = UILabel::create();
+
+	wchar_t uni = 0;
+	int line = 0;
+
+	while ((uni = utf8vector_next_unichar(vector, utf8Line)) != '\0')
+	{
+		utf8LineTestLabel->setText(utf8Line.c_str());
+
+		if (utf8LineTestLabel->getContentSize().width > maxLineWidth)
+		{
+			UILabel* utf8LineLabel = UILabel::create();
+			utf8LineLabel->setText((char*)utf8Line.c_str());
+			utf8LineLabel->setAnchorPoint(ccp(0, 0.5));
+			utf8LineLabel->setPositionY(-line*utf8LineTestLabel->getContentSize().height);
+			multyStringPanel->addChild(utf8LineLabel);
+
+			utf8Line.clear();
+			line++;
+		}
+	}
+
+	if (utf8Line.size() != 0)
+	{
+		UILabel* utf8LineLabel = UILabel::create();
+		utf8LineLabel->setText((char*)utf8Line.c_str());
+		utf8LineLabel->setAnchorPoint(ccp(0, 0.5));
+		utf8LineLabel->setPositionY(-line*utf8LineTestLabel->getContentSize().height);
+		multyStringPanel->addChild(utf8LineLabel);
+	}
+
+	delete[] multyStringUTF8;
+	utf8LineTestLabel->release();
+	utf8vector_free(vector);
+
+	return multyStringPanel;
+}
+
 char* TianXiaDiYi::ansi2utf8(const char* inbuf)
 {
 	iconv_t cd;
@@ -199,7 +199,7 @@ char* TianXiaDiYi::ansi2utf8(const char* inbuf)
 	}
 
 	size_t inbytesleft = strlen(inbuf);
-	size_t outbytesleft = inbytesleft * 2;
+	size_t outbytesleft = inbytesleft * 6;
 	char* outbuf = new char[outbytesleft];
 
 	const char* in = inbuf;
@@ -305,6 +305,7 @@ void TianXiaDiYi::yiActionCallback( CCNode* pSender )
 	addChild(mainCityScene);
 
 	uiMainCity = UIMainCity::create();
+	uiMainCity->retain();
 	addChild(uiMainCity);
 
 	uiMainCity->setVisible(true);

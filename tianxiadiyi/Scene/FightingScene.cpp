@@ -1,4 +1,5 @@
 #include "FightingScene.h"
+#include "Sprite\Solider.h"
 #include "Input\Input.h"
 #include "AI\StateMachine.h"
 #include "AI\PathFind.h"
@@ -6,6 +7,8 @@
 
 FightingScene::FightingScene()
 {
+	chapterManager = ChapterManager::getTheOnlyInstance();
+
 	monsterAgilityVector.clear();
 	monsterEnemyVector.clear();
 	monsterFriendVector.clear();
@@ -23,7 +26,7 @@ FightingScene::FightingScene()
 		for (int j = 0; j < 3; j++)
 		{
 			formationGeneral[i][j] = formationArrary[formationManager->selectId][i][j];
-			formationSoldier[i][j] = formationArrary[formationManager->selectId][i][j];
+			formationSoldier[i][j] = chapterManager->formationArmyArray[i][j];
 		}
 	}
 
@@ -78,7 +81,6 @@ bool FightingScene::init()
 
 			Monster* monster = gs.general;
 			gs.general->creatArmature();
-			monster->setAttribute();
 			monster->setPosition(ccp(formationGeneralPositions[j][i].x, formationGeneralPositions[j][i].y));
 			monster->setOriginalPosition(monster->position);
 			monster->armature->setPosition(monster->position);
@@ -118,6 +120,10 @@ bool FightingScene::init()
 		{ccp(742, 164), ccp(874, 164), ccp(1003, 164)}
 	};
 
+	vector<string> armyVector = chapterManager->getArmyVector();
+
+	int k = 0;
+
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
@@ -127,10 +133,14 @@ bool FightingScene::init()
 				continue;
 			}
 
-			Solider* solider = new Solider(1);
+			if (armyVector.size() == k)
+			{
+				continue;
+			}
+
+			Solider* solider = new Solider(atoi(armyVector[k++].c_str()));;
 			solider->creatArmature();
 			Monster* monster = solider;
-			monster->setAttribute();
 			monster->setPosition(ccp(formationSoldierPositions[j][i].x, formationSoldierPositions[j][i].y));
 			monster->armature->setPosition(monster->position);
 			monster->setOriginalPosition(monster->position);
@@ -165,11 +175,19 @@ bool FightingScene::init()
 		}
 	}
 
-	fenNuYiJiEffect = new Effect();
+	qianJunPoZhanEffect = new Effect(QIAN_JUN_PO);
+	qianJunPoZhanEffect->armature->setVisible(false);
+	addChild(qianJunPoZhanEffect->armature);
+
+	fenNuYiJiEffect = new Effect(FEN_NU_YI_JI);
 	fenNuYiJiEffect->armature->setVisible(false);
 	addChild(fenNuYiJiEffect->armature);
 
-	// √ÙΩ›÷µ≈≈–Ú
+	liZhanEffect = new Effect(LI_ZHAN);
+	liZhanEffect->armature->setVisible(false);
+	addChild(liZhanEffect->armature);
+
+	// √ÙΩ›÷µ≈≈–Ú[’ºŒªµ„≈≈–Ú]
 	for (int i = 0; i < monsterEnemyVector.size(); i++)
 	{
 		monsterAgilityVector.push_back(monsterEnemyVector[i]);
@@ -184,7 +202,7 @@ bool FightingScene::init()
 	{
 		for (int j = 0; j < monsterAgilityVector.size(); j++)
 		{
-			if (monsterAgilityVector[i]->agility > monsterAgilityVector[j]->agility)
+			if (monsterAgilityVector[i]->minJie > monsterAgilityVector[j]->minJie)
 			{
 				Monster* sprite = monsterAgilityVector[i];
 				monsterAgilityVector[i] = monsterAgilityVector[j];
@@ -333,7 +351,7 @@ END1:
 			{
 				for (int j = 0; j < 3; j++)
 				{
-					if (formationSoldier[j][i] == true)
+					if (formationGeneral[j][i] == true)
 					{
 						if ((monsterFriendArray[j][i] == NULL) || (monsterFriendArray[j][i]->action == DEAD))
 						{

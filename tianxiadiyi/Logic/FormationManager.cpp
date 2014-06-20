@@ -7,9 +7,9 @@ bool formationArrary[11][3][3] =
 {
 	    // 基础阵法
 	{
-		{false, false, false},
-		{true, false, false},
-		{false, false, false}
+		{true, true, true},
+		{true, true, true},
+		{true, true, true}
 	},
 	    // 一字长蛇阵
 	{

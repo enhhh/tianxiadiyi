@@ -6,21 +6,23 @@
 
 Sprite::Sprite()
 {
-	visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	armature = NULL;
 
+	visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	speed = WALK_SPEED;
 	speedX = 0;
 	speedY = 0;
 	distX = 0;
 	distY = 0;
+
+	originalPosition = ccp(0, 0);
 	position = ccp(0, 0);
 	targetPosition = ccp(0, 0);
 
 	isTouchMove = false;
-
 	action = STAND;
 
+	direction = DIRECTION_NONE;
 	directionX = RIGHT;
 	directionY = DIRECTION_NONE;
 
@@ -37,6 +39,10 @@ Sprite::Sprite()
 	aiType = AI_INIT;
 	aiDuration = 0;
 	isAstar = false;
+
+	wanderPoint = ccp(0, 0);
+	seekPoint = ccp(0, 0);
+	fleePoint = ccp(0, 0);
 }
 
 Sprite::~Sprite()
@@ -79,11 +85,6 @@ void Sprite::updateEXT(float delta)
 void Sprite::setMainCity(MainCity* mainCity)
 {
 	this->mainCity = mainCity;
-}
-
-void Sprite::setChapterMap(ChapterMap* chapterMap)
-{
-	this->chapterMap = chapterMap;
 }
 
 void Sprite::setFightingMap(FightingMap* fightingMap)

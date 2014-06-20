@@ -34,7 +34,6 @@ public:
 	virtual bool init();
 	virtual void onEnter();
 	virtual void onExit();
-	virtual void registerWithTouchDispatcher();
 	virtual bool ccTouchBegan(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchEnded(CCTouch* touch, CCEvent* event);
 	virtual void ccTouchCancelled(CCTouch* touch, CCEvent* event);

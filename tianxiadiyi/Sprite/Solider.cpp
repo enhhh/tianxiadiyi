@@ -6,6 +6,10 @@ Solider::Solider( int id ) : Monster(SOLDIER)
 	const _DBC_SOLIDER* solider = (_DBC_SOLIDER*)soliderTab->Search_Index_EQU(id);
 
 	attribute = *solider;
+
+	hp = 100;
+	anger = 0;
+	minJie = rand() % 100;
 }
 
 Solider::~Solider()

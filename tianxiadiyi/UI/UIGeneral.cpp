@@ -287,9 +287,19 @@ void UIGeneral::equipmentButtonClicked( CCObject* sender, TouchEventType type )
 			{
 				generalManager->selectEquipmentId = i;
 
-				TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = UIWeponTakeUp::create();
-				TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->retain();
-				TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup);
+				if (i == 5)
+				{
+					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRide = UIRide::create();
+					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRide->retain();
+					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRide->setVisible(true);
+					TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRide);
+				}
+				else
+				{
+					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = UIWeponTakeUp::create();
+					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->retain();
+					TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup);
+				}
 			}
 		}
 	}

@@ -6,6 +6,7 @@
 UICountry::UICountry()
 {
 	countryManager = CountryManager::getTheOnlyInstance();
+	multiStringPanelTemp = NULL;
 }
 
 UICountry::~UICountry()
@@ -33,8 +34,8 @@ bool UICountry::init()
 	UIButton* modifyButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("ModifyButton"));
 	modifyButton->addTouchEventListener(this, toucheventselector(UICountry::modifyButtonClicked));
 
-	UIButton* appointmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("AppointmentButton"));
-	appointmentButton->addTouchEventListener(this, toucheventselector(UICountry::appointmentButtonClicked));
+	// UIButton* appointmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("AppointmentButton"));
+	// appointmentButton->addTouchEventListener(this, toucheventselector(UICountry::appointmentButtonClicked));
 
 	UIButton* quitButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("QuitButton"));
 	quitButton->addTouchEventListener(this, toucheventselector(UICountry::quitButtonClicked));
@@ -47,6 +48,14 @@ bool UICountry::init()
 
 	UIButton* countryLand = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CountryLandButton"));
 	countryLand->addTouchEventListener(this, toucheventselector(UICountry::countryLandButtonClicked));
+
+	for (int i = 0; i < 4; i++)
+	{
+		const char* s = CCString::createWithFormat("AttributeLabel_%d", i+1)->getCString();
+		attributeLabel[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
+	}
+
+	multiStringPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("MultiStringPanel"));
 
 	coutryTestButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CountryTestButton"));
 	memberPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("MemberPanel"));
@@ -65,6 +74,7 @@ bool UICountry::init()
 
 	addChild(uiLayer);
 	addChild(memberTableView);
+
 	setVisible(false);
 	refresh();
 	return true;
@@ -76,8 +86,43 @@ void UICountry::onEnter()
 	setTouchEnabled(true);
 }
 
+void UICountry::clear()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		attributeLabel[i]->setText(" ");
+	}
+
+	if (multiStringPanelTemp != NULL)
+	{
+		multiStringPanel->removeChild(multiStringPanelTemp, true);
+	}
+}
+
 void UICountry::refresh()
 {
+	clear();
+
+	// 国号
+	const char* name = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(countryManager->name);
+	// 人物
+	const char* renWu = CCString::createWithFormat("%d/%d", countryManager->onlineNum, countryManager->totalNum)->getCString();
+	// 等级
+	const char* lv = CCString::createWithFormat("%d", countryManager->lv)->getCString();
+	// 经验
+	const char* exp = CCString::createWithFormat("%d", countryManager->exp)->getCString();
+
+	const char* attribute[4] = {name, renWu, lv, exp,};
+
+	for (int i = 0; i < 4; i++)
+	{
+		attributeLabel[i]->setText(attribute[i]);
+	}
+
+	multiStringPanelTemp = TianXiaDiYi::getTheOnlyInstance()->getMultiString(countryManager->notice, multiStringPanel->getContentSize().width);
+	multiStringPanel->addChild(multiStringPanelTemp);
+
+	delete name;
 }
 
 void UICountry::scrollViewDidScroll( CCScrollView* view )
@@ -128,14 +173,12 @@ CCTableViewCell* UICountry::tableCellAtIndex( CCTableView* table, unsigned int i
 		memberBGImageView->setPosition(memberBGImageViewEXT->getPosition());
 		panel->addChild(memberBGImageView);
 
-		string memberName[] = {"柳生飘絮", "郡主", "188", "18602", "4份钟前"};
-
 		CountryMember countryMember = countryManager->countryMemberVector[idx];
 
 		// 玩家
 		const char* name = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(countryMember.name);
 		// 职务
-		const char* job = CCString::createWithFormat("%d", countryMember.job)->getCString();
+		const char* job = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(countryManager->getJobName(countryMember.job));
 		// 等级
 		const char* lv = CCString::createWithFormat("%d", countryMember.lv)->getCString();
 		// 贡献度
@@ -161,6 +204,7 @@ CCTableViewCell* UICountry::tableCellAtIndex( CCTableView* table, unsigned int i
 		}
 
 		delete[] name;
+		delete[] job;
 		delete[] login;
 
 		UIImageView* selectCoutryFrameImageView = UIImageView::create();
@@ -211,7 +255,12 @@ void UICountry::closeButtonClicked( CCObject* sender, TouchEventType type )
 
 void UICountry::verifyButtonClicked( CCObject* sender, TouchEventType type )
 {
-	countryManager->verify();
+	if (type == CCTOUCHBEGAN)
+	{
+		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryVerify = UICountryVerify::create();
+		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryVerify->retain();
+		TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryVerify);
+	}
 }
 
 void UICountry::modifyButtonClicked( CCObject* sender, TouchEventType type )
@@ -240,6 +289,12 @@ void UICountry::kickButtonClicked( CCObject* sender, TouchEventType type )
 
 void UICountry::countryRankButtonClicked( CCObject* sender, TouchEventType type )
 {
+	if (type == CCTOUCHBEGAN)
+	{
+		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryRank = UICountryRank::create();
+		TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryRank->retain();
+		TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiCountryRank);
+	}
 }
 
 void UICountry::countryLandButtonClicked( CCObject* sender, TouchEventType type )

@@ -24,6 +24,11 @@ public:
 
 	UIImageView* itemImageView[16];
 	UIImageView* itemFeatureImageView;
+	UIImageView* selectFrameImageView;
+
+	UILabel* attributeValueLabel[3];
+	UIPanel* multiStringPanel;
+	UIPanel* multiStringPanelTemp;
 
 	UIBag();
 	~UIBag();

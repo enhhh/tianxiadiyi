@@ -6,6 +6,7 @@
 UIBag::UIBag()
 {
 	itemManager = ItemManager::getTheOnlyInstance();
+	multiStringPanelTemp = NULL;
 }
 
 UIBag::~UIBag()
@@ -54,6 +55,16 @@ bool UIBag::init()
 
 	itemFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("ItemFeatureImageView"));
 
+	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
+
+	for (int i = 0; i < 3; i++)
+	{
+		const char* s = CCString::createWithFormat("AttributeValueLabel_%d", i+1)->getCString();
+		attributeValueLabel[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
+	}
+
+	multiStringPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("MultiStringPanel"));
+
 	addChild(uiLayer);
 
 	setVisible(false);
@@ -75,6 +86,16 @@ void UIBag::clear()
 	}
 
 	itemFeatureImageView->setVisible(false);
+
+	for (int i = 0; i < 3; i++)
+	{
+		attributeValueLabel[i]->setText(" ");
+	}
+
+	if (multiStringPanelTemp != NULL)
+	{
+		multiStringPanel->removeChild(multiStringPanelTemp, true);
+	}
 }
 
 void UIBag::refresh()
@@ -109,25 +130,56 @@ void UIBag::refresh()
 	}
 
 	Item* item = itemManager->itemArray[itemManager->selectItemId];
-	
+
 	if (item != NULL)
 	{
-		const char* s;
+		// 图片
+		const char* tuPian;
+		// 名称
+		const char* mingCheng;
+		// 描述
+		const char* miaoShu;
+		// 价格
+		const char* jiaGe;
 
 		if (item->type == GEM)
 		{
 			Gem* gem = (Gem*)item;
-			s = CCString::createWithFormat("png/gem/%s.png", gem->attribute.tuPian)->getCString();
+			tuPian = CCString::createWithFormat("png/gem/%s.png", gem->attribute.tuPian)->getCString();
+			
+			mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(gem->attribute.name);
+			miaoShu = gem->attribute.miaoShu;
+			jiaGe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(CCString::createWithFormat("%d金币", gem->attribute.maiChuJiaGe)->getCString());
 		}
 
 		if (item->type == EQUIPMENT)
 		{
 			Equipment* equipment = (Equipment*)item;
-			s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
+			tuPian = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
+
+			mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(equipment->attribute.name);
+			miaoShu = equipment->attribute.miaoShu;
+			jiaGe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(CCString::createWithFormat("%d金币", equipment->attribute.maiChuJiaGe)->getCString());
 		}
 
-		itemFeatureImageView->loadTexture(s);
+		itemFeatureImageView->loadTexture(tuPian);
 		itemFeatureImageView->setVisible(true);
+
+		const char* attribute[3] = {mingCheng, miaoShu, jiaGe};
+
+		for (int i = 0; i < 3; i++)
+		{
+			attributeValueLabel[i]->setText(attribute[i]);
+		}
+
+		if (miaoShu != NULL)
+		{
+			multiStringPanelTemp = TianXiaDiYi::getTheOnlyInstance()->getMultiString(miaoShu, multiStringPanel->getContentSize().width);
+			multiStringPanel->addChild(multiStringPanelTemp);
+		}
+
+		delete[] mingCheng;
+		delete[] jiaGe;
 	}
 }
 
@@ -148,6 +200,7 @@ void UIBag::itemButtonClicked( CCObject* sender, TouchEventType type )
 
 		if (strcmp(button->getName(), s) == 0)
 		{
+			selectFrameImageView->setPosition(button->getPosition());
 			itemManager->selectItemId = itemManager->pageNum * 16 + i;
 			refresh();
 
@@ -181,6 +234,9 @@ void UIBag::pageLeftButtonClicked( CCObject* sender, TouchEventType type )
 		}
 
 		CCLOG("itemManager->pageNum: %d", itemManager->pageNum);
+		itemManager->selectItemId = itemManager->pageNum * 16;
+		UIButton* button = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("ItemButton_1"));
+		selectFrameImageView->setPosition(button->getPosition());
 
 		refresh();
 	}
@@ -199,6 +255,9 @@ void UIBag::pageRightButtonClicked( CCObject* sender, TouchEventType type )
 		}
 
 		CCLOG("itemManager->pageNum: %d", itemManager->pageNum);
+		itemManager->selectItemId = itemManager->pageNum * 16;
+		UIButton* button = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("ItemButton_1"));
+		selectFrameImageView->setPosition(button->getPosition());
 
 		refresh();
 	}

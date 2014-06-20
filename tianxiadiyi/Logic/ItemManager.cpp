@@ -15,7 +15,7 @@ ItemManager::ItemManager()
 
 	for (int i = 0; i < 76; i++)
 	{
-		Equipment* equipment = new Equipment(i+1);
+		Equipment* equipment = new Equipment(i);
 		itemVector.push_back(equipment);
 	}
 

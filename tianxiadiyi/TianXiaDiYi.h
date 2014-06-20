@@ -8,7 +8,6 @@
 
 #include "Scene\MainCityScene.h"
 #include "Scene\FightingScene.h"
-#include "Scene\ChapterScene.h"
 #include "UI\UIMainCity.h"
 #include "Network\UUSocketWrap.h"
 
@@ -19,7 +18,6 @@ using namespace cocos2d::extension;
 enum SceneType
 {
 	MAIN_CITY = 0,
-	CHAPTER_SCENE,
 	FIGHTING_SCENE
 };
 
@@ -42,7 +40,6 @@ public:
 	UUCSocketWrap* socketWrap;
 
 	MainCityScene* mainCityScene;
-	ChapterScene* chapterScene;
 	FightingScene* fightingScene;
 
 	UIMainCity* uiMainCity;
@@ -74,6 +71,8 @@ public:
 	void setSceneType(int sceneType);
 
 	long long getCurrentTime();
+
+	UIPanel* getMultiString(const char* s, int maxLineWidth);
 
 	char* ansi2utf8(const char* inbuf);
 	

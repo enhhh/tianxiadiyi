@@ -5,7 +5,6 @@
 
 Monster::Monster(int type)
 {
-	monsterType = type;
 	attackSprite = NULL;
 
 	isFriend = false;
@@ -13,8 +12,6 @@ Monster::Monster(int type)
 
 	direction = LEFT;
 	face = LEFT;
-
-	setAttribute();
 	setType(MONSTER);
 }
 
@@ -30,11 +27,4 @@ void Monster::updateEXT(float delta)
 void Monster::setIsFriend(bool isFriend)
 {
 	this->isFriend = isFriend;
-}
-
-void Monster::setAttribute()
-{
-	agility = rand() % 100;
-	anger = 0;
-	hp = 100;
 }

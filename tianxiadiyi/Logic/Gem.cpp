@@ -53,4 +53,6 @@ int Gem::getAttributeValue()
 		return gemStrengthen->shiJiShuXingZhi;
 		break;
 	}
+
+	return 0;
 }

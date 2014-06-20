@@ -89,22 +89,27 @@ BOOL CDataBase::OpenFromTXT(const CHAR* szFileName)
 }
 
 
-vector<CHAR*> CDataBase::GetSplitData(const CHAR* szData)
+vector<string> CDataBase::GetSplitData(string split)
 {
-	vector<CHAR*> splitVector;
-	CHAR s[] = "1|2|3|4|5";
-	const CHAR* d = "|";
-	CHAR* p;
+	string tok = "|";
+	split += tok;
+	
+	vector<string> result;
+	int size = split.size();
 
-	p = strtok(s, d);
-
-	while(p)
+	for (int i = 0; i < size; i++)
 	{
-		splitVector.push_back(p);
-		p = strtok(NULL, d);
+		int pos = split.find(tok, i);
+		
+		if (pos < size)
+		{
+			string s = split.substr(i, pos-i);
+			result.push_back(s);
+			i = pos + tok.size()-1;
+		}
 	}
 
-	return splitVector;
+	return result;
 }
 
 INT CDataBase::GetSplitData_Int( const CHAR* szData, UINT nCount)
@@ -177,7 +182,12 @@ VOID CDataBaseSystem::OpenAllDataBase(VOID)
 		{ DBC_SOUL_BEAD,  "soulBead.txt"	},	// 魂珠表
 		{ DBC_RIDE,  "ride.txt"	},	// 坐骑表
 		{ DBC_TELENT,  "talent.txt"	},	// 天赋表
-		{ DBC_GEM_STRENGTHEN, "gemStrengthen.txt"} // 宝石强化表
+		{ DBC_GEM_STRENGTHEN, "gemStrengthen.txt"}, // 宝石强化表
+		{ DBC_ADVANCED, "advanced.txt"},  // 将领进阶表
+		{ DBC_RIDE_STRENGTHEN_MANAGER, "rideStrengthen.txt"},  // 坐骑强化表
+		{ DBC_OFFICIAL, "official.txt"},  // 官职表
+		{ DBC_ROUND, "round.txt"},  // 战斗回合表
+		{ DBC_SOLIDER_POSITION, "soliderPosition.txt"}  // 士兵占位表
 	};
 
 	// 打开所有数据库

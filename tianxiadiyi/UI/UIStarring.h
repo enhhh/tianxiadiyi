@@ -61,14 +61,14 @@ public:
 
 	virtual bool init();
 	virtual void onEnter();
-	void refresh();
-	
+
 	// 重写触屏回调函数
 	virtual bool ccTouchBegan(CCTouch* pTouch, CCEvent* event);
 	virtual void ccTouchMoved(CCTouch* pTouch, CCEvent* event);
 	virtual void ccTouchEnded(CCTouch* pTouch, CCEvent* event);
 	virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
 
+	void refresh();
 	void refreshCulture();
 	void refreshTelent();
 	void refreshSoul();

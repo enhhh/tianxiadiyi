@@ -4,6 +4,8 @@
 UIMainCity::UIMainCity()
 {
 	uiFighting = NULL;
+	uiChapter = NULL;
+
 	uiFormation = NULL;
 	uiStarring = NULL;
 
@@ -18,6 +20,8 @@ UIMainCity::UIMainCity()
 	uiRideStrengthen = NULL;
 	uiCountry = NULL;
 	uiCountryLand = NULL;
+	uiCountryRank = NULL;
+	uiCountryVerify = NULL;
 }
 
 UIMainCity::~UIMainCity()
@@ -69,7 +73,6 @@ bool UIMainCity::init()
 void UIMainCity::onEnter()
 {
 	CCLayer::onEnter();
-	setTouchEnabled(true);
 }
 
 void UIMainCity::fightingButtonClicked(CCObject* sender, TouchEventType type)

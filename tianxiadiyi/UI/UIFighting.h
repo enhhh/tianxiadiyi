@@ -6,6 +6,7 @@
 #include "cocos2d.h"
 #include "cocos-ext.h"
 #include "SimpleAudioEngine.h"
+#include "Logic\ChapterManager.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
@@ -17,6 +18,7 @@ class UIFighting : public CCLayer, public CCTableViewDataSource, public CCTableV
 {
 public:
 
+	ChapterManager* chapterManager;
 	UILayer* uiLayer;
 
 	UIButton* fightingTestButton;

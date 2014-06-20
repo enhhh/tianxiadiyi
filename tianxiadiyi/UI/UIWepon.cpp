@@ -64,7 +64,7 @@ bool UIWepon::init()
 void UIWepon::onEnter()
 {
 	CCLayer::onEnter();
-	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, -3, false);
+	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, -1, false);
 }
 
 void UIWepon::clear()
@@ -269,6 +269,11 @@ void UIWepon::closeButtonClicked( CCObject* sender, TouchEventType type )
 
 void UIWepon::fillButtonClicked( CCObject* sender, TouchEventType type )
 {
+	if (weponManager->gemFillSprite.weponGem.gem == NULL) 
+	{
+		return;
+	}
+
 	// 交换宝石数据
 	weponManager->fill();
 
