@@ -6,6 +6,8 @@
 #include "SimpleAudioEngine.h"
 
 #include "UIFighting.h"
+#include "UIChapter.h"
+
 #include "UIFormation.h"
 #include "UIStarring.h"
 
@@ -20,6 +22,8 @@
 #include "UIRideStrengthen.h"
 #include "UICountry.h"
 #include "UICountryLand.h"
+#include "UICountryRank.h"
+#include "UICountryVerify.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
@@ -33,6 +37,8 @@ public:
 	UILayer* uiLayer;
 
 	UIFighting* uiFighting;
+	UIChapter* uiChapter;
+
 	UIFormation* uiFormation;
 	UIStarring* uiStarring;
 
@@ -43,10 +49,14 @@ public:
 
 	UIBag* uiBag;
 	UIStrengthen* uiStrengthen;
+
 	UIRide* uiRide;
 	UIRideStrengthen* uiRideStrengthen;
+
 	UICountry* uiCountry;
 	UICountryLand* uiCountryLand;
+	UICountryRank* uiCountryRank;
+	UICountryVerify* uiCountryVerify;
 
 	UIMainCity();
 	~UIMainCity();

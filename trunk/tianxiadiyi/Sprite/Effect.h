@@ -26,9 +26,7 @@ using namespace cocos2d::extension;
 class Effect : public Sprite
 {
 public:
-	int type;
-
-	Effect();
+	Effect(int type);
 	~Effect();
 
 	void updateEXT(float delta);

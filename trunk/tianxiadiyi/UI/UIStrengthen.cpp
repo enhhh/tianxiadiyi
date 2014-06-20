@@ -73,13 +73,13 @@ bool UIStrengthen::init()
 
 	strengthenTestButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("StrengthenTestButton"));
 
+	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
+
 	UIPanel* tableViewPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("TableViewPanel"));
 
 	CCTableView* strengthenTableView = CCTableView::create(this, CCSizeMake(strengthenTestButton->getContentSize().width, tableViewPanel->getContentSize().height));
 	strengthenTableView->setDirection(kCCScrollViewDirectionVertical);
 	strengthenTableView->setVerticalFillOrder(kCCTableViewFillTopDown);
-
-	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
 
 	CCPoint strengthenTestPosition = strengthenTestButton->getPosition();
 	strengthenTableView->setPosition(ccp(strengthenTestPosition.x, strengthenTestPosition.y - tableViewPanel->getContentSize().height));

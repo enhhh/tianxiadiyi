@@ -12,6 +12,8 @@
 #include "Sprite\Effect.h"
 #include "AI\States.h"
 #include "Logic\FormationManager.h"
+#include "Logic\ChapterManager.h"
+
 #include "UI\UIFightingWin.h"
 
 using namespace cocos2d;
@@ -27,6 +29,8 @@ public:
 	~FightingScene();
 public:
 
+	ChapterManager* chapterManager;
+
 	CCSize visibleSize;
 
 	FightingMap* fightingMap;
@@ -38,7 +42,9 @@ public:
 	Monster* monsterEnemyArray[3][3];
 	Monster* monsterFriendArray[3][3];
 
+	Effect* qianJunPoZhanEffect;
 	Effect* fenNuYiJiEffect;
+	Effect* liZhanEffect;
 
 	int round;
 	int roundMax;

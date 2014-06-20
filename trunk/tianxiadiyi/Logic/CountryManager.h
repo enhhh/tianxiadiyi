@@ -13,6 +13,30 @@ using namespace CocosDenshion;
 using namespace cocos2d::extension;
 using namespace std;
 
+struct CountryRankMember
+{
+	// 国家等级
+	int lv;
+	// 国家名称
+	char* name;
+	// 国家君主
+	char* zhenMingTianZi;
+	// 人数
+	int num;
+	// 排名
+	int rank;
+};
+
+struct VerifyMember
+{
+	// 玩家id
+	int id;
+	// 玩家名称
+	char* name;
+	// 等级
+	int lv;
+};
+
 struct CountryMember
 {
 	// 玩家id
@@ -35,24 +59,35 @@ class CountryManager
 {
 public:
 	// 国号
-	string* name;
+	char* name;
 	// 在线人数
 	int onlineNum;
 	// 总人数
 	int totalNum;
+	// 等级
+	int lv;
+	// 经验
+	int exp;
 	// 公告
-	string* notice;
+	char* notice;
 
-	// 成员
+	// 国家成员
 	vector<CountryMember>countryMemberVector;
+	// 审核成员
+	vector<VerifyMember>verifyMemberVector;
+	// 国家排名成员
+	vector<CountryRankMember>countryRankMemberVector;
 
 	// 选中当前项
 	int selectId;
+	// 选中审核成员
+	int selectVerifyId;
 
 	CountryManager();
 	~CountryManager();
 
 	static CountryManager* getTheOnlyInstance();
+	char* getJobName(int job);
 
 	void verify();
 	void modify();

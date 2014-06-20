@@ -1,11 +1,12 @@
 #include "UIFighting.h"
 #include "UIMainCity.h"
-#include "Scene\ChapterScene.h"
+#include "UIChapter.h"
 
 #include "..\TianXiaDiYi.h"
 
 UIFighting::UIFighting()
 {
+	chapterManager = ChapterManager::getTheOnlyInstance();
 }
 
 UIFighting::~UIFighting()
@@ -71,6 +72,7 @@ void UIFighting::scrollViewDidZoom( CCScrollView* view )
 void UIFighting::tableCellTouched( CCTableView* table, CCTableViewCell* cell )
 {
 	CCLOG("cell touched at index: %i", cell->getIdx());
+	chapterManager->selectChapterId = cell->getIdx();
 }
 
 cocos2d::CCSize UIFighting::cellSizeForTable( CCTableView* table )
@@ -135,7 +137,7 @@ CCTableViewCell* UIFighting::tableCellAtIndex( CCTableView* table, unsigned int 
 
 unsigned int UIFighting::numberOfCellsInTableView( cocos2d::extension::CCTableView *table )
 {
-	return 5;
+	return chapterManager->chapterVector.size();
 }
 
 void UIFighting::tableCellHighlight( CCTableView* table, extension::CCTableViewCell* cell )
@@ -165,13 +167,11 @@ void UIFighting::closeButtonClicked(CCObject* sender, TouchEventType type)
 void UIFighting::enterButtonClicked( CCObject* sender, TouchEventType type )
 {
 	TianXiaDiYi::getTheOnlyInstance()->removeChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiFighting, true);
-	TianXiaDiYi::getTheOnlyInstance()->removeChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity, true);
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiFighting->release();
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiFighting = NULL;
 
-	TianXiaDiYi::getTheOnlyInstance()->removeChild(TianXiaDiYi::getTheOnlyInstance()->mainCityScene, true);
-	TianXiaDiYi::getTheOnlyInstance()->mainCityScene->release();
-	TianXiaDiYi::getTheOnlyInstance()->mainCityScene= NULL;
-
-	TianXiaDiYi::getTheOnlyInstance()->chapterScene = ChapterScene::create();
-	TianXiaDiYi::getTheOnlyInstance()->chapterScene->retain();
-	TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->chapterScene);
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiChapter = UIChapter::create();
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiChapter->retain();
+	TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiChapter->setVisible(true);
+	TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiChapter);
 }

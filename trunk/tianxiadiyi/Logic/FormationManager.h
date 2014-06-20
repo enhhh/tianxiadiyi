@@ -20,6 +20,9 @@ struct GeneralSprite
 {
 	General* general;
 	CCSprite* sprite;
+	bool isFormation;
+	int i;
+	int j;
 };
 
 class FormationManager

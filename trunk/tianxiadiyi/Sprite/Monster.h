@@ -21,16 +21,17 @@ enum MonsterType
 class Monster : public Sprite
 {
 public:
+	// 类型
 	int monsterType;
 
+	// 生命
+	int hp;
+	
 	// 敏捷
-	int agility;
+	int minJie;
 
 	// 怒气
 	int anger;
-
-	// 血量
-	int hp;
 
 	Monster(int type);
 	~Monster();
@@ -38,8 +39,6 @@ public:
 	void updateEXT(float delta);
 
 	void setIsFriend(bool isFriend);
-
-	void setAttribute();
 };
 
 #endif

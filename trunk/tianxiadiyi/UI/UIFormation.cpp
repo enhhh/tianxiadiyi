@@ -207,6 +207,10 @@ bool UIFormation::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
 			i = formationManager->pageNum * 8 + i;
 
 			selectGeneralSprite.general = formationManager->generalVector[i];
+			
+			selectGeneralSprite.i = i;
+			selectGeneralSprite.j = -1;
+			selectGeneralSprite.isFormation = false;
 
 			if (selectGeneralSprite.general->isFormation)
 			{
@@ -234,6 +238,10 @@ bool UIFormation::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
 				if (rect.containsPoint(touchPosition))
 				{
 					selectGeneralSprite = formationManager->generalSpriteArray[i][j];
+
+					selectGeneralSprite.i = i;
+					selectGeneralSprite.j = j;
+					selectGeneralSprite.isFormation = true;
 					
 					formationManager->generalSpriteArray[i][j].general = NULL;
 					formationManager->generalSpriteArray[i][j].sprite = NULL;
@@ -277,21 +285,35 @@ void UIFormation::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
 
 					if (rect.containsPoint(touchPosition))
 					{
-						GeneralSprite& gs = formationManager->generalSpriteArray[i][j];
-
-						if (gs.sprite != NULL)
+						if (selectGeneralSprite.isFormation)
 						{
-							removeChild(gs.sprite, true);
-							gs.general->isFormation = false;
-							gs.general = NULL;
-							gs.sprite = NULL;
-						}
+							GeneralSprite& gs = formationManager->generalSpriteArray[i][j];
 
+							if (gs.sprite != NULL)
+							{
+								gs.sprite->setPosition(headFormationImage[selectGeneralSprite.i][selectGeneralSprite.j]->getPosition());
+								formationManager->generalSpriteArray[selectGeneralSprite.i][selectGeneralSprite.j] = gs;
+							}
+						}
+						else
+						{
+							GeneralSprite& gs = formationManager->generalSpriteArray[i][j];
+
+							if (gs.sprite != NULL)
+							{
+								removeChild(gs.sprite, true);
+								gs.general->isFormation = false;
+								gs.general = NULL;
+								gs.sprite = NULL;
+							}
+						}
+						
 						selectGeneralSprite.general->isFormation = true;
 						selectGeneralSprite.sprite->setPosition(position);
 						formationManager->generalSpriteArray[i][j] = selectGeneralSprite;
 						selectGeneralSprite.general = NULL;
 						selectGeneralSprite.sprite = NULL;
+
 						return;
 					}
 				}

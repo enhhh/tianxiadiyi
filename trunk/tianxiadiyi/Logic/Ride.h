@@ -16,9 +16,13 @@ class Ride
 {
 public:
 	_DBC_RIDE attribute;
+	int lv;
+	int strengthenLv;
 
 	Ride(int id);
 	~Ride();
+
+	vector<string> getStrengthenAttribute(int strengthenLv);
 };
 
 #endif

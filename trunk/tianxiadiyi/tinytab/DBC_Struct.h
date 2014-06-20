@@ -43,6 +43,8 @@ struct _DBC_GENERAL
 	char* tianFu;
 	// 技能
 	char* JiNeng;
+	// 技能特效 
+	char* jiNengTeXiao;
 	// 头像
 	char* tuPian;
 	// 动画
@@ -56,12 +58,14 @@ struct _DBC_SOLIDER
 	int id;
 	// 姓名
 	char* name;
+	// 动画
+	char* dongHua;
 	// 攻击
 	int gongJi;
 	// 生命
 	int shengMing;
-	// 动画
-	char* dongHua;
+	// 级别
+	int jieBie;
 };
 
 #define DBC_FORMATION 3
@@ -100,6 +104,8 @@ struct _DBC_EQUIPMENT
 	char* tuPian;
 	// 描述
 	char* miaoShu;
+	// 卖出价格
+	int maiChuJiaGe;
 };
 
 #define DBC_SKILL 5
@@ -117,11 +123,15 @@ struct _DBC_GEM
 	// 编号
 	int id;
 	// 名称
-	int name;
+	char* name;
 	// 种类
 	int zhongLei;
 	// 图片
 	char* tuPian;
+	// 描述
+	char* miaoShu;
+	// 卖出价格
+	int maiChuJiaGe;
 };
 
 #define DBC_SOUL_BEAD 7
@@ -243,4 +253,85 @@ struct _DBC_GEM_STRENGTHEN
 	int jiuJiShuXingZhi;
 	// 十级属性值
 	int shiJiShuXingZhi;
+};
+
+#define DBC_ADVANCED 11
+struct _DBC_ADVANCED
+{
+	// 编号
+	int id;
+	// 名称
+	char* name;
+	// 等级
+	int dengJi;
+	// 加成点数
+	int jiaChengDianShu;
+	// 消耗品
+	char* xiaoHaoPin;
+};
+
+#define DBC_RIDE_STRENGTHEN_MANAGER 12
+struct _DBC_RIDE_STRENGTHEN
+{
+	// 编号
+	int id;
+	// 名称
+	char* name;
+	// 一级数值
+	char* yiJiShuZhi;
+	// 二级数值
+	char* erJiShuZhi;
+	// 三级数值
+	char* sanJiShuZhi;
+	// 四级数值
+	char* siJiShuZhi;
+	// 五级数值
+	char* wuJiShuZhi;
+	// 六级数值
+	char* liuJiShuZhi;
+	// 七级数值
+	char* qiJiShuZhi;
+	// 八级数值
+	char* baJiShuZhi;
+	// 九级数值
+	char* jiuJiShuZhi;
+	// 十级数值
+	char* shiJiShuZhi;
+};
+
+#define DBC_OFFICIAL 13
+struct _DBC_OFFICIAL
+{
+	// 编号
+	int id;
+	// 名称
+	char* name;
+	// 贡献需求
+	int gongXianXuQiu;
+};
+
+#define DBC_ROUND 14
+struct _DBC_ROUND
+{
+	// 编号
+	int id;
+	// 名称
+	char* name;
+	// 封面
+	int fengMianGeneral;
+	// 军队
+	char* army;
+	// 地图
+	char* diTu;
+};
+
+#define DBC_SOLIDER_POSITION 15
+struct _DBC_SOLIDER_POSITION
+{
+	// 编号
+	int id;
+	// 无BOOS占位
+	char* wuBossZhanWei;
+	// 有BOSS占位
+	char* youBossZhanWei;
 };

@@ -31,6 +31,7 @@ bool MainCityScene::init()
 	player->armature->setPosition(ccp(450, 360));
 	addChild(player->armature);
 
+	// NPC
 	/*string spritePlist[4][4] = 
 	{
 		{"ui/SquareCircleSprite0.png", "ui/SquareCircleSprite0.plist", "ui/SquareCircleSprite.ExportJson", "SquareCircleSprite"},
@@ -61,18 +62,14 @@ bool MainCityScene::init()
 
 void MainCityScene::onEnter()
 {
+	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, false);
 	CCLayer::onEnter();
-	setTouchEnabled(true);
 }
 
 void MainCityScene::onExit()
 {
+	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
 	CCLayer::onExit();
-}
-
-void MainCityScene::registerWithTouchDispatcher()
-{
-	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 1, true);
 }
 
 bool MainCityScene::ccTouchBegan(CCTouch* touch, CCEvent* event)
@@ -149,7 +146,7 @@ void MainCityScene::updateEXT(float delta)
 {
 	Input::update();
 
-	vector<Sprite*> spriteVector;
+	/*vector<Sprite*> spriteVector;
 	spriteVector.push_back(player);
 
 	for (int i = 0; i < monsterVector.size(); i++)
@@ -173,13 +170,13 @@ void MainCityScene::updateEXT(float delta)
 	for (int i = 0; i < spriteVector.size(); i++)
 	{
 		spriteVector[i]->armature->setZOrder(i);
-	}
+	}*/
 
 	mainCity->updateEXT(delta);
 	player->updateEXT(delta);
 	
-	for (int i = 0; i < monsterVector.size(); i++)
+	/*for (int i = 0; i < monsterVector.size(); i++)
 	{
 		monsterVector[i]->updateEXT(delta);
-	}
+	}*/
 }

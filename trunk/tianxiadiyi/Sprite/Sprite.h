@@ -6,7 +6,6 @@
 #include "SimpleAudioEngine.h"
 
 #include "TileMap\MainCity.h"
-#include "TileMap\ChapterMap.h"
 #include "TileMap\FightingMap.h"
 
 #include "AI\StateMachine.h"
@@ -47,14 +46,11 @@ public:
 	Sprite();
 	~Sprite();
 
-	CCSize visibleSize;
-	
 	MainCity* mainCity;
-	ChapterMap* chapterMap;
 	FightingMap* fightingMap;
-
 	CCArmature* armature;
-	
+
+	CCSize visibleSize;
 	float speed;
 	float speedX;
 	float speedY;
@@ -111,9 +107,7 @@ public:
 
 	void setMainCity(MainCity* mainCity);
 
-	void setChapterMap(ChapterMap* chapterMap);
-
-	void setFightingMap(FightingMap* chapterMap);
+	void setFightingMap(FightingMap* fightingMap);
 
 	void setCamera(Camera* camera);
 

@@ -24,7 +24,11 @@ public:
 	UILayer* uiLayer;
 
 	UIImageView* rideImageView[8];
+	UILabel* rideNameLabel[8];
+	UILabel* rideLvLabel[8];
+
 	UILabel* attributeValueLabel[5];
+	UIImageView* selectFrameImageView;
 
 	UIRide();
 	~UIRide();

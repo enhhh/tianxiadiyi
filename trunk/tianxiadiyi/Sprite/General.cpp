@@ -14,8 +14,13 @@ General::General( int id ) : Monster(GENERAL)
 	hp = 10 * attribute.tiLi;
 
 	attributePoint = 5;
+	advanced = 0;
 
 	isFormation = false;
+
+	hp = 100;
+	anger = 0;
+	minJie = rand() % 100;
 }
 
 General::~General()
