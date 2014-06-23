@@ -8,6 +8,7 @@
 #include "SimpleAudioEngine.h"
 
 #include "Sprite\General.h"
+#include "Logic\ItemManager.h"
 
 using namespace cocos2d;
 using namespace CocosDenshion;
@@ -25,9 +26,23 @@ enum General_EQUIPMENT_TYPE
 	GENERAL_ZUO_JI
 };
 
+struct GeneralItem
+{
+	int id;
+	Equipment* equipment;
+};
+
+struct ItemSprite
+{
+	GeneralItem generalItem;
+	CCSprite* sprite;
+};
+
 class GeneralManager
 {
 public:
+
+	ItemManager* itemManager;
 
 	// 将领列表
 	vector<General*>generalVector;
@@ -43,6 +58,19 @@ public:
 
 	// 将领最大页数
 	int maxPageNum;
+
+	GeneralItem* generalItemArray;
+
+	ItemSprite itemSpriteArray[9];
+
+	// 选择的物品
+	int selectItemId;
+
+	// 物品当前页数
+	int itemPageNum;
+
+	// 物品最大页数
+	int itemMaxPageNum;
 
 	GeneralManager();
 	~GeneralManager();

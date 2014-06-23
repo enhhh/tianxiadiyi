@@ -33,6 +33,8 @@ bool UIGeneral::init()
 	UIButton* closeButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("CloseButton"));
 	closeButton->addTouchEventListener(this, toucheventselector(UIGeneral::closeButtonClicked));
 
+	spritePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SpritePanel"));
+
 	UIButton* pageLeftButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageLeftButton"));
 	pageLeftButton->addTouchEventListener(this, toucheventselector(UIGeneral::pageLeftButtonClicked));
 
@@ -46,19 +48,14 @@ bool UIGeneral::init()
 		headButton->addTouchEventListener(this, toucheventselector(UIGeneral::headButtonClicked));
 	}
 
-	for (int i = 0; i < 6; i++)
-	{
-		const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
-		UIButton* equipmentButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
-		equipmentButton->addTouchEventListener(this, toucheventselector(UIGeneral::equipmentButtonClicked));
-	}
+	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
 
-	for (int i = 0; i < 4; i++)
+	/*for (int i = 0; i < 4; i++)
 	{
 		const char* s = CCString::createWithFormat("AddButton_%d", i+1)->getCString();
 		UIButton* addButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName(s));
 		addButton->addTouchEventListener(this, toucheventselector(UIGeneral::addButtonClicked));
-	}
+	}*/
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -72,14 +69,13 @@ bool UIGeneral::init()
 		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
-	for (int i = 0; i < 16; i++)
+	headFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("HeadFeatureImageView"));
+
+	for (int i = 0; i < 15; i++)
 	{
 		const char* s = CCString::createWithFormat("AttributeValueLabel_%d", i+1)->getCString();
 		attributeValueLabel[i] = dynamic_cast<UILabel*>(uiLayer->getWidgetByName(s));
 	}
-
-	selectFrameImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("SelectFrameImageView"));
-	headFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("HeadFeatureImageView"));
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -87,9 +83,19 @@ bool UIGeneral::init()
 		starImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));;
 	}
 
-	spritePanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("SpritePanel"));
+	itemPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("ItemPanel"));
 
-	General* general = generalManager->generalVector[generalManager->selectGeneralId];
+	for (int i = 0; i < 9; i++)
+	{
+		const char* s = CCString::createWithFormat("ItemImageView_%d", i+1)->getCString();
+		itemImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));;
+	}
+
+	UIButton* pageUpButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageUpButton"));
+	pageUpButton->addTouchEventListener(this, toucheventselector(UIGeneral::pageUpButtonClicked));
+
+	UIButton* pageDownButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageDownButton"));
+	pageDownButton->addTouchEventListener(this, toucheventselector(UIGeneral::pageDownButtonClicked));
 
 	addChild(uiLayer);
 	setVisible(false);
@@ -103,11 +109,8 @@ void UIGeneral::onEnter()
 	setTouchEnabled(true);
 }
 
-
 void UIGeneral::clear()
 {
-	headFeatureImageView->setVisible(false);
-
 	for (int i = 0; i < 3; i++)
 	{
 		headImageView[i]->setVisible(false);
@@ -118,12 +121,14 @@ void UIGeneral::clear()
 		equipmentImageView[i]->setVisible(false);
 	}
 
+	headFeatureImageView->setVisible(false);
+
 	for (int i = 0; i < 10; i++)
 	{
 		starImageView[i]->setVisible(false);
 	}
 
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		attributeValueLabel[i]->setText(" ");
 	}
@@ -131,6 +136,20 @@ void UIGeneral::clear()
 	if (spriteAarmature != NULL)
 	{
 		uiLayer->removeChild(spriteAarmature, true);
+	}
+
+	for (int i = 0; i < 9; i++)
+	{
+		itemImageView[i]->setVisible(false);
+	}
+
+	for (int i = 0; i < 9; i++)
+	{
+		if (generalManager->itemSpriteArray[i].sprite != NULL)
+		{
+			uiLayer->removeChild(generalManager->itemSpriteArray[i].sprite, true);
+			generalManager->itemSpriteArray[i].sprite = NULL;
+		}
 	}
 }
 
@@ -198,26 +217,23 @@ void UIGeneral::refresh()
 	const char* baoJiShangHai = CCString::createWithFormat("%d", general->attribute.baoJiShangHai)->getCString();
 	// 识破
 	const char* shiPo = CCString::createWithFormat("%.f%%", general->attribute.shiPoLv*100)->getCString();
+	// 名称
+	const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.name);
 	// 职业
 	const char* zhiYe = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.zhiYeMingCheng);
 	// 技能
 	const char* jiNeng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.JiNeng);
-	// 羁绊
-	const char* jiBan = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8("天下第一");
-	// 名称
-	const char* mingCheng = TianXiaDiYi::getTheOnlyInstance()->ansi2utf8(general->attribute.name);
 
-	const char* attribute[16] = {wuLi, zhiLi, tiLi, minJie, tianFu, shengMing, baoJi, geDang, mingZhong, shanBi, baoJiShangHai, shiPo, zhiYe, jiNeng, jiBan, mingCheng};
+	const char* attribute[15] = {wuLi, zhiLi, tiLi, minJie, tianFu, shengMing, baoJi, geDang, mingZhong, shanBi, baoJiShangHai, shiPo, mingCheng, zhiYe, jiNeng};
 
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		attributeValueLabel[i]->setText(attribute[i]);
 	}
 
+	delete[] mingCheng;
 	delete[] zhiYe;
 	delete[] jiNeng;
-	delete[] jiBan;
-	delete[] mingCheng;
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -237,6 +253,31 @@ void UIGeneral::refresh()
 	spriteAarmature->getAnimation()->play("Stand");
 	spriteAarmature->setPosition(spritePanel->getPosition());
 	uiLayer->addChild(spriteAarmature);
+
+	if (generalManager->itemMaxPageNum <= 0)
+	{
+		return;
+	}
+
+	for (int i = 0; i < 9; i++)
+	{
+		int j = generalManager->itemPageNum * 9 + i;
+
+		// 宝石栏是否有宝石
+		if (generalManager->generalItemArray[j].equipment != NULL)
+		{
+			const char* s = CCString::createWithFormat("png/equipment/%s.png", generalManager->generalItemArray[j].equipment->attribute.tuPian)->getCString();
+			generalManager->itemSpriteArray[i].sprite = CCSprite::create(s);
+			
+			CCPoint itemPanelPosition = itemPanel->getPosition();
+			CCPoint itemImageViewPosition = itemImageView[i]->getPosition();
+			CCPoint position = CCPoint(itemPanelPosition.x+itemImageViewPosition.x, itemPanelPosition.y+itemImageViewPosition.y);
+
+			generalManager->itemSpriteArray[i].sprite->setPosition(position);
+			uiLayer->addChild(generalManager->itemSpriteArray[i].sprite);
+			generalManager->itemSpriteArray[i].generalItem = generalManager->generalItemArray[i];
+		}
+	}
 }
 
 void UIGeneral::closeButtonClicked( CCObject* sender, TouchEventType type )
@@ -266,43 +307,6 @@ void UIGeneral::headButtonClicked( CCObject* sender, TouchEventType type )
 			}
 		}
 	}	
-}
-
-void UIGeneral::equipmentButtonClicked( CCObject* sender, TouchEventType type )
-{
-	if (generalManager->selectGeneralId >= generalManager->generalVector.size())
-	{
-		return;
-	}
-
-	UIButton* button = (UIButton*)sender;
-
-	if (type == CCTOUCHBEGAN)
-	{
-		for (int i = 0; i < 6; i++)
-		{
-			const char* s = CCString::createWithFormat("EquipmentButton_%d", i+1)->getCString();
-
-			if (strcmp(button->getName(), s) == 0)
-			{
-				generalManager->selectEquipmentId = i;
-
-				if (i == 5)
-				{
-					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRide = UIRide::create();
-					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRide->retain();
-					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRide->setVisible(true);
-					TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiRide);
-				}
-				else
-				{
-					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup = UIWeponTakeUp::create();
-					TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup->retain();
-					TianXiaDiYi::getTheOnlyInstance()->addChild(TianXiaDiYi::getTheOnlyInstance()->uiMainCity->uiWeponTakeup);
-				}
-			}
-		}
-	}
 }
 
 void UIGeneral::addButtonClicked( CCObject* sender, TouchEventType type )
@@ -377,6 +381,45 @@ void UIGeneral::pageRightButtonClicked( CCObject* sender, TouchEventType type )
 		generalManager->selectGeneralId = generalManager->pageNum * 3;
 		UIButton* button = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("HeadButton_1"));;
 		selectFrameImageView->setPosition(button->getPosition());
+
+		refresh();
+	}
+}
+
+void UIGeneral::pageUpButtonClicked( CCObject* sender, TouchEventType type )
+{
+	if (type == CCTOUCHBEGAN)
+	{
+		generalManager->itemPageNum--;
+
+		if (generalManager->itemPageNum < 0)
+		{
+			generalManager->itemPageNum = 0;
+			return;
+		}
+
+		CCLOG("generalManager->pageNum: %d", generalManager->itemPageNum);
+		generalManager->selectItemId = generalManager->itemPageNum * 9;
+
+		refresh();
+	}
+}
+
+void UIGeneral::pageDownButtonClicked( CCObject* sender, TouchEventType type )
+{
+	if (type == CCTOUCHBEGAN)
+	{
+		generalManager->itemPageNum++;
+
+		if (generalManager->itemPageNum > generalManager->itemMaxPageNum - 1)
+		{
+			generalManager->itemPageNum = generalManager->itemMaxPageNum - 1;
+			return;
+		}
+
+		CCLOG("generalManager->pageNum: %d", generalManager->itemPageNum);
+
+		generalManager->selectItemId = generalManager->itemPageNum * 9;
 
 		refresh();
 	}

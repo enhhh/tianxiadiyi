@@ -84,6 +84,26 @@ int ItemManager::getGemNum(int type)
 	return num;
 }
 
+int ItemManager::getEquipmentNum()
+{
+	int num = 0;
+
+	for (int i = 0; i < itemManager->maxPageNum*16; i++)
+	{
+		Item* item = itemManager->itemArray[i];
+
+		if (item != NULL)
+		{
+			if (item->type == EQUIPMENT)
+			{
+				num++;
+			}
+		}
+	}
+
+	return num;
+}
+
 void ItemManager::sort()
 {
 	selectItemId = 0;

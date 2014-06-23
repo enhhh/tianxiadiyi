@@ -34,19 +34,17 @@ class WeponManager
 public:
 	ItemManager* itemManager;
 	WeponTakeUpManager* weponTakeUpManager;
+	Equipment* equipment;
 
 	vector<WeponGem> gemVector;
+	WeponGem* weponGemArray;
+	int selectGemId;
 
 	int pageNum;
 	int maxPageNum;
 
 	GemSprite gemSpriteArray[4];
 	GemSprite gemFillSprite;
-
-	Equipment* equipment;
-	WeponGem* weponGemArray;
-
-	int selectGemId;
 
 	WeponManager();
 	~WeponManager();

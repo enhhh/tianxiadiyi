@@ -80,10 +80,10 @@ void WeponManager::init()
 		}
 	}
 
+	selectGemId = 0;
+
 	pageNum = 0;
 	maxPageNum = (gemNum-1) / 4 + 1;
-
-	selectGemId = 0;
 
 	if (gemNum == 0)
 	{
