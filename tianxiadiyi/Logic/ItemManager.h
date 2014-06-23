@@ -32,7 +32,9 @@ public:
 	static ItemManager* getTheOnlyInstance();
 
 	int getGemNum(int type);
-
+	
+	int getEquipmentNum();
+	
 	void sort();
 
 	void sell();
