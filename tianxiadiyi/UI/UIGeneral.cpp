@@ -9,6 +9,9 @@ UIGeneral::UIGeneral()
 {
 	generalManager = GeneralManager::getTheOnlyInstance();
 	spriteAarmature = NULL;
+
+	itemFeatureSprite.sprite = NULL;
+	selectItemSprite.sprite = NULL;
 }
 
 UIGeneral::~UIGeneral()
@@ -65,7 +68,7 @@ bool UIGeneral::init()
 
 	for (int i = 0; i < 6; i++)
 	{
-		const char* s = CCString::createWithFormat("EquipmentImageView_%d", i+1)->getCString();
+		const char* s = CCString::createWithFormat("EquipmentFrameImageView_%d", i+1)->getCString();
 		equipmentImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
@@ -85,10 +88,12 @@ bool UIGeneral::init()
 
 	itemPanel = dynamic_cast<UIPanel*>(uiLayer->getWidgetByName("ItemPanel"));
 
+	itemFeatureImageView = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName("ItemFeatureFrameImageView"));
+
 	for (int i = 0; i < 9; i++)
 	{
-		const char* s = CCString::createWithFormat("ItemImageView_%d", i+1)->getCString();
-		itemImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));;
+		const char* s = CCString::createWithFormat("ItemFrameImageView_%d", i+1)->getCString();
+		itemImageView[i] = dynamic_cast<UIImageView*>(uiLayer->getWidgetByName(s));
 	}
 
 	UIButton* pageUpButton = dynamic_cast<UIButton*>(uiLayer->getWidgetByName("PageUpButton"));
@@ -106,7 +111,125 @@ bool UIGeneral::init()
 void UIGeneral::onEnter()
 {
 	CCLayer::onEnter();
-	setTouchEnabled(true);
+	CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, -1, false);
+}
+
+bool UIGeneral::ccTouchBegan( CCTouch* pTouch, CCEvent* event )
+{
+	CCPoint touchPosition = pTouch->getLocation();
+	
+	// 选择魂珠
+	for (int i = 0; i < 9; i++)
+	{
+		CCPoint itemPanelPosition = itemPanel->getPosition();
+		CCPoint itemImageViewPosition = itemImageView[i]->getPosition();
+		CCPoint position = CCPoint(itemPanelPosition.x+itemImageViewPosition.x, itemPanelPosition.y+itemImageViewPosition.y);
+
+		CCSize size = itemImageView[i]->getContentSize();
+		CCRect rect = CCRect(position.x-size.width/2, position.y-size.height/2, size.width, size.height);
+
+		if (rect.containsPoint(touchPosition))
+		{
+			generalManager->selectItemId = generalManager->itemPageNum * 9 + i;
+			selectItemSprite = generalManager->itemSpriteArray[i];
+
+			generalManager->itemSpriteArray[i].generalItem.equipment= NULL;
+			generalManager->itemSpriteArray[i].sprite = NULL;
+
+			refreshItemFeatureSprite();
+
+			return true;
+		}
+	}
+
+	CCLOG("ccTouchBegan");
+	return true;
+}
+
+void UIGeneral::ccTouchMoved( CCTouch* pTouch, CCEvent* event )
+{
+	CCLOG("ccTouchMoved");
+	CCPoint touchPosition = pTouch->getLocation();
+
+	if (selectItemSprite.sprite != NULL)
+	{
+		selectItemSprite.sprite->setPosition(touchPosition);
+	}
+}
+
+void UIGeneral::ccTouchEnded( CCTouch* pTouch, CCEvent* event )
+{
+	CCLOG("ccTouchEnded");
+	CCPoint touchPosition = pTouch->getLocation();
+
+	// 取消选择物品
+	if (selectItemSprite.sprite != NULL)
+	{
+		int imageViewId = generalManager->selectItemId - generalManager->itemPageNum*9;
+		
+		CCPoint itemPanelPosition = itemPanel->getPosition();
+		CCPoint itemImageViewPosition = itemImageView[imageViewId]->getPosition();
+		CCPoint itemPosition = CCPoint(itemPanelPosition.x+itemImageViewPosition.x, itemPanelPosition.y+itemImageViewPosition.y);
+		
+		// 选择物品栏
+		for (int i = 0; i < 9; i++)
+		{
+			CCPoint itemPanelPosition = itemPanel->getPosition();
+			CCPoint itemImageViewPosition = itemImageView[i]->getPosition();
+			CCPoint position = CCPoint(itemPanelPosition.x+itemImageViewPosition.x, itemPanelPosition.y+itemImageViewPosition.y);
+
+			CCSize size = itemImageView[i]->getContentSize();
+			CCRect rect = CCRect(position.x-size.width/2, position.y-size.height/2, size.width, size.height);
+
+			if (rect.containsPoint(touchPosition))
+			{
+				if (generalManager->itemSpriteArray[i].sprite != NULL)
+				{
+					// 交换物品位置
+					generalManager->itemSpriteArray[i].sprite->setPosition(itemPosition);
+					selectItemSprite.sprite->setPosition(position);
+
+					generalManager->itemSpriteArray[imageViewId] = generalManager->itemSpriteArray[i];
+					generalManager->itemSpriteArray[i] = selectItemSprite;
+				}
+				else
+				{
+					selectItemSprite.sprite->setPosition(position);
+					generalManager->itemSpriteArray[i] = selectItemSprite;
+				}
+
+				selectItemSprite.generalItem.equipment = NULL;
+				selectItemSprite.sprite = NULL;
+
+				return;
+			}
+		}
+
+		// 选择装备栏
+		for (int i = 0; i < 6; i++)
+		{
+			CCPoint equipmentImageViewPosition = equipmentImageView[i]->getPosition();
+
+			CCSize size = equipmentImageView[i]->getContentSize();
+			CCRect rect = CCRect(equipmentImageViewPosition.x-size.width/2, equipmentImageViewPosition.y-size.height/2, size.width, size.height);
+
+			if (rect.containsPoint(touchPosition))
+			{
+			}
+		}
+
+		selectItemSprite.sprite->setPosition(itemPosition);
+		generalManager->itemSpriteArray[imageViewId] = selectItemSprite;
+
+		selectItemSprite.generalItem.equipment = NULL;
+		selectItemSprite.sprite = NULL;
+	}
+}
+
+void UIGeneral::ccTouchCancelled( CCTouch *pTouch, CCEvent *pEvent )
+{
+	CCLOG("ccTouchCancelled");
+	CCPoint touchPosition = pTouch->getLocation();
 }
 
 void UIGeneral::clear()
@@ -116,40 +239,9 @@ void UIGeneral::clear()
 		headImageView[i]->setVisible(false);
 	}
 
-	for (int i = 0; i < 6; i++)
-	{
-		equipmentImageView[i]->setVisible(false);
-	}
-
-	headFeatureImageView->setVisible(false);
-
-	for (int i = 0; i < 10; i++)
-	{
-		starImageView[i]->setVisible(false);
-	}
-
-	for (int i = 0; i < 15; i++)
-	{
-		attributeValueLabel[i]->setText(" ");
-	}
-
 	if (spriteAarmature != NULL)
 	{
 		uiLayer->removeChild(spriteAarmature, true);
-	}
-
-	for (int i = 0; i < 9; i++)
-	{
-		itemImageView[i]->setVisible(false);
-	}
-
-	for (int i = 0; i < 9; i++)
-	{
-		if (generalManager->itemSpriteArray[i].sprite != NULL)
-		{
-			uiLayer->removeChild(generalManager->itemSpriteArray[i].sprite, true);
-			generalManager->itemSpriteArray[i].sprite = NULL;
-		}
 	}
 }
 
@@ -170,16 +262,7 @@ void UIGeneral::refresh()
 		}
 	}
 
-	if (generalManager->selectGeneralId >= generalManager->generalVector.size())
-	{
-		return;
-	}
-
-	const char* s = CCString::createWithFormat("png/general/%s.png", generalManager->generalVector[generalManager->selectGeneralId]->attribute.tuPian)->getCString();
-	headFeatureImageView->loadTexture(s);
-	headFeatureImageView->setVisible(true);
-
-	for (int i = 0; i < 6; i++)
+	/*for (int i = 0; i < 6; i++)
 	{
 		Equipment* equipment = generalManager->generalVector[generalManager->selectGeneralId]->equipmentArray[i];
 
@@ -188,8 +271,100 @@ void UIGeneral::refresh()
 			const char* s = CCString::createWithFormat("png/equipment/%s.png", equipment->attribute.tuPian)->getCString();
 			equipmentImageView[i]->loadTexture(s);
 			equipmentImageView[i]->setVisible(true);
-		}	
+		}
+	}*/
+
+	General* general = generalManager->generalVector[generalManager->selectGeneralId];
+
+	const char* imagePath = CCString::createWithFormat("ui/%sSprite0.png", general->attribute.tuPian)->getCString();;
+	const char* plistPath = CCString::createWithFormat("ui/%sSprite0.plist", general->attribute.tuPian)->getCString();;
+	const char* configFilePath = CCString::createWithFormat("ui/%sSprite.ExportJson", general->attribute.tuPian)->getCString();
+
+	CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo(imagePath, plistPath, configFilePath);
+	const char* armatureName = CCString::createWithFormat("%sSprite", general->attribute.tuPian)->getCString();
+	spriteAarmature = CCArmature::create(armatureName);
+	spriteAarmature->getAnimation()->play("Stand");
+	spriteAarmature->setPosition(spritePanel->getPosition());
+	uiLayer->addChild(spriteAarmature);
+
+	if (itemPanel->isVisible())
+	{
+		refreshItem();
 	}
+}
+
+void UIGeneral::clearItem()
+{
+	for (int i = 0; i < 9; i++)
+	{
+		if (generalManager->itemSpriteArray[i].sprite != NULL)
+		{
+			uiLayer->removeChild(generalManager->itemSpriteArray[i].sprite, true);
+			generalManager->itemSpriteArray[i].sprite = NULL;
+		}
+	}
+}
+
+void UIGeneral::refreshItem()
+{
+	clearItem();
+
+	refreshItemFeatureSprite();
+
+	if (generalManager->itemMaxPageNum <= 0)
+	{
+		return;
+	}
+
+	for (int i = 0; i < 9; i++)
+	{
+		int j = generalManager->itemPageNum * 9 + i;
+
+		// 背包栏是否有装备
+		if (generalManager->generalItemArray[j].equipment != NULL)
+		{
+			const char* s = CCString::createWithFormat("png/equipment/%s.png", generalManager->generalItemArray[j].equipment->attribute.tuPian)->getCString();
+			generalManager->itemSpriteArray[i].sprite = CCSprite::create(s);
+
+			CCPoint itemPanelPosition = itemPanel->getPosition();
+			CCPoint itemImageViewPosition = itemImageView[i]->getPosition();
+			CCPoint position = CCPoint(itemPanelPosition.x+itemImageViewPosition.x, itemPanelPosition.y+itemImageViewPosition.y);
+
+			generalManager->itemSpriteArray[i].sprite->setPosition(position);
+			uiLayer->addChild(generalManager->itemSpriteArray[i].sprite);
+			generalManager->itemSpriteArray[i].generalItem = generalManager->generalItemArray[i];
+		}
+	}
+}
+
+void UIGeneral::clearAttribute()
+{
+	headFeatureImageView->setVisible(false);
+
+	for (int i = 0; i < 15; i++)
+	{
+		attributeValueLabel[i]->setText(" ");
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		starImageView[i]->setVisible(false);
+	}
+}
+
+
+void UIGeneral::refreshAttribute()
+{
+	clearAttribute();
+
+	if (generalManager->selectGeneralId >= generalManager->generalVector.size())
+	{
+		return;
+	}
+
+	const char* s = CCString::createWithFormat("png/general/%s.png", generalManager->generalVector[generalManager->selectGeneralId]->attribute.tuPian)->getCString();
+	headFeatureImageView->loadTexture(s);
+	headFeatureImageView->setVisible(true);
 
 	General* general = generalManager->generalVector[generalManager->selectGeneralId];
 
@@ -242,41 +417,34 @@ void UIGeneral::refresh()
 			starImageView[i]->setVisible(true);
 		}	
 	}
+}
 
-	const char* imagePath = CCString::createWithFormat("ui/%sSprite0.png", general->attribute.tuPian)->getCString();;
-	const char* plistPath = CCString::createWithFormat("ui/%sSprite0.plist", general->attribute.tuPian)->getCString();;
-	const char* configFilePath = CCString::createWithFormat("ui/%sSprite.ExportJson", general->attribute.tuPian)->getCString();
-
-	CCArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo(imagePath, plistPath, configFilePath);
-	const char* armatureName = CCString::createWithFormat("%sSprite", general->attribute.tuPian)->getCString();
-	spriteAarmature = CCArmature::create(armatureName);
-	spriteAarmature->getAnimation()->play("Stand");
-	spriteAarmature->setPosition(spritePanel->getPosition());
-	uiLayer->addChild(spriteAarmature);
-
-	if (generalManager->itemMaxPageNum <= 0)
+void UIGeneral::clearItemFeatureSprite()
+{
+	if (itemFeatureSprite.sprite != NULL)
 	{
-		return;
+		uiLayer->removeChild(itemFeatureSprite.sprite, true);
+		itemFeatureSprite.sprite = NULL;
 	}
+}
 
-	for (int i = 0; i < 9; i++)
+void UIGeneral::refreshItemFeatureSprite()
+{
+	clearItemFeatureSprite();
+
+	GeneralItem generalItem = generalManager->generalItemArray[generalManager->selectItemId];
+
+	if (generalItem.equipment != NULL)
 	{
-		int j = generalManager->itemPageNum * 9 + i;
+		const char* s = CCString::createWithFormat("png/equipment/%s.png", generalItem.equipment->attribute.tuPian)->getCString();
+		itemFeatureSprite.sprite = CCSprite::create(s);
 
-		// 宝石栏是否有宝石
-		if (generalManager->generalItemArray[j].equipment != NULL)
-		{
-			const char* s = CCString::createWithFormat("png/equipment/%s.png", generalManager->generalItemArray[j].equipment->attribute.tuPian)->getCString();
-			generalManager->itemSpriteArray[i].sprite = CCSprite::create(s);
-			
-			CCPoint itemPanelPosition = itemPanel->getPosition();
-			CCPoint itemImageViewPosition = itemImageView[i]->getPosition();
-			CCPoint position = CCPoint(itemPanelPosition.x+itemImageViewPosition.x, itemPanelPosition.y+itemImageViewPosition.y);
+		CCPoint itemPanelPosition = itemPanel->getPosition();
+		CCPoint itemFeatureImageViewPosition = itemFeatureImageView->getPosition();
+		CCPoint position = CCPoint(itemPanelPosition.x+itemFeatureImageViewPosition.x, itemPanelPosition.y+itemFeatureImageViewPosition.y);
 
-			generalManager->itemSpriteArray[i].sprite->setPosition(position);
-			uiLayer->addChild(generalManager->itemSpriteArray[i].sprite);
-			generalManager->itemSpriteArray[i].generalItem = generalManager->generalItemArray[i];
-		}
+		itemFeatureSprite.sprite->setPosition(position);
+		uiLayer->addChild(itemFeatureSprite.sprite);
 	}
 }
 
