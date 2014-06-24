@@ -37,15 +37,35 @@ public:
 
 	// itemPanel
 	UIPanel* itemPanel;
+	UIImageView* itemFeatureImageView;
 	UIImageView* itemImageView[9];
+
+	ItemSprite itemFeatureSprite;
+	ItemSprite selectItemSprite;
 
 	UIGeneral();
 	~UIGeneral();
 
 	virtual bool init();
 	virtual void onEnter();
+
+	// 重写触屏回调函数
+	virtual bool ccTouchBegan(CCTouch* pTouch, CCEvent* event);
+	virtual void ccTouchMoved(CCTouch* pTouch, CCEvent* event);
+	virtual void ccTouchEnded(CCTouch* pTouch, CCEvent* event);
+	virtual void ccTouchCancelled(CCTouch *pTouch, CCEvent *pEvent);
+
 	void clear();
 	void refresh();
+
+	void clearItem();
+	void refreshItem();
+
+	void clearAttribute();
+	void refreshAttribute();
+
+	void clearItemFeatureSprite();
+	void refreshItemFeatureSprite();
 
 	void closeButtonClicked(CCObject* sender, TouchEventType type);
 	void headButtonClicked(CCObject* sender, TouchEventType type);

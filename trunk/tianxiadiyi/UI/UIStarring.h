@@ -71,6 +71,7 @@ public:
 	void refresh();
 	void refreshCulture();
 	void refreshTelent();
+	void clearSoul();
 	void refreshSoul();
 	void refreshSoulFeatureSprite();
 

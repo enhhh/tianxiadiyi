@@ -60,7 +60,6 @@ public:
 	int maxPageNum;
 
 	GeneralItem* generalItemArray;
-
 	ItemSprite itemSpriteArray[9];
 
 	// 选择的物品

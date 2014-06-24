@@ -500,13 +500,8 @@ void UIStarring::refreshTelent()
 	}
 }
 
-void UIStarring::refreshSoul()
+void UIStarring::clearSoul()
 {
-	if (starringManager->soulMaxPageNum <= 0)
-	{
-		return;
-	}
-
 	for (int i = 0; i < 12; i++)
 	{
 		if (starringManager->soulBeadSpriteArray[i].armature != NULL)
@@ -514,7 +509,29 @@ void UIStarring::refreshSoul()
 			uiLayer->removeChild(starringManager->soulBeadSpriteArray[i].armature, true);
 			starringManager->soulBeadSpriteArray[i].armature = NULL;
 		}
+	}
 
+	for (int i = 0; i < 10; i++)
+	{
+		if (starringManager->soulBeadEquipSpriteArray[i].armature != NULL)
+		{
+			uiLayer->removeChild(starringManager->soulBeadEquipSpriteArray[i].armature, true);
+			starringManager->soulBeadEquipSpriteArray[i].armature = NULL;
+		}
+	}
+}
+
+void UIStarring::refreshSoul()
+{
+	clearSoul();
+
+	if (starringManager->soulMaxPageNum <= 0)
+	{
+		return;
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
 		int j = starringManager->soulPageNum * 12 + i;
 
 		if (starringManager->soulBeadArray[j] != NULL)
@@ -540,12 +557,6 @@ void UIStarring::refreshSoul()
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (starringManager->soulBeadEquipSpriteArray[i].armature != NULL)
-		{
-			uiLayer->removeChild(starringManager->soulBeadEquipSpriteArray[i].armature, true);
-			starringManager->soulBeadEquipSpriteArray[i].armature = NULL;
-		}
-
 		if (starringManager->soulBeadEquipArray[i] != NULL)
 		{
 			const char* imagePath = CCString::createWithFormat("ui/%s0.png", starringManager->soulBeadEquipArray[i]->attribute.dongHua)->getCString();;
@@ -577,12 +588,12 @@ void UIStarring::refreshSoulFeatureSprite()
 		soulBeadFeatureSprite.armature = NULL;
 	}
 
-	SoulBead* soulBead = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
-
 	for (int i = 0; i < 3; i++)
 	{
 		soulBeadAttributeValueLabel[i]->setText(" ");
 	}
+
+	SoulBead* soulBead = starringManager->soulBeadArray[starringManager->selectSoulBeadId];
 
 	if (soulBead != NULL)
 	{
